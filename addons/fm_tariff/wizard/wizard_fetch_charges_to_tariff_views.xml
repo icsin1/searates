@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_product_tariff_custom_view_tree" model="ir.ui.view">
+        <field name="name">product.template.view.tree</field>
+        <field name="model">product.template</field>
+        <field name="priority">55</field>
+        <field name="arch" type="xml">
+            <tree create="0" delete="0">
+                <field name="product_variant_count" invisible="1"/>
+                <field name="sale_ok" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="cost_currency_id" invisible="1"/>
+                <field name="name" string="Charge"/>
+                <field name="default_code" optional="show"/>
+                <field name="barcode" optional="hide" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
+                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" optional="hide"/>
+                <field name="list_price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id'}" optional="show" decoration-muted="not sale_ok"/>
+                <field name="standard_price" widget="monetary" options="{'currency_field': 'cost_currency_id'}" optional="show" readonly="1"/>
+                <field name="categ_id" optional="hide"/>
+                <field name="detailed_type" optional="hide" readonly="1"/>
+                <field name="type" invisible="1"/>
+                <field name="uom_id" readonly="1" optional="show" groups="uom.group_uom"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="wizard_charge_master_fetch_view_form" model="ir.ui.view">
+        <field name="name">wizard.charge.master.fetch.form</field>
+        <field name="model">wizard.charge.master.fetch</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="res_id" invisible="1"/>
+                <field name="res_model" invisible="1" />
+                <field name="company_id" invisible="1"/>
+                <notebook>
+                    <page name="charges" string="Charges">
+                        <field name="charge_ids" context="{'tree_view_ref': 'fm_tariff.product_product_tariff_custom_view_tree'}">
+                            <tree create="0" delete="0">
+                                <field name="product_variant_count" invisible="1"/>
+                                <field name="sale_ok" invisible="1"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="cost_currency_id" invisible="1"/>
+                                <field name="name" string="Charge"/>
+                                <field name="default_code" optional="show"/>
+                                <field name="barcode" optional="hide" attrs="{'readonly': [('product_variant_count', '&gt;', 1)]}"/>
+                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" optional="hide"/>
+                                <field name="list_price" string="Sales Price" widget="monetary" options="{'currency_field': 'currency_id'}" optional="show" decoration-muted="not sale_ok"/>
+                                <field name="standard_price" widget="monetary" options="{'currency_field': 'cost_currency_id'}" optional="show" readonly="1"/>
+                                <field name="categ_id" optional="hide"/>
+                                <field name="detailed_type" optional="hide" readonly="1"/>
+                                <field name="type" invisible="1"/>
+                                <field name="uom_id" readonly="1" optional="show" groups="uom.group_uom"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button string="Fetch &amp; Override" name="action_fetch_and_override" type="object" class="oe_highlight"/>
+                    <button string="Fetch &amp; Merge" name="action_fetch_and_merge" invisible="1" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="btn btn-default" special="cancel" />
+                </footer>
+            </form>
+
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="model_shipment_quote_status_history_company_rule" model="ir.rule">
+            <field name="name">Shipment Quote Status History Multi-Company</field>
+            <field name="model_id" ref="fm_quote_reports.model_shipment_quote_status_history"/>
+            <field name="domain_force">['|',('company_id','=',False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+    </data>
+</odoo>

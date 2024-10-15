@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_res_group_filter_inherit" model="ir.ui.view">
+            <field name="name">res.group.search.view</field>
+            <field name="model">res.groups</field>
+            <field name="inherit_id" ref="base.view_groups_search"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//search" position="inside">
+                        <filter name="application" string="Applications" context="{'group_by':'category_id'}"/>
+                    </xpath>
+                </data>
+            </field>
+    </record>
+    
+    <record id="res_group_action" model="ir.actions.act_window">
+            <field name="name">Applications</field>
+            <field name="res_model">res.groups</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="base.view_groups_search"/>
+            <field name="domain">[('category_id', '!=', False)]</field>
+            <field name="context">{"search_default_application":1,"create":0,"edit":0,"delete":0}</field>
+    </record>
+
+    <menuitem
+        id="groups_menu"
+        name="Groups"
+        action="res_group_action"
+        parent="freight_base.root_freight_users_companies"
+        sequence="5"/>   
+</odoo>

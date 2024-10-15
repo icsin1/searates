@@ -1,0 +1,99 @@
+.side_panel_switch {
+    @extend .shadow-sm;
+    transition: all 0.2s ease;
+    position: sticky !important;
+    background-color: white;
+    font-size: 15px;
+    padding: 7px;
+    padding-left: 10px;
+    border-top: 1px solid #c8c8d3;
+    border-left: 1px solid #c8c8d3;
+    border-bottom: 1px solid #c8c8d3;
+    border-radius: 50px 0px 0px 50px;
+    bottom: 20%;
+    margin-left: -30px;
+    left: 200% !important;
+    right: 0;
+    z-index: 2;
+    color: #414141;
+    margin-right: 309px !important;
+    &:hover {
+        color: #000;
+    }
+    &.hide {
+        margin-right: 0 !important;
+    }
+}
+.o_controller_with_side_panel {
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: flex-start;
+    width: 310px !important;
+    height: 100% !important;
+    left: 200% !important;
+    background: white !important;
+    border-left: 1px solid #c8c8d3;
+    position: sticky !important;
+    overflow: scroll;
+    z-index: 1;
+    padding: 0 !important;
+    &.hide {
+        width: 0 !important;
+        border: none !important;
+    }
+    &::-webkit-scrollbar {
+        width: 4px;
+    }
+    &::-moz-scrollbar {
+        width: 4px;
+    }
+    .o_form_view,.o_side_panel {
+        .o_form_sheet_bg {
+            border: none !important;
+
+            .o_form_sheet {
+                margin: 0 auto !important;
+                min-width: auto !important;
+                box-shadow: none !important;
+                width: 100% !important;
+                border: none !important;
+
+                .oe_button_box {
+                    margin-bottom: 10px !important;
+                    display: flex;
+                    flex-wrap: wrap;
+
+                    .oe_stat_button {
+                        flex-basis: 50%;
+                        border-width: 1px;
+                        margin-top: -1px;
+                        margin-left: -1px;
+                        height: 56px;
+                        .o_stat_value {
+                            font-size: 10px;
+                        }
+                    }
+                }
+                .o_horizontal_separator {
+                    font-size: 14px;
+                }
+                .o_td_label {
+                    padding-right: 5px !important;
+                    min-width: 140px !important;
+                    & + td {
+                        padding-right: 5px !important;
+                    }
+                }
+            }
+        }
+    }
+}
+.o_dialog .modal-footer .o_list_export_xlsx {
+    display: none;
+}
+.oe_kanban_card {
+    overflow-wrap: anywhere;
+}
+.o_form_view .custom-radio .custom-control-input:disabled:checked ~ .custom-control-label::before {
+    @extend .bg-primary;
+}

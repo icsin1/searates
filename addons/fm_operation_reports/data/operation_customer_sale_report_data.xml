@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+        <!-- Client Action -->
+        <record id="action_operation_reports__sales_by_customer" model="ir.actions.client">
+            <field name="name">Sales Report by Customer</field>
+            <field name="tag">ics_account_reports.finance_reports</field>
+            <field name="context" eval="{'model': 'operation.customer.sale.report'}"/>
+            <field name="res_model">customer.sale.report</field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem
+            id="menu_operation_report_sales_by_customer"
+            name="Sales Report by Customer"
+            parent="menu_freight_operation_reporting"
+            action="action_operation_reports__sales_by_customer"
+            groups="freight_base.group_operation_manager,base.group_system"
+            sequence="1"
+        />
+
+        <!-- Client Action -->
+        <record id="action_operation_reports_shipping_lines" model="ir.actions.client">
+            <field name="name">Sales Report by Shipping Lines</field>
+            <field name="tag">ics_account_reports.finance_reports</field>
+            <field name="context" eval="{'model': 'operation.customer.shipping.line.report'}"/>
+            <field name="res_model">customer.shipping.line.report</field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem
+            id="menu_operation_report_shipping_lines"
+            name="Sales Report by Shipping Lines"
+            parent="menu_freight_operation_reporting"
+            action="action_operation_reports_shipping_lines"
+            groups="freight_base.group_operation_manager,base.group_system"
+            sequence="2"
+        />
+</odoo>

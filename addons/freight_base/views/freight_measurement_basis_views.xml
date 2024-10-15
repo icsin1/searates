@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="freight_measurement_basis_view_tree" model="ir.ui.view">
+        <field name="name">freight.measurement.basis.view.tree</field>
+        <field name="model">freight.measurement.basis</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name" />
+                <field name="transport_mode_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                <field name="package_group"/>
+                <field name="active" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="freight_measurement_basis_view_form" model="ir.ui.view">
+        <field name="name">freight.measurement.basis.view.form</field>
+        <field name="model">freight.measurement.basis</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <label for="name"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Measurement Basis"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="transport_mode_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="package_group" required="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="freight_measurement_basis_action" model="ir.actions.act_window">
+        <field name="name">Measurement Basis</field>
+        <field name="res_model">freight.measurement.basis</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem
+        id="freight_freight_measurement_basis_menu"
+        name="Measurement Basis"
+        action="freight_measurement_basis_action"
+        parent="freight_base.root_freight_master_configuration"/>
+</odoo>

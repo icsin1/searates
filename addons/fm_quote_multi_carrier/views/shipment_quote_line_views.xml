@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_view_shipment_quote_line_form" model="ir.ui.view">
+        <field name="name">shipment.quote.line.form.inherit</field>
+        <field name="model">shipment.quote.line</field>
+        <field name="inherit_id" ref="fm_quote.view_shipment_quote_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/group" position="before">
+                <field name="multi_carrier_quote" invisible="1"/>
+                <field name="transport_mode_id" invisible="1"/>
+                <field name="mode_type" invisible="1"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_row')]" position="after">
+                <field name="incoterm_id" options="{'no_create':1}" attrs="{'invisible': [('multi_carrier_quote', '=', False)], 'required': [('multi_carrier_quote', '=', True)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='service_name']" position="after">
+                <div class="o_td_label" name="carrier_label" attrs="{'invisible': ['|', ('mode_type', '=', False), ('multi_carrier_quote', '=', False)]}">
+                    <label for="carrier_id" string="Shipping Line" attrs="{'invisible': [('mode_type', '!=', 'sea')]}"/>
+                    <label for="carrier_id" string="Airline" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                    <label for="carrier_id" string="Transporter Name" attrs="{'invisible': [('mode_type', '!=', 'land')]}"/>
+                </div>
+                <div class="o_row" name="carrier_name" attrs="{'invisible': ['|', ('mode_type', '=', False), ('multi_carrier_quote', '=', False)]}">
+                    <field name="carrier_id" domain="[('transport_mode_id', '=', transport_mode_id)]" options="{'no_create':1}" nolabel="1" attrs="{'required': [('multi_carrier_quote', '=', True)]}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

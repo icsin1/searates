@@ -1,0 +1,61 @@
+.modal.o_technical_modal {
+    .modal-dialog {
+        @extend .modal-dialog-centered;
+    }
+    .modal-content {
+        @extend .shadow;
+        border-radius: 5px;
+        .modal-header {
+            padding: 1rem;
+            .o_debug_manager {
+                @extend .pt-1;
+            }
+            .modal-title {
+                font-size: 20px;
+                color: $primary;
+            }
+            button.close {
+                font-size: 20px;
+                line-height: unset;
+            }
+        }
+        .modal-footer {
+            button {
+                font-weight: bold;
+                font-size: 15px;
+            }
+        }
+    }
+}
+
+.modal-dialog.ics_center_modal_dialog {
+    .modal-content {
+        @extend .shadow;
+        padding: 1rem;
+        border-radius: 5px;
+        .modal-header {
+            border: none;
+            padding-bottom: 0px;
+            .modal-title {
+                font-size: 25px;
+                color: $primary;
+            }
+            button.close {
+                font-size: 25px;
+                line-height: unset;
+            }
+        }
+        .modal-body {
+            padding-top: 5px;
+            font-size: 14px;
+        }
+        .modal-footer {
+            border-top: none;
+            padding-top: 5px;
+            button {
+                font-weight: bold;
+                font-size: 15px;
+            }
+        }
+    }
+}

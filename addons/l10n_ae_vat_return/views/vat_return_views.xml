@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="vat_return_view_tree" model="ir.ui.view">
+        <field name="name">vat.return.view.tree</field>
+        <field name="model">vat.return</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="from_date"/>
+                <field name="to_date"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="vat_return_view_form" model="ir.ui.view">
+        <field name="name">vat.return.view.form</field>
+        <field name="model">vat.return</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="fetch_tax_information" type="object" string="Fetch" class="oe_highlight"/>
+                    <button name="action_print_pdf" type="object" string="PDF" class="oe_highlight"/>
+                    <button name="action_print_excel" type="object" string="Excel" class="oe_highlight"
+                            confirm="This action will refresh the data displayed on the screen."/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" invisible="1"/>
+                            <field name="partner_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="from_date" required="1"/>
+                        </group>
+                        <group>
+                            <field name="to_date" required="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <group string="VAT on Sales and all other Outputs">
+                        <field name="vat_return_sale_ids" nolabel="1" options="{'no_create': True}" >
+                            <tree delete="false" create="false" editable="bottom">
+                                <field name="box_no" readonly="1"/>
+                                <field name="description" readonly="1"/>
+                                <button name="action_view_detail_report" type="object" string="View"/>
+                                <field name="base_amount" invisible="1" attrs="{'readonly':[('box_no','!=','7')]}"/>
+                                <field name="tax_amount" invisible="1" attrs="{'readonly':[('box_no','!=','7')]}"/>
+                                <field name="actual_base_amount" attrs="{'readonly':[('box_no','!=','7')]}"/>
+                                <field name="actual_tax_amount" attrs="{'readonly':[('box_no','!=','7')]}"/>
+                                <field name="adjustment_amount" attrs="{'readonly':[('box_no', 'in', ['2','4','5','6','7'])]}"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group col="12">
+                        <group colspan="8">
+                        </group>
+                        <group colspan="4">
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="sale_tax_vat_amount_total"/>
+                                <field name="total_of_adjustment"/>
+                            </group>
+                        </group>
+                    </group>
+                    <group string="VAT on Expenses and all other Inputs">
+                        <field name="vat_return_purchase_ids" options="{'no_create': True}" nolabel="1">
+                            <tree delete="false" create="false" editable="bottom">
+                                <field name="box_no" readonly="1"/>
+                                <field name="description" readonly="1"/>
+                                <button name="action_view_detail_report" type="object" string="View"/>
+                                <field name="base_amount" readonly="1" invisible="1"/>
+                                <field name="tax_amount" readonly="1" invisible="1"/>
+                                <field name="actual_base_amount" readonly="1"/>
+                                <field name="actual_tax_amount" readonly="1"/>
+                                <field name="adjustment_amount"/>
+                            </tree>
+                        </field>
+                    </group>
+                    <group col="12">
+                        <group colspan="8">
+                        </group>
+                        <group colspan="4">
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="total_recoverable_vat_amount"/>
+                                <field name="total_of_purchase_adjustment"/>
+                            </group>
+                        </group>
+                    </group>
+                    <group string="Net VAT due">
+                        <div class="clearfix position-relative o_form_sheet">
+                            <table class="table table-info">
+                                <tr>
+                                    <td class="table-info">Box</td>
+                                    <td class="table-info">Descriptions</td>
+                                    <td class="table-info">VAT Amount</td>
+                                </tr>
+                                <tr>
+                                    <td class="table-info">12</td>
+                                    <td class="table-info">Total value of due tax for the period</td>
+                                    <td class="table-success">
+                                        <field name="total_value_of_due_tax"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="table-info">13</td>
+                                    <td class="table-info">Total value of recoverable tax for the period</td>
+                                    <td class="table-success">
+                                        <field name="total_of_recoverable_tax"/>
+                                    </td>
+
+                                </tr>
+                                <tr>
+                                    <td class="table-info">14</td>
+                                    <td class="table-info">Net VAT payable (or reclaimable) for the period</td>
+                                    <td class="table-info">
+                                        <field name="net_payable_amount"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </group>
+
+                      <div style="margin-top:20px" class="text-left">
+                        **Amount is displayed in your base currency <strong> <field name="currency_id" readonly="1" force_save="1"/></strong>
+
+                </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="vat_return_action" model="ir.actions.act_window">
+        <field name="name">VAT 201 Return Report</field>
+        <field name="res_model">vat.return</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem
+        id="vat_return_report_menu"
+        name="VAT 201 Return Report"
+        action="l10n_ae_vat_return.vat_return_action"
+        parent="account.menu_finance_entries_accounting_ledgers"
+        sequence="10"/>
+    
+    <record id="action_l10n_ae_report_vat_root" model="ir.actions.client">
+        <field name="name">VAT ALL Report</field>
+        <field name="res_model">web.report</field>
+        <field name="tag">ics_report_base.web_report</field>
+        <field name="context" eval="{'report_id': ref('l10n_ae_vat_return.l10n_ae_vat201_report_detail')}"/>
+    </record>
+</odoo>

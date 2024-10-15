@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="freight_container_type_view_form" model="ir.ui.view">
+        <field name="name">freight.container.type.view.form</field>
+        <field name="model">freight.container.type</field>
+        <field name="arch" type="xml">
+            <form string="">
+                <sheet>
+                    <label for="code"/>
+                    <div class="oe_title">
+                        <h1><field name="code" /></h1>
+                    </div>
+                    <label for="name"/>
+                    <div class="oe_title">
+                        <h1><field name="name" /></h1>
+                    </div>
+                    <group>
+                        <group name="container_type_left">
+                            <field name="transport_mode_id" required="1" options="{'no_create': 1}"/>
+                            <field name="category_id"></field>
+                            <field name="total_teu"></field>
+                            <field name="iata_class"></field>
+                        </group>
+                        <group name="container_type_right">
+                            <div class="o_td_label">
+                                <label for="tare_weight" />
+                            </div>
+                            <div class="o_row">
+                                <field name="tare_weight"></field>
+                                <field name="tare_weight_uom_id" placeholder="UOM" 
+                                    groups="uom.group_uom"></field>
+                            </div>
+                            <div class="o_td_label">
+                                <label for="max_gross_weight" />
+                            </div>
+                            <div class="o_row">
+                                <field name="max_gross_weight"></field>
+                                <field name="max_gross_weight_uom_id" placeholder="UOM" 
+                                    groups="uom.group_uom"></field>
+                            </div>
+                            <div class="o_td_label">
+                                <label for="max_cargo_weight" />
+                            </div>
+                            <div class="o_row">
+                                <field name="max_cargo_weight"></field>
+                                <field name="max_cargo_weight_uom_id" placeholder="UOM" 
+                                    groups="uom.group_uom"></field>
+                            </div>
+                            <div class="o_td_label">
+                                <label for="net_weight" />
+                            </div>
+                            <div class="o_row">
+                                <field name="net_weight"></field>
+                                <field name="net_weight_uom_id" placeholder="UOM" 
+                                    groups="uom.group_uom"></field>
+                            </div>
+                            <div class="o_td_label">
+                                <label for="cubic_capacity" />
+                            </div>
+                            <div class="o_row">
+                                <field name="cubic_capacity"></field>
+                                <field name="cubic_capacity_uom_id" placeholder="UOM" 
+                                    groups="uom.group_uom"></field>
+                            </div>
+                        </group>
+                    </group>
+                    <group>
+                        <div class="o_td_label">
+                            <label for="outer_length" string="Outer Measurement (L x B x H)"/>
+                        </div>
+                        <div class="o_row">
+                            <field name="outer_length"></field> x
+                            <field name="outer_breadth"></field> x
+                            <field name="outer_height"></field>
+                            <field name="outer_uom_id" placeholder="UOM" 
+                                    groups="uom.group_uom"></field>
+                        </div>
+                        <div class="o_td_label">
+                            <label for="inner_length" string="Inner Measurement (L x B x H)"/>
+                        </div>
+                        <div class="o_row">
+                            <field name="inner_length"></field> x
+                            <field name="inner_breadth"></field> x
+                            <field name="inner_height"></field>
+                            <field name="inner_uom_id" placeholder="UOM" 
+                                    groups="uom.group_uom"></field>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="freight_container_type_view_tree" model="ir.ui.view">
+        <field name="name">freight.container.type.view.tree</field>
+        <field name="model">freight.container.type</field>
+        <field name="arch" type="xml">
+            <tree string="Container Type">
+                <field name="code"></field>
+                <field name="name"></field>
+                <field name="category_id"></field>
+            </tree>
+        </field>
+    </record>
+
+    <record id="freight_container_type_action" model="ir.actions.act_window">
+        <field name="name">Container/Package Type</field>
+        <field name="res_model">freight.container.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="freight_container_type_menu"
+        name="Container/Package Type"
+        action="freight_container_type_action"
+        parent="freight_base.root_freight_admin_manage_menu" />
+
+</odoo>

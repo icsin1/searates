@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_email_system_notify_view" model="ir.ui.view">
+        <field name="name">res.config.settings.email.system.notify.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="50"/>
+        <field name="inherit_id" ref="freight_base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='users_setting_container']" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box" id="show_email_system_notify_setting">
+                    <div class="o_setting_left_pane">
+                        <field name="email_system_notify"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="email_system_notify"/>
+                        <div class="text-muted">
+                            Once we enable the option, we can see the email and system notifications at user preference.
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

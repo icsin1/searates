@@ -1,0 +1,35 @@
+version: '2'
+services:
+  postgresql:
+    image: bitnami/postgresql:16.3.0
+    volumes:
+      - 'postgresql_data_local:/bitnami/postgresql'
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - POSTGRESQL_USERNAME=serp_pg_admin
+      - POSTGRESQL_DATABASE=serp_pg_db
+  odoo:
+    image: saas-kit-1.0-15.0
+    ports:
+      - '8069'
+    volumes:
+      - 'serp_app_data_local:/bitnami/odoo'
+    depends_on:
+      - postgresql
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - ODOO_DATABASE_HOST=postgresql
+      - ODOO_DATABASE_PORT_NUMBER=5432
+      - ODOO_DATABASE_USER=serp_pg_admin
+      - ODOO_DATABASE_NAME=serp_pg_db
+      - BITNAMI_DEBUG=True
+      - ODOO_EMAIL=admin@example.com
+      - ODOO_PASSWORD=admin
+
+volumes:
+  postgresql_data_local:
+    driver: local
+  serp_app_data_local:
+    driver: local

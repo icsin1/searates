@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="crm_prospect_lead_action_new" model="ir.actions.act_window">
+        <field name="name">Prospect Lead</field>
+        <field name="res_model">crm.prospect.lead</field>
+        <field name="view_mode">form</field>
+    </record>
+
+    <record id="inherit_crm_prospect_view_form" model="ir.ui.view">
+        <field name="name">crm.prospect.view.form</field>
+        <field name="model">crm.prospect</field>
+        <field name="inherit_id" ref="crm_prospect.crm_prospect_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="before">
+                <header>
+                    <button string="Create Lead" name="action_create_lead" type="object" class="oe_highlight"/>
+                </header>
+            </xpath>
+            <xpath expr="//sheet/label" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_open_prospect_lead" type="object" class="oe_stat_button" icon="fa-star"
+                        attrs="{'invisible':[('lead_count','=',0)]}">
+                        <field name="lead_count" string="Lead" widget="statinfo"/>
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

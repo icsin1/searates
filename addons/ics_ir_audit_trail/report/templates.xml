@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="report_audit_trail">
+        <t t-call="web.html_container">
+
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <div class="oe_structure"/>
+                    <h2 style="text-align:center;">Audit Trail</h2>
+                    <table width="100%" class="table table-bg-white table-sm table-bordered"
+                           style="border: 2px solid black;">
+                        <thead style="display: table-row-group;color:black !important;">
+                            <tr>
+                                <th style="text-align:left;">Date</th>
+                                <th style="text-align:left;">User</th>
+                                <th style="text-align:left;">Name</th>
+                                <th style="text-align:left;">Operation Type</th>
+                                <th style="text-align:left;">Change Logs</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="docs" t-as="o">
+                                <tr>
+                                    <td style="text-align:left;">
+                                        <span t-field="o.operation_date_time"/>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        <span t-field="o.user_id"/>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        <span t-field="o.name"/>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        <span t-field="o.operation_type"/>
+                                    </td>
+                                    <td style="text-align:left;">
+                                        <span t-field="o.change_values"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+
+    </template>
+</odoo>

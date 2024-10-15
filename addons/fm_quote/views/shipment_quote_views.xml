@@ -1,0 +1,751 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_shipment_quote_form" model="ir.ui.view">
+        <field name="name">shipment.quote.form</field>
+        <field name="model">shipment.quote</field>
+        <field name="arch" type="xml">
+            <form string="Shipment Quote">
+                <header attrs="{'invisible': [('id', '=', False)]}">
+                    <field name="state" widget="statusbar"/>
+                    <button string="Change Status" name="action_change_status" type="object" attrs="{'invisible': [('state', 'in', ['cancel', 'expire'])]}" class="oe_highlight"/>
+                    <button name="action_option_publish_confirm_wizard" string="Publish Quote" type="object" class="btn-primary" help="Send Email to Customer" attrs="{'invisible': [('state', '=', 'accept')]}"/>
+                    <button string="Convert To Shipment" name="action_create_shipment" type="object" class="oe_highlight" attrs="{'invisible': ['|', '|', '&amp;', ('shipment_count', '=', 'single'), ('freight_shipment_count', '>', 0), ('quote_for', '!=', 'shipment'), ('state', '!=', 'accept')]}"/>
+                    <button string="Convert To Direct Shipment" name="action_create_direct_shipment" type="object" class="oe_highlight" attrs="{'invisible': ['|', '|', '&amp;', ('shipment_count', '=', 'single'), ('freight_shipment_count', '>', 0), ('quote_for', '!=', 'shipment'), ('state', '!=', 'accept')]}"/>
+                    <button name="action_create_revised_quote" string="Revise Quote" type="object" class="btn-primary"
+                        states="expire,reject,cancel"/>
+                </header>
+                <sheet>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="opportunity_id" invisible="1"/>
+                    <field name="is_package_group" invisible="1"/>
+                    <field name="freight_shipment_count" invisible="1"/>
+                    <field name="freight_direct_shipment_count" invisible="1"/>
+                    <field name="freight_shipment_ids" invisible="1"/>
+                    <field name="cargo_is_package_group" invisible="1"/>
+                    <field name="mode_type" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                           <button class="oe_stat_button" name="action_open_direct_shipments"
+                            type="object" icon="fa-bars" attrs="{'invisible': [('freight_direct_shipment_count', '=', 0)]}">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">View</span>
+                                <span class="o_stat_text">Direct Shipment</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" name="action_open_shipments"
+                            type="object" icon="fa-bars" attrs="{'invisible': [('freight_shipment_count', '=', 0)]}">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">View</span>
+                                <span class="o_stat_text">House Shipment</span>
+                            </div>
+                        </button>
+
+                        <button class="oe_stat_button" name="action_open_parent_shipment_quote"
+                            type="object" icon="fa-history" attrs="{'invisible': [('cancelled_quote_id', '=', False)]}">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Previous</span>
+                                <span class="o_stat_text">Quote</span>
+                            </div>
+                        </button>
+                        <button name="preview_shipment_quote"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-globe icon">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Customer</span>
+                                <span class="o_stat_text">Preview</span>
+                            </div>
+                        </button>
+                    </div>
+                    <div class="oe_title w-100">
+                        <label for="name" name="oe_inline"/>
+                        <h1><field name="name" class="oe_inline" force_save="1" readonly="1"/></h1>
+                    </div>
+                    <group string="Customer">
+                        <group>
+                            <field name="client_id"/>
+                            <field name="client_address_id" widget="res_partner_many2one" string="Address" context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': client_id, 'default_type': 'invoice', 'form_view_ref': 'freight_base.res_partner_address_form'}" options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>
+                            <field name="is_courier_shipment" widget="boolean_toggle" attrs="{'readonly': [('id', '>', 0)], 'invisible': [('quote_for', '!=', 'shipment')]}"/>
+                            <field name="quote_for" widget="radio" options="{'horizontal': True}" attrs="{'readonly': ['|', ('opportunity_id', '!=', False), ('id', '>', 0)]}"/>
+                            <field name="shipment_count" widget="radio" options="{'horizontal': True}" attrs="{'readonly': [('state', 'not in', ['draft'])]}"/>
+                        </group>
+                        <group>
+                            <field name="date"/>
+                            <field name="quote_expiry_date"/>
+                            <field name="user_id" options="{'no_create': True, 'no_open': True}" context="{'access_all_team_member': True, 'team_id': team_id}"/>
+                            <field name="company_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="cancelled_quote_id" invisible="1"/>
+                            <field name="team_id" options="{'no_create': True}" required="1"/>
+                            <field name="freight_shipment_type" readonly="1" attrs="{'invisible':[('freight_shipment_type', 'not in', ['house_shipment','master_shipment'])]}"/>
+
+                        </group>
+                    </group>
+                    <group string="Mode of Shipment">
+                        <group>
+                            <field name="transport_mode_id" options="{'no_create': True, 'no_open': True}" attrs="{'required': [('quote_for', '=', 'shipment')],
+                                'readonly': [('id', '&gt;', 0),('transport_mode_id', '&gt;', 0)]}" force_save="1"/>
+                            <field name="consolidation_type_id" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                        <group>
+                            <field name="shipment_type_domain" invisible="1" />
+                            <field name="shipment_type_id" domain="shipment_type_domain" options="{'no_create': True, 'no_open': True}" attrs="{'required': [('quote_for', '=', 'shipment')],
+                                'readonly': [('id', '&gt;', 0),('shipment_type_id', '&gt;', 0)]}" force_save="1"/>
+                            <field name="cargo_type_domain" invisible="1" />
+                            <field name="cargo_type_id" domain="cargo_type_domain" options="{'no_create': True, 'no_open': True}" attrs="{'required': [('quote_for', '=', 'shipment')],
+                                'readonly': [('id', '&gt;', 0),('cargo_type_id', '&gt;', 0)]}" force_save="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Shipper" name="shipper">
+                            <field name="shipper_consignee_bool" invisible="1" />
+                            <field name="shipper_id"/>
+                            <field name="shipper_address_id" widget="res_partner_many2one" string="Shipper Address" context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': shipper_id, 'default_type': 'delivery', 'form_view_ref': 'freight_base.res_partner_address_form'}" options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>
+                        </group>
+                        <group string="Consignee" name="consignee">
+                            <field name="consignee_id"/>
+                            <field name="consignee_address_id" widget="res_partner_many2one" string="Consignee Address" context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': consignee_id, 'default_type': 'delivery', 'form_view_ref': 'freight_base.res_partner_address_form'}" options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>
+                        </group>
+                    </group>
+                    <group string="General Information">
+                        <group>
+                            <field name="service_mode_id" attrs="{'required': [('quote_for', '=', 'shipment')]}"/>
+                            <field name="estimated_pickup"/>
+                            <field name="quote_check" invisible="1"/>
+                            <field name="origin_country_id" string="Origin Country" options="{'no_create': True}" attrs="{'required': [('quote_for', '=', 'shipment'), ('mode_type', '!=', 'land'), ('quote_check', '!=', True)], 'invisible': [('mode_type', '=', 'land')]}"/>
+                            <field name="origin_un_location_id" context="{'default_country_id': origin_country_id}" options="{'no_open': True}" domain="[('country_id', '=', origin_country_id)]" attrs="{'invisible': [('mode_type', '=', False)], 'required': [('quote_for', '=', 'shipment'), ('mode_type', 'in', ('air', 'sea'))]}"/>
+                            <div class="o_td_label">
+                                <label for="port_of_loading_id" string="Origin Port" attrs="{'invisible': ['|', ('mode_type', '=', False), ('mode_type', 'in', ['air', 'land'])]}"/>
+                                <label for="port_of_loading_id" string="Origin Airport" attrs="{'invisible': ['|', ('mode_type', '=', False), ('mode_type', 'in', ['sea', 'land'])]}"/>
+                            </div>
+                            <div>
+                                <field name="port_of_loading_domain" invisible="1" />
+                                <field name="port_of_loading_id" domain="port_of_loading_domain" nolabel="1" context="{'default_country_id': origin_country_id, 'default_transport_mode_id': transport_mode_id}" attrs="{'required': [('quote_for', '=', 'shipment'), ('mode_type', 'in', ('air', 'sea'))], 'invisible': ['|', ('mode_type', '=', False), ('mode_type', '=', 'land')]}"/>
+                            </div>
+                            <field name="incoterm_check" invisible="1"/>
+                            <field name="flight_number" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                            <field name="pickup_address" attrs="{'invisible': ['|',('quote_for','!=','shipment'),('incoterm_check', '!=', True)]}"/>
+                            <field name="transit_time" placeholder="Transit Time taken to reach destination"/>
+                        </group>
+                        <group>
+                            <field name="reference_number"/>
+                            <field name="expected_delivery"/>
+                            <div class="o_td_label">
+                                <label for="destination_country_id" string="Delivery Country" attrs="{'invisible': ['|', ('mode_type', '=', False), ('mode_type', 'in', ['air', 'sea'])]}"/>
+                                <label for="destination_country_id" string="Destination Country" attrs="{'invisible': [('mode_type', '=', 'land')]}"/>
+                            </div>
+                            <div>
+                                <field name="destination_country_id" context="{'no_create': True, 'no_open': True}" attrs="{'required': [('quote_for', '=', 'shipment'),('quote_check', '!=', True)]}"/>
+                            </div>
+                            <field name="destination_un_location_id" context="{'default_country_id': destination_country_id}" options="{'no_open': True}" domain="[('country_id', '=', destination_country_id)]" attrs="{'invisible': [('mode_type', '=', False)], 'required': [('quote_for', '=', 'shipment'), ('mode_type', 'in', ('air', 'sea'))]}"/>
+                            <div class="o_td_label">
+                                <label for="port_of_discharge_id" string="Destination Port" attrs="{'invisible': ['|', ('mode_type', '=', False), ('mode_type', 'in', ['air', 'land'])]}"/>
+                                <label for="port_of_discharge_id" string="Destination Airport" attrs="{'invisible': ['|', ('mode_type', '=', False), ('mode_type', 'in', ['sea', 'land'])]}"/>
+                            </div>
+                            <div>
+                                <field name="port_of_discharge_domain" invisible="1" />
+                                <field name="port_of_discharge_id" domain="port_of_discharge_domain" context="{'default_country_id': destination_country_id, 'default_transport_mode_id': transport_mode_id}" attrs="{'required': [('quote_for', '=', 'shipment'), ('mode_type', 'in', ('air', 'sea'))], 'invisible': [('mode_type', '=', 'land')]}"/>
+                            </div>
+                            <field name="incoterm_id" options="{'no_create': True, 'no_open': True}" attrs="{'required' :[('quote_for', '=', 'shipment'), ('is_courier_shipment', '=', False)]}"/>
+                            <div class="o_td_label" attrs="{'invisible': [('mode_type', '=', False)]}">
+                                <label for="carrier_id" string="Shipping Line" attrs="{'invisible': [('mode_type', '=', 'air')]}"/>
+                                <label for="carrier_id" string="Airline" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                            </div>
+                            <div class="o_row" attrs="{'invisible': [('mode_type', '=', False)]}">
+                                <field name="carrier_domain" invisible="1" />
+                                <field name="carrier_id" domain="carrier_domain" nolabel="1" attrs="{'invisible': [('mode_type', '=', False)]}" context="{'default_transport_mode_id': transport_mode_id}" options="{'no_create': True}" placeholder="Carrier"/>
+                                <field name="aircraft_type" attrs="{'invisible': [('mode_type', '!=', 'air')]}" placeholder="Aircraft Type"/>
+                            </div>
+                            <field name="delivery_address" attrs="{'invisible': ['|',('quote_for','!=','shipment'),('incoterm_check', '!=', True)]}"/>
+                        </group>
+                    </group>
+                    <group string="Additional Info" attrs="{'invisible': [('quote_for', '!=', 'shipment')]}">
+                        <group>
+                            <field name="product_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name = "free_day"/>
+                        </group>
+                        <group string="Agent" name="Agent">
+                            <field name="agent_id"/>
+                            <field name="agent_address_id" widget="res_partner_many2one" context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': agent_id, 'default_type': 'delivery', 'form_view_ref': 'freight_base.res_partner_address_form'}" options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>
+                        </group>
+                        <group string="CoLoader" name="Co-Loader">
+                            <field name="co_loader_id"/>
+                            <field name="co_loader_address_id" widget="res_partner_many2one" context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': co_loader_id, 'default_type': 'delivery', 'form_view_ref': 'freight_base.res_partner_address_form'}" options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>
+                        </group>
+                    </group>
+                    <group string="HAZ Details" attrs="{'invisible': [('mode_type', '=', 'air')]}">
+                        <group>
+                            <field name="is_dangerous_good" widget="boolean_toggle"/>
+                            <field name="haz_class_id" attrs="{'invisible':[('is_dangerous_good','!=',True)],'required':[('is_dangerous_good','=',True)]}" options="{'no_create':1}"/>
+                        </group>
+                        <group>
+                            <field name="haz_un_number" attrs="{'invisible':[('is_dangerous_good','!=',True)],'required':[('is_dangerous_good','=',True)]}"/>
+                            <field name="dangerous_good_note" attrs="{'invisible':[('is_dangerous_good','!=',True)]}"/>
+                        </group>
+                    </group>
+
+
+                    <group string="Monetary Details" attrs="{'invisible': [('quote_for', '!=', 'shipment')]}">
+                        <group>
+                            <label for="goods_value" string="Goods Value"/>
+                            <div class="o_row">
+                                <field name="goods_value"/>
+                                <field name="goods_value_currency_id" class="oe_edit_only" options="{'no_create': True}"/>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="insurance_value" string="Insurance Value"/>
+                            <div class="o_row">
+                                <field name="insurance_value"/>
+                                <field name="insurance_value_currency_id" class="oe_edit_only" options="{'no_create': True}"/>
+                            </div>
+                        </group>
+                    </group>
+                    <separator string="Declared Weight &amp; Volume"/>
+                    <label for="auto_update_weight_volume" class="font-weight-bold" attrs="{'invisible': [('cargo_is_package_group', '=', False)]}"/>
+                    <field name="auto_update_weight_volume" widget="boolean_toggle" nolable="1" attrs="{'invisible': [('cargo_is_package_group', '=', False)]}" force_save="1"/>
+                    <group>
+                        <group>
+                            <label for="pack_unit" string="Packs"/>
+                            <div class="d-flex oe_inline">
+                                <field name="pack_unit" force_save="1" attrs="{'readonly':['|',('auto_update_weight_volume','=',True),('state','!=','draft')]}"/>&amp;nbsp;
+                                <field name="pack_unit_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1" attrs="{'readonly':['|',('auto_update_weight_volume','=',True),('state','!=','draft')]}"/>
+                            </div>
+                            <label for="gross_weight_unit"/>
+                            <div class="d-flex oe_inline">
+                                <field name="gross_weight_unit" force_save="1" attrs="{'readonly':['|',('auto_update_weight_volume','=',True),('state','!=','draft')]}"/>&amp;nbsp;
+                                <field name="gross_weight_unit_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1" attrs="{'readonly':['|',('auto_update_weight_volume','=',True),('state','!=','draft')]}"/>
+                            </div>
+                            <label for="net_weight_unit"/>
+                            <div class="d-flex oe_inline">
+                                <field name="net_weight_unit" force_save="1" attrs="{'readonly':['|',('auto_update_weight_volume','=',True),('state','!=','draft')]}"/>&amp;nbsp;
+                                <field name="net_weight_unit_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1" attrs="{'readonly':['|',('auto_update_weight_volume','=',True),('state','!=','draft')]}"/>
+                            </div>
+                            <label for="volume_unit"/>
+                            <div class="d-flex oe_inline">
+                                <field name="volume_unit" force_save="1" attrs="{'readonly':['|',('auto_update_weight_volume','=',True),('state','!=','draft')]}"/>&amp;nbsp;
+                                <field name="volume_unit_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1" attrs="{'readonly':['|',('auto_update_weight_volume','=',True),('state','!=','draft')]}"/>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="weight_volume_unit"/>
+                            <div class="d-flex oe_inline">
+                                <field name="weight_volume_unit" force_save="1" attrs="{'readonly':['|',('auto_update_weight_volume','=',True),('state','!=','draft')]}"/>&amp;nbsp;
+                                <field name="weight_volume_unit_uom_id" class="ml-1" options="{'no_open': True, 'no_create': True}" force_save="1" attrs="{'readonly':['|',('auto_update_weight_volume','=',True),('state','!=','draft')]}"/>
+                            </div>
+                            <label for="chargeable" string="Chargeable"/>
+                            <div class="d-flex oe_inline">
+                                <field name="chargeable" force_save="1" readonly="1"/>
+                                <field name="chargeable_uom_id" readonly="1" force_save="1" class="ml-2" options="{'no_open': True, 'no_create': True}"/>
+                            </div>
+                            <label for="chargeable_volume" string="Chargeable Volume" attrs="{'invisible':[('mode_type', '!=', 'sea')]}"/>
+                            <div class="d-flex oe_inline" attrs="{'invisible':[('mode_type', '!=', 'sea')]}">
+                                <field name="chargeable_volume" force_save="1" readonly="1"/>
+                                <field name="chargeable_volume_unit_uom_id" readonly="1" class="ml-2" options="{'no_open': True, 'no_create': True}"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group name="container" string="Packages" attrs="{'invisible':['|', ('quote_for', '!=', 'shipment'), ('is_package_group', '=', True)]}">
+                        <field name="quote_container_line_ids"
+                            attrs="{'readonly': [
+                                '|',
+                                ('state', '!=', 'draft'),
+                                '&amp;', '&amp;', '&amp;',
+                                ('transport_mode_id', '=', False),
+                                ('service_mode_id', '=', False),
+                                ('cargo_type_id', '=', False),
+                                ('quote_for', '=', 'shipment'),
+                            ]}" nolabel="1"/>
+                    </group>
+                    <separator string="Packages" attrs="{'invisible':['|', ('quote_for', '!=', 'shipment'), ('is_package_group', '!=', True)]}"/>
+                    <field name="quote_cargo_line_ids" string="Packages"
+                        attrs="{
+                            'invisible':['|', ('quote_for', '!=', 'shipment'), ('is_package_group', '!=', True)],
+                            'readonly': ['|',
+                                ('state', '!=', 'draft'),
+                                '&amp;', '&amp;', '&amp;',
+                                ('transport_mode_id', '=', False),
+                                ('service_mode_id', '=', False),
+                                ('cargo_type_id', '=', False),
+                                ('quote_for', '=', 'shipment'),
+                            ]}"/>
+                    <field name="enable_quote_routing" invisible="1"/>
+                    <separator string="Routing" attrs="{'invisible': [('enable_quote_routing', '=' , False)]}"/>
+                    <field name="route_ids" attrs="{'invisible': [('enable_quote_routing', '=' , False)], 'readonly': [('state', '!=', 'draft')]}"/>
+                    <separator string="Charges"/>
+                    <label for="show_incl_single_line" class="font-weight-bold" attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <field name="show_incl_single_line" widget="boolean_toggle" attrs="{'invisible': [('state', '!=', 'draft')]}" context="{'force_change': True}" nolable="1"/>
+                    <field name="include_tax_names" invisible="1"/>
+                    <field name="include_total_amount" invisible="1"/>
+                    <field name="include_total_amount_in_words" invisible="1"/>
+                    <field name="all_include_sell_amount_rate" invisible="1"/>
+                    <group>
+                        <field name="quotation_line_ids"
+                            attrs="{'readonly': ['|',
+                                ('state', '!=', 'draft'),
+                                '&amp;', '&amp;', '&amp;',
+                                ('transport_mode_id', '=', False),
+                                ('service_mode_id', '=', False),
+                                ('cargo_type_id', '=', False),
+                                ('quote_for', '=', 'shipment'),
+                            ]}"
+                            context="{
+                                'default_debtor_partner_id': client_id,
+                                'default_debtor_address_id': client_address_id,
+                                'default_cost_currency_id':currency_id,
+                                'default_sell_currency_id':currency_id,
+                                'default_company_id': company_id,
+                                'default_currency_id': currency_id
+                            }" nolabel="1"/>
+                    </group>
+                    <group string="Charges Summary" groups="fm_sale_crm.group_sales_manager,freight_base.group_manage_pricing,base.group_system">
+                        <group>
+                            <div/>
+                            <field name="estimated_total_cost" class="text-danger"/>
+                            <field name="estimated_profit"/>
+                        </group>
+                        <group>
+                            <div/>
+                            <field name="estimated_total_revenue" class="text-success"/>
+                            <label for="estimated_margin_percent" />
+                            <div class="o_raw text-info">
+                                <field name="estimated_margin_percent" class="font-weight-bold"/> %
+                            </div>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Terms &amp; Conditions" name="terms_conditions">
+                            <group>
+                                <field name="quote_template_domain" invisible="1"/>
+                                <field name="shipment_quote_template_id"
+                                        domain="quote_template_domain"
+                                        optional="{'no_create':1}"
+                                        context="{'default_transport_mode_id': transport_mode_id, 'default_shipment_type_id': shipment_type_id, 'cargo_type_ids': cargo_type_id, 'default_template_for': quote_for, 'from_quote': True}"/>
+                                <field name="note"/>
+                            </group>
+                        </page>
+                        <page name="remarks" string="Remarks">
+                            <group name="remark">
+                                <field name="remarks" nolabel="1"/>
+                            </group>
+                        </page>
+                        <page groups="base.group_no_one" string="Customer Signature" name="customer_signature">
+                            <group>
+                                <field name="signed_by" readonly="1"/>
+                                <field name="signed_on" readonly="1"/>
+                                <field name="image_1920" widget="image" readonly="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_shipment_quote_tree" model="ir.ui.view">
+        <field name="name">shipment.quote.tree</field>
+        <field name="model">shipment.quote</field>
+        <field name="arch" type="xml">
+            <tree string="Quote">
+                <field name="name"/>
+                <field name="client_id"/>
+                <field name="client_address_id" optional="hide"/>
+                <field name="shipper_id" optional="hide"/>
+                <field name="shipper_address_id" optional="hide"/>
+                <field name="consignee_id" optional="hide"/>
+                <field name="consignee_address_id" optional="hide"/>
+                <field name="quote_for" optional="hide"/>
+                <field name="transport_mode_id" optional="hide"/>
+                <field name="consolidation_type_id" optional="hide"/>
+                <field name="shipment_type_id" optional="hide"/>
+                <field name="cargo_type_domain" invisible="1" />
+                <field name="cargo_type_id" domain="cargo_type_domain" optional="hide"/>
+                <field name="service_mode_id" optional="hide"/>
+                <field name="transit_time" optional="hide"/>
+                <field name="estimated_pickup" optional="hide"/>
+                <field name="expected_delivery" optional="hide"/>
+                <field name="reference_number" optional="hide"/>
+                <field name="carrier_id" optional="hide"/>
+                <field name="incoterm_id" optional="hide"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="state"/>
+                <field name="origin_country_id" optional="hide"/>
+                <field name="destination_country_id" optional="hide"/>
+                <field name="port_of_loading_id" optional="hide"/>
+                <field name="port_of_discharge_id" optional="hide"/>
+                <field name="user_id" optional="hide"/>
+                <field name="product_ids" optional="hide"/>
+                <field name="goods_value" optional="hide"/>
+                <field name="goods_value_currency_id" optional="hide"/>
+                <field name="insurance_value" optional="hide"/>
+                <field name="insurance_value_currency_id" optional="hide"/>
+                <field name="estimated_total_revenue" groups="fm_sale_crm.group_salesman,freight_base.group_manage_pricing,base.group_system"/>
+                <field name="estimated_total_cost"  groups="fm_sale_crm.group_sales_manager,freight_base.group_manage_pricing,base.group_system"/>
+                <field name="estimated_profit" groups="fm_sale_crm.group_sales_manager,freight_base.group_manage_pricing,base.group_system"/>
+                <field name="estimated_margin_percent" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="shipment_quote_view_kanban" model="ir.ui.view">
+        <field name="name">shipment.quote.view.kanban</field>
+        <field name="model">shipment.quote</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" records_draggable="0" default_group_by="state" quick_create="false" >
+                <field name="name"/>
+                <field name="transport_mode_id"/>
+                <field name="origin_un_location_id"/>
+                <field name="destination_un_location_id"/>
+                <field name="client_id"/>
+                <field name="shipper_id"/>
+                <field name="consignee_id"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="row mb4">
+                                <div id="title" class="col d-flex justify-content-between">
+                                    <h3 class="mb-0 pb-0 text-info"><t t-esc="record.name.value"/></h3>
+                                </div>
+                            </div>
+                            <t t-if="record.origin_un_location_id.value and record.destination_un_location_id.value">
+                                <t t-set="transport_mode" t-value="record.transport_mode_id.value"/>
+                                <h3>
+                                    <t t-if="transport_mode == '[SEA] Sea Freight'"><i class="fa fa-ship" aria-label="ship"></i></t>
+                                    <t t-if="transport_mode == '[AIR] Air Freight'"><i class="fa fa-plane" aria-label="plane"></i></t>
+                                    <t t-if="transport_mode == '[ROA] Road Freight'"><i class="fa fa-road" aria-label="road"></i></t>
+                                    <field name="origin_un_location_id"/> <span class="fa fa-arrow-right" aria-label="circle"/> <field name="destination_un_location_id"/>
+                                </h3>
+                            </t>
+                            <table class="table table-sm small mb-0">
+                                <tr class="table-primary">
+                                    <th>Customer</th>
+                                    <th>Shipper</th>
+                                    <th>Consignee</th>
+                                </tr>
+                                <tr>
+                                    <td><field name="client_id"/></td>
+                                    <td><field name="shipper_id"/></td>
+                                    <td><field name="consignee_id"/></td>
+                                </tr>
+                            </table>
+                            <table class="table table-sm mt-0">
+                                <tr>
+                                    <th><i class="fa fa-2x fa-money" aria-label="money"/></th>
+                                    <th class="table-info">Estimated</th>
+                                </tr>
+                                <tr class="small" groups="fm_sale_crm.group_salesman,freight_base.group_manage_pricing,base.group_system">
+                                    <td>Total Revenue</td>
+                                    <td class="table-info"><field name="estimated_total_revenue"/></td>
+                                </tr>
+                                <tr class="small" groups="fm_sale_crm.group_sales_manager,freight_base.group_manage_pricing,base.group_system">
+                                    <td>Total Cost</td>
+                                    <td class="table-info"><field name="estimated_total_cost"/></td>
+                                </tr>
+                                <tr class="small" groups="fm_sale_crm.group_sales_manager,freight_base.group_manage_pricing,base.group_system">
+                                    <td>Profit</td>
+                                    <td class="table-info"><field name="estimated_profit"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="shipment_quote_view_search" model="ir.ui.view">
+        <field name="name">shipment.quote.view.search</field>
+        <field name="model">shipment.quote</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="client_id"/>
+                <field name="shipper_id"/>
+                <field name="consignee_id"/>
+                <field name="state"/>
+                <field name="port_of_loading_id"/>
+                <field name="port_of_discharge_id"/>
+                <field name="transport_mode_id"/>
+                <field name="consolidation_type_id"/>
+                <field name="shipment_type_id"/>
+                <field name="cargo_type_domain" invisible="1" />
+                <field name="cargo_type_id" domain="cargo_type_domain"/>
+                <field name="service_mode_id"/>
+                <field name="user_id"/>
+                <field name="date"/>
+                <field name="quote_for"/>
+                <separator/>
+                <filter string="My Quotes" name="my_quotes" domain="[('user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Open Quotes" name="open_quotes" domain="[('state', '!=', 'cancel')]"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Accepted" name="accept" domain="[('state', '=', 'accept')]"/>
+                <filter string="Rejected" name="reject" domain="[('state', '=', 'reject')]"/>
+                <filter name="current_month" string="Current Month" domain="[
+                    ('date', '&gt;=', (context_today()).strftime('%Y-%m-01')),
+                    ('date', '&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                <separator/>
+                <group expand="0" name="group_by" string="Group By">
+                    <filter name="group_state" string="State" context="{'group_by' : 'state'}"/>
+                    <filter name="group_customer" string="Customer" context="{'group_by': 'client_id'}"/>
+                    <filter name="group_sales_user_id" string="Sales Agent" context="{'group_by': 'user_id'}"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter name="group_quote_for" string="Quote for" context="{'group_by': 'quote_for'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="shipment_quote_container_view_tree" model="ir.ui.view">
+        <field name="name">shipment.quote.container.lines.view.tree</field>
+        <field name="model">shipment.quote.container.lines</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="container_type_id" options="{'no_create': True}" domain="[('transport_mode_id', '=', transport_mode_id)]"/>
+                <field name="count" />
+                <field name="commodity" options="{'no_create': True}"/>
+                <field name="teu" readonly="1" force_save="1" />
+                <field name="transport_mode_id" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="shipment_quote_container_lines_form">
+        <field name="name">shipment.quote.container.lines.form</field>
+        <field name="model">shipment.quote.container.lines</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="oe_title">
+                    <label for="container_type_id" name="oe_inline"/>
+                    <h1>
+                        <field name="container_type_id" class="oe_inline" domain="[('transport_mode_id', '=', transport_mode_id)]"/>
+                    </h1>
+                </div>
+                <group>
+                    <group>
+                        <field name="pack_container_id" invisible="1"/>
+                        <field name="count"/>
+                        <field name="teu" readonly="1" force_save="1"/>
+                        <field name="transport_mode_id" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="commodity"/>
+                        <field name="quotation_id" invisible="1"/>
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="shipment_quote_cargo_lines_view_tree" model="ir.ui.view">
+        <field name="name">shipment.quote.cargo.lines.view.tree</field>
+        <field name="model">shipment.quote.cargo.lines</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="pack_type_id" />
+                <field name="transport_mode_id" invisible="1"/>
+                <field name="count" />
+                <field name="weight" optional="hide" />
+                <field name="weight_uom_id" optional="hide"/>
+                <field name="volume"  optional="hide"/>
+                <field name="volume_uom_id" optional="hide" />
+                <field name="commodity_id" />
+                <field name="commodity_hs_code" />
+                <field name="is_hazardous" attrs="{'column_invisible': [('parent.mode_type', '=', 'air')]}"/>
+                <field name="notes" />
+                <field name="length" optional="hide" />
+                <field name="width" optional="hide" />
+                <field name="height" optional="hide" />
+                <field name="lwh_uom_id" optional="hide" />
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="shipment_quote_cargo_lines_form">
+        <field name="name">shipment.quote.cargo.lines.form</field>
+        <field name="model">shipment.quote.cargo.lines</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="oe_title">
+                    <label for="pack_type_id" name="oe_inline"/>
+                    <h1>
+                        <field name="transport_mode_id" invisible="1"/>
+                        <field name="mode_type" invisible="1"/>
+                        <field name="cargo_type_id" invisible="1"/>
+                        <field name="cargo_code" invisible="1"/>
+                        <field name="calculated_dimension_lwh" invisible="1"/>
+                        <field name="pack_type_domain" invisible="1" />
+                        <field name="pack_type_id" domain="pack_type_domain" class="oe_inline" options="{'no_create': True}"/>
+                    </h1>
+                </div>
+                <label for="length" string="Dimentions (L-W-H)" attrs="{'invisible': [('calculated_dimension_lwh', '!=', True)]}"/>
+                <div class="o_row" attrs="{'invisible': [('calculated_dimension_lwh', '!=', True)]}">
+                    <field name="length" />x
+                    <field name="width" />x
+                    <field name="height" />
+                    <field name="lwh_uom_id" options="{'no_create': True}"/>
+                </div>
+                <div class="row">
+                    <div class="col-2">
+                        <field name="pack_container_id" invisible="1"/>
+                        <label for="count" string="Pack Count" class="font-weight-bold d-block"/>
+                        <field name="count"/>
+                        <field name="quotation_id" invisible="1"/>
+                    </div>
+                    <div class="col-2">
+                        <label for="divided_value" string="Divided Value" class="font-weight-bold d-block"/>
+                        <field name="divided_value" force_save="1" readonly="1"/>
+                    </div>
+                    <div class="col-4">
+                        <label for="commodity_id" class="font-weight-bold d-block"/>
+                        <field name="commodity_id" nolabel="1" options="{'no_create': True}"/>
+                    </div>
+                    <div class="col-2">
+                        <label for="commodity_hs_code" class="font-weight-bold d-block"/>
+                        <field name="commodity_hs_code" placeholder="HS Code" title="HS Code" />
+                    </div>
+                    <div class="col-2">
+                        <label for="is_hazardous" class="font-weight-bold d-block"/>
+                        <field name="is_hazardous" widget="boolean_toggle" />
+                    </div>
+                </div>
+                <group>
+                    <group name="container_type_right" attrs="{'invisible': [('mode_type', '=', 'sea')]}">
+                        <label for="weight"/>
+                        <div class="o_row">
+                            <field name="weight"/>
+                            <field name="weight_uom_id" options="{'no_create': True, 'no_open': True}"/>
+                        </div>
+                        <label for="volume"/>
+                        <div class="o_row">
+                            <field name="volume"/>
+                            <field name="volume_uom_id" options="{'no_create': True, 'no_open': True}"/>
+                        </div>
+                        <label for="volumetric_weight"/>
+                        <div class="o_row" readonly="1">
+                            <field name="volumetric_weight" force_save="1"/>
+                            <field name="volumetric_weight_uom_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('mode_type', '=', 'air')]}"/>
+                        </div>
+                    </group>
+                    <group name="container_type_right" attrs="{'invisible': [('mode_type', '!=', 'sea')]}">
+                        <label for="weight" string="Gross Weight"/>
+                        <div class="o_row">
+                            <field name="weight"/>
+                            <field name="weight_uom_id" options="{'no_create': True, 'no_open': True}"/>
+                        </div>
+                        <label for="volume"/>
+                        <div class="o_row">
+                            <field name="volume" force_save="1" readonly="1"/>
+                            <field name="volume_uom_id" readonly="1" options="{'no_create': True, 'no_open': True}"/>
+                        </div>
+                        <label for="chargeable_volume"/>
+                        <div class="o_row" readonly="1">
+                            <field name="chargeable_volume" force_save="1" readonly="1"/>
+                            <field name="chargeable_uom_id" options="{'no_create': True, 'no_open': True}" readonly="1"/>
+                        </div>
+                    </group>
+                </group>
+                <div class="o_row">
+                    <span attrs="{'invisible': [('mode_type', '!=', 'air')]}">Volumetric weight = (L x W x H x Pack Count) / Divided Value</span>
+                </div>
+                <div>
+                    <label for="notes"/>
+                    <field name="notes" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_shipment_quote" model="ir.actions.act_window">
+        <field name="name">Quotes</field>
+        <field name="res_model">shipment.quote</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_open_quotes': 1, 'search_default_my_quotes': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Add a new Quotation</p>
+        </field>
+    </record>
+
+    <record id="crm_prospect_opportunity_view_form_inherit_shipment_quote" model="ir.ui.view">
+        <field name="name">crm_prospect_opportunity.view.form.inherit.shipment.quote</field>
+        <field name="model">crm.prospect.opportunity</field>
+        <field name="inherit_id" ref="crm_prospect_lead.crm_prospect_opportunity_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" name="action_open_quotations"
+                            type="object" icon="fa-bars"
+                            attrs="{'invisible': [('quotation_count', '=', 0)]}">
+                        <div class="o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="quotation_count"/>
+                                <field name="quotation_ids" invisible="1"/>
+                            </span>
+                            <span class="o_stat_text">
+                                Quote
+                            </span>
+                        </div>
+                    </button>
+                    <button class="oe_stat_button" name="action_open_rate_requests"
+                            type="object" icon="fa-bars"
+                            attrs="{'invisible': [('rate_count', '=', 0)]}">
+                        <div class="o_stat_info">
+                            <span class="o_stat_value">
+                                <field name="rate_count"/>
+                            </span>
+                            <span class="o_stat_text">
+                                Rate Requests
+                            </span>
+                        </div>
+                    </button>
+                </div>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button string="Create Quote" name="action_create_quotation" type="object" class="oe_highlight" attrs="{'invisible': [('allow_quote_creation', '=', False)]}"/>
+                <button string="Rate Request" name="action_rate_request" type="object" class="oe_highlight" attrs="{'invisible': [('allow_quote_creation', '=', False)]}"/>
+                <field name="allow_quote_creation" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="crm_prospect_opportunity_stage_view_form_inherit_shipment_quote" model="ir.ui.view">
+        <field name="name">crm.prospect.opportunity.stage.view.form.inherit.shipment.quote</field>
+        <field name="model">crm.prospect.opportunity.stage</field>
+        <field name="inherit_id" ref="crm_prospect_lead.crm_prospect_opportunity_stage_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group>
+                    <field name="allow_quote_creation" widget="boolean_toggle"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="portal_share_quote_ction" model="ir.actions.act_window">
+        <field name="name">Share</field>
+        <field name="res_model">portal.share</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_shipment_quote"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+    <menuitem
+        id="menu_shipment_quote"
+        name="Quotes"
+        action="action_shipment_quote"
+        parent="fm_sale_crm.fm_sales_root_menu"/>
+
+    <menuitem
+        id="menu_shipment_operation_quote"
+        name="Quotes"
+        action="action_shipment_quote"
+        parent="freight_base.root_freight_operations"
+        groups="fm_sale_crm.group_salesman,freight_base.group_operation_associate,freight_base.group_manage_pricing,base.group_erp_manager"
+    />
+</odoo>

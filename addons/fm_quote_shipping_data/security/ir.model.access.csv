@@ -1,0 +1,2 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+access_shipping_line_free_time,access_shipping_line_free_time,model_shipping_line_free_time,base.group_user,1,1,1,1

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <menuitem
+        id="menu_audit_logs"
+        name="Audit Logs"
+        parent="freight_base.root_freight_admin_configurations"
+        sequence="50"
+        groups="ics_ir_audit_log.group_auditlog_user,odoo_base.group_freight_technical_support_team"
+    />
+
+    <!-- auditlog.operation -->
+    <record model="ir.ui.view" id="view_auditlog_operation_tree">
+        <field name="name">ir.audit.log.operation.tree</field>
+        <field name="model">ir.audit.log.operation</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="name" />
+                <field name="model_id"/>
+                <field name="res_id"/>
+                <field name="user_id"/>
+                <field name="operation_type"/>
+                <field name="operation_date_time"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <record model="ir.ui.view" id="view_auditlog_operation_form">
+        <field name="name">ir.audit.log.operation.form</field>
+        <field name="model">ir.audit.log.operation</field>
+        <field name="arch" type="xml">
+            <form string="Rule" edit="0" create="0">
+                <sheet>
+                    <group string="Operation">
+                        <group>
+                            <field name="model_id" options="{'no_open': 1, 'no_create': 1}"/>
+                            <field name="res_id"/>
+                            <field name="user_id" options="{'no_open': 1, 'no_create': 1}"/>
+                        </group>
+                        <group>
+                            <field name="operation_type"/>
+                            <field name="operation_date_time"/>
+                        </group>
+                    </group>
+                    <group string="Changes">
+                        <field name="change_values" widget="html" string="Changes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_auditlog_operation_search" model="ir.ui.view">
+        <field name="name">ir.audit.log.operation.search</field>
+        <field name="model">ir.audit.log.operation</field>
+        <field name="arch" type="xml">
+            <search string="Logs">
+                <field name="name"/>
+                   <separator/>
+                    <filter string="Today" name="today" domain="[('create_date', '&gt;', (context_today() - datetime.timedelta(days=1)).strftime('%%Y-%%m-%%d'))]"/>
+                    <filter string="Last 7 days" name="last_7days" domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
+                    <filter string="Last 30 days" name="last_month" domain="[('create_date','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                    <separator/>
+                    <filter name="filter_create_date" date="create_date"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_auditlog_operation_tree">
+        <field name="name">Data Logs</field>
+        <field name="res_model">ir.audit.log.operation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_auditlog_operation_search"/>
+    </record>
+
+    <menuitem
+        id="menu_audit_data_logs"
+        name="Data Logs"
+        parent="menu_audit_logs"
+        action="action_auditlog_operation_tree"
+        groups="ics_ir_audit_log.group_auditlog_user,odoo_base.group_freight_technical_support_team"
+    />
+</odoo>

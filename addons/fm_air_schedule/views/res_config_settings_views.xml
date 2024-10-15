@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="15"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='fm_schedule']" position="inside">
+                <h2>Air Schedule API</h2>
+                <div class="row mt16 o_settings_container" name="fm_air_schedule_settings">
+                    <div class="col-12 col-lg-12 o_setting_box" id="oag_api_credentials">
+                        <div class="o_setting_left_pane">
+                            <field name="module_fm_oag_air_schedule" />
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <div class="row">
+                                <div class="col">
+                                    <h3>OAG Air Schedule</h3>
+                                    <p>Enable Fetching realtime Air Schedules</p>
+                                </div>
+                                <div class="col text-right">
+                                    <img src="/fm_air_schedule/static/images/oag_logo.png" alt="OAG Aviation Worldwide Limited"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

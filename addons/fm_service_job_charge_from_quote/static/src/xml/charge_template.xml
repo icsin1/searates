@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-extend="ServiceJobCharges.buttons" t-name="ServiceJobCharges.buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <button t-if="widget.modelName == 'service.job.charge.cost'" data-action="update_cost_charge_ids" data-pycontext="{}" class="ics_charge_button btn btn-primary btn-sm o_button_fetch_from_quote mr-1" title="Fetch From Quote">
+                Fetch From Quote
+            </button>
+            <button t-if="widget.modelName == 'service.job.charge.revenue'" data-action="update_revenue_charge_ids" data-pycontext="{}" class="ics_charge_button btn btn-primary btn-sm o_button_fetch_from_quote mr-1" title="Fetch From Quote">
+                Fetch From Quote
+            </button>
+        </t>
+    </t>
+</templates>

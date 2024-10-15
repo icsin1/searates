@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_freight_master_charge_cost_view_form" model="ir.ui.view">
+        <field name="name">master.shipment.charge.cost.view.form</field>
+        <field name="model">master.shipment.charge.cost</field>
+        <field name="inherit_id" ref="freight_management_charges.freight_master_charge_cost_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_ids']" position="after">
+                <field name="company_calculate_tds" invisible="1"/>
+                <field name="expense_tds_rate_id" attrs="{'invisible':[('company_calculate_tds','=',False)], 'readonly': [('status', '!=', 'no')]}" options="{'no_create': 1}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_freight_master_charge_cost_view_tree" model="ir.ui.view">
+        <field name="name">master.shipment.charge.cost.view.tree.inherit</field>
+        <field name="model">master.shipment.charge.cost</field>
+        <field name="inherit_id" ref="freight_management_charges.freight_master_charge_cost_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tax_ids']" position="after">
+                <field name="expense_tds_rate_id" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

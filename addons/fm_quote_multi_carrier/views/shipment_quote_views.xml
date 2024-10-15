@@ -1,0 +1,81 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="view_shipment_quote_form_fm_quote" model="ir.ui.view">
+        <field name="name">shipment.quote.view.form.inherit</field>
+        <field name="model">shipment.quote</field>
+        <field name="inherit_id" ref="fm_quote.view_shipment_quote_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_courier_shipment']" position="after">
+                <field name="multi_carrier_quote" widget="boolean_toggle" attrs="{'readonly': [('id', '>', 0)], 'invisible': [('quote_for', '!=', 'shipment')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='incoterm_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('multi_carrier_quote', '=', True)], 
+                    'required': [('quote_for', '=', 'shipment'), ('is_courier_shipment', '=', False), ('multi_carrier_quote','=', False)]}
+                </attribute>
+            </xpath>
+            <xpath expr="//field[@name='carrier_id']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('mode_type', '=', False), ('multi_carrier_quote', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='aircraft_type']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('mode_type', '!=', 'air'), ('multi_carrier_quote', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_create_shipment']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', '|', '&amp;', ('shipment_count', '=', 'single'), ('freight_shipment_count', '&gt;', 0), 
+                    ('quote_for', '!=', 'shipment'), ('multi_carrier_quote', '=', True), ('state', '!=', 'accept')]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_option_publish_confirm_wizard']" position="after">
+                <button string="Convert To Shipment" name="action_quote_multi_carrier_shipment" type="object" class="oe_highlight"
+                    attrs="{'invisible': ['|', '|', '|', '&amp;', ('shipment_count', '=', 'single'), ('freight_shipment_count', '>', 0), ('quote_for', '!=', 'shipment'), 
+                    ('multi_carrier_quote', '=', False), ('state', '!=', 'accept')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='pickup_address']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('quote_for','!=','shipment'), ('incoterm_check', '!=', True), ('multi_carrier_quote','=', False), ]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='delivery_address']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('quote_for','!=','shipment'), ('incoterm_check', '!=', True), ('multi_carrier_quote','=', False), ]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_fm_road_view_shipment_quote_form" model="ir.ui.view">
+        <field name="name">fm_road.shipment.quote.form.inherit</field>
+        <field name="model">shipment.quote</field>
+        <field name="inherit_id" ref="fm_road_quote.fm_road_view_shipment_quote_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='carrier_id']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('mode_type', '!=', 'sea'), ('multi_carrier_quote', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//label[@for='carrier_id'][2]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('mode_type', '!=', 'air'), ('multi_carrier_quote', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//label[@for='carrier_id'][last()]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('mode_type', '!=', 'land'), ('multi_carrier_quote', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_fm_tariff_quote_view_shipment_quote_form" model="ir.ui.view">
+        <field name="name">fm_tariff_quote.shipment.quote.form.inherit</field>
+        <field name="model">shipment.quote</field>
+        <field name="inherit_id" ref="fm_tariff_quote.view_shipment_quote_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_tariff_services_wizard'][last()]" position="attributes">
+                <attribute name="attrs">{'invisible': [('quote_for', '=', 'shipment'), '|', '|', '|', '|', ('multi_carrier_quote', '=', True), ('state', '!=', 'draft'),
+                    ('transport_mode_id', '=', False), ('shipment_type_id', '=', False), ('cargo_type_id', '=', False)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_shipment_quote_view_search" model="ir.ui.view">
+        <field name="name">shipment.quote.view.search.inherit</field>
+        <field name="model">shipment.quote</field>
+        <field name="inherit_id" ref="fm_quote.shipment_quote_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='current_month']" position="after">
+                <filter string="Multi Carrier Quote" name="multi_carrier_quote" domain="[('multi_carrier_quote', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

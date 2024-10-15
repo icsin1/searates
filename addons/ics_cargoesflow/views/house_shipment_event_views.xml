@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="freight_house_shipment_event_view_tree_extend" model="ir.ui.view">
+        <field name="name">freight.house.shipment.event.view.tree.extend</field>
+        <field name="model">freight.house.shipment.event</field>
+        <field name="inherit_id" ref="freight_management.freight_house_shipment_event_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='event_type_id']" position="before">
+                <field name="container_id" attrs="{'column_invisible': [('parent.mode_type', '=', 'air')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="freight_house_shipment_event_view_form_extend" model="ir.ui.view">
+        <field name="name">freight.house.shipment.event.view.tree.extend</field>
+        <field name="model">freight.house.shipment.event</field>
+        <field name="inherit_id" ref="freight_management.freight_house_shipment_event_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='location']" position="before">
+                <field name="container_id" attrs="{'invisible': [('parent.mode_type', '=', 'air')]}"/>
+            </xpath>
+        </field>
+    </record>
+   
+</odoo>

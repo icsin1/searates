@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="freight_master_charge_revenue_view_tree" model="ir.ui.view">
+        <field name="name">master.shipment.charge.revenue.view.tree.new.tab</field>
+        <field name="model">master.shipment.charge.revenue</field>
+        <field name="inherit_id" ref="freight_management_charges.freight_master_charge_revenue_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="before">
+                <button name="action_open_on_new_tab" type="object" title="Open on new tab" context="{'action': 'freight_management_charges.freight_master_shipment_view_revenue_charges_action'}" class="btn p-0 fa fa-external-link text-info"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

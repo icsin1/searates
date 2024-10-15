@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_wizard_account_global_tds_tax_all,access_wizard_account_global_tds_tax_all,model_wizard_account_global_tds_tax,base.group_user,1,1,1,1

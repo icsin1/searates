@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+    <t t-inherit="web.NavBar" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-call='web.NavBar.AppsMenu']" position="replace">
+        </xpath>
+    </t>
+    <t t-extend="UserMenu">
+        <t t-jquery=".oe_topbar_name" t-operation="attributes">
+            <attribute name="class">oe_topbar_name d-none</attribute>
+        </t>
+    </t>
+</template>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_schedule_selector_wizard_form" model="ir.ui.view">
+        <field name="name">sailing.schedule.selector.wizard.form</field>
+        <field name="model">sailing.schedule.selector.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="transport_mode_id" invisible="1"/>
+                <div class="row" name="top_group">
+                    <div class="col-3">
+                        <label for="origin_port_id"/>
+                        <field nolabel="1" name="origin_port_id" options="{'no_open': 1, 'no_create': True}"/>
+                    </div>
+                    <div class="col-3">
+                        <label for="destination_port_id"/>
+                        <field nolabel="1" name="destination_port_id" options="{'no_open': 1, 'no_create': True}"/>
+                    </div>
+                    <div class="col-3">
+                        <label for="carrier_id"/>
+                        <field nolabel="1" name="carrier_id" domain="[('transport_mode_id', '=', transport_mode_id)]" options="{'no_open': 1, 'no_create': True}"/>
+                    </div>
+                    <div class="col-3">
+                        <label for="vessel_id"/>
+                        <field nolabel="1" name="vessel_id" options="{'no_open': 1, 'no_create': True}"/>
+                    </div>
+                    <div class="col-6">
+                        <label for="departure_from_date"/>
+                        <div class="o_row">
+                            <field nolabel="1" placeholder="From" name="departure_from_date" /> - <field placeholder="To" nolabel="1" name="departure_to_date" />
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <label for="arrival_from_date"/>
+                        <div class="o_row">
+                            <field nolabel="1" placeholder="From" name="arrival_from_date" /> - <field placeholder="To" nolabel="1" name="arrival_to_date" />
+                        </div>
+                    </div>
+                </div>
+                <separator string="Schedules" attrs="{'invisible': [('schedule_ids', '=', [])]}"/>
+                <field name="schedule_ids" attrs="{'invisible': [('schedule_ids', '=', [])]}" readonly="1" options="{'no_open': True}" context="{'selector_wizard_id': active_id}">
+                    <tree>
+                        <button class="btn btn-sm btn-primary btn-icon fa fa-arrow-right" title="Select Schedule" type="object" name="action_select_schedule"/>
+                        <field name="name" />
+                        <field name="voyage_number" class="font-weight-bold"/>
+                        <field name="service_name" />
+                        <field name="carrier_id" />
+                        <field name="vessel_id" />
+                        <field name="scac_number" />
+                        <field name="imo_number" />
+                        <field name="origin_port_id" />
+                        <field name="destination_port_id" />
+                    </tree>
+                </field>
+                <footer>
+                    <button type="special" special="cancel" string="Cancel" class="btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

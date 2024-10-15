@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="edi_sr_einvoice_global" model="account.edi.format">
+            <field name="name">SearatesERP e-Invoice EDI</field>
+            <field name="code">edi_sr_env</field>
+        </record>
+    </data>
+</odoo>

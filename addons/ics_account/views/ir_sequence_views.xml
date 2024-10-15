@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_sequence_view_form" model="ir.ui.view">
+        <field name="name">ir.sequence.view.form</field>
+        <field name="model">ir.sequence</field>
+        <field name="inherit_id" ref="base.sequence_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sequence']" position="inside">
+                <group string="Fiscal Year" name="fiscal_year_sequence">
+                    <div>
+                        For using fiscal year start and end year you can start variables with 'fys_' and 'fye_'
+                        where fys is Fiscal Year Start and fye is Fiscal Year End.<br/>
+
+                        e.g. %%(fys_year)s for long and %%(fys_y)s for short same like %%(fye_year)s for long and %%(fye_y)s
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

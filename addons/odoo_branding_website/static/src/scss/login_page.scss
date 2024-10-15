@@ -1,0 +1,28 @@
+.odoo_website_bg_image {
+    background-image: none;
+    background-color: #F3F3F3 !important;
+    background-size: cover;
+
+    .oe_login_form, .oe_signup_form, .oe_reset_password_form {
+        margin: 10px auto;
+        max-width: 400px;
+        width: 100%;
+    }
+    .login_box_margin {
+        margin-right: 50px;
+    }
+    .login_card {
+        max-width: 400px;
+        width: 350px;
+        box-shadow: none;
+        margin: 0 auto;
+        @include media-breakpoint-up(lg) {
+            margin-right: auto;
+        }
+
+        @include media-breakpoint-down(sm) {
+            max-width: 100%;
+            width: 100%;
+        }
+    }
+}

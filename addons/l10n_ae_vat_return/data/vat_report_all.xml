@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="l10n_ae_vat201_report_detail" model="web.report">
+            <field name="name">VAT 201 Detail Report</field>
+            <field name="is_tax_report" eval="False"/>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="filter_multi_company">disabled</field>
+            <field name="filter_date_type">disabled</field>
+            <field name="enable_report_handler_code" eval="True"/>
+            <field name="report_handler_python_code">
+record_domain = report_line.get('record_domain')
+move_lines = model.search(record_domain)
+moves = move_lines.mapped('move_id')
+partners = moves.mapped('partner_id')
+journals = moves.mapped('journal_id')
+move_type = moves.move_type
+sign = -1 if move_type in ['out_invoice', 'out_refund'] else 1
+
+doc_type = {
+  'out_invoice': 'Customer Invoice',
+  'out_refund': 'Credit Note',
+  'in_invoice': 'Vendor Bill',
+  'in_refund': 'Vendor Credit Note'
+}
+
+result = {
+    'party_trn': partners and partners[0].vat or '',
+    'document_type': doc_type.get(move_type, ''),
+    'sign': sign
+}
+            </field>
+        </record>
+
+        <!-- Sections / Lines -->
+        <record id="l10n_ae_vat201_report_detail_section" model="web.report.line">
+            <field name="web_report_id" ref="l10n_ae_vat201_report_detail"/>
+            <field name="name">Report</field>
+            <field name="code">VAT</field>
+            <field name="sequence">1</field>
+            <field name="strict_on_date_range" eval="False"/>
+            <field name="hierarchy_level">1</field>
+            <field name="group_by_fields">id</field>
+            <field name="group_total" eval="False"/>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_report_name" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">document_type</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">document_type</field>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_title" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">title</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">document_type</field>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_report_party_name" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">partner_id</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">partner_id and partner_id[1] or ''</field>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_report_doc_no" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">move_name</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">move_name</field>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_report_l10n_ae_vat_amount" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">l10n_ae_vat_amount</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">l10n_ae_vat_amount</field>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_report_balance" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">balance</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">balance</field>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_report_vat_amount" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">vat_amount</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">balance / (price_total - l10n_ae_vat_amount) * sign if l10n_ae_vat_amount &gt; 0 else 0</field>
+            <field name="subformula_expression">round(vat_amount *l10n_ae_vat_amount , 3) if l10n_ae_vat_amount &gt; 0 else 0</field>
+            <field name="value_type">monetary</field>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_report_price_subtotal" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">price_subtotal</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">price_subtotal</field>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_report_non_tax_amount" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">non_tax_amount</field>
+            <field name="computation_engine">python_code</field>
+            <field name="value_type">monetary</field>
+            <field name="formula_expression">0 if l10n_ae_vat_amount &gt; 0 else abs(balance)</field>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_report_taxable_amount" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">taxable_amount</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">0 if non_tax_amount &gt; 0 else balance * sign</field>
+            <field name="value_type">monetary</field>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_report_price_total" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">price_total</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">price_total</field>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_report_amount_total" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">amount_total</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">taxable_amount + non_tax_amount + vat_amount</field>
+            <field name="value_type">monetary</field>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_report_party_trn" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">party_trn</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">party_trn</field>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_report_date" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">date</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">date</field>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_report_sign" model="web.report.expression">
+            <field name="web_report_line_id" ref="l10n_ae_vat201_report_detail_section"/>
+            <field name="name">sign</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">sign</field>
+        </record>
+
+        <!-- Columns -->
+        <record id="l10n_ae_vat201_report_detail_party_name" model="web.report.column">
+            <field name="web_report_id" ref="l10n_ae_vat201_report_detail"/>
+            <field name="name">Party Name</field>
+            <field name="expression_label">partner_id</field>
+            <field name="sequence">1</field>
+            <field name="value_type">string</field>
+            <field name="sortable" eval="True"/>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_party_trn" model="web.report.column">
+            <field name="web_report_id" ref="l10n_ae_vat201_report_detail"/>
+            <field name="name">Party TRN</field>
+            <field name="expression_label">party_trn</field>
+            <field name="sequence">2</field>
+            <field name="value_type">string</field>
+            <field name="sortable" eval="False"/>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_doc_no" model="web.report.column">
+            <field name="web_report_id" ref="l10n_ae_vat201_report_detail"/>
+            <field name="name">Document No</field>
+            <field name="expression_label">move_name</field>
+            <field name="sequence">3</field>
+            <field name="value_type">string</field>
+            <field name="sortable" eval="False"/>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_date" model="web.report.column">
+            <field name="web_report_id" ref="l10n_ae_vat201_report_detail"/>
+            <field name="name">Document Date</field>
+            <field name="expression_label">date</field>
+            <field name="sequence">3</field>
+            <field name="value_type">date</field>
+            <field name="sortable" eval="False"/>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_taxable_amount" model="web.report.column">
+            <field name="web_report_id" ref="l10n_ae_vat201_report_detail"/>
+            <field name="name">Taxable Amount</field>
+            <field name="expression_label">taxable_amount</field>
+            <field name="sequence">4</field>
+            <field name="value_type">monetary</field>
+            <field name="sortable" eval="False"/>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_non_price_subtotal" model="web.report.column">
+            <field name="web_report_id" ref="l10n_ae_vat201_report_detail"/>
+            <field name="name">Non Taxable Amount</field>
+            <field name="expression_label">non_tax_amount</field>
+            <field name="sequence">5</field>
+            <field name="value_type">monetary</field>
+            <field name="sortable" eval="False"/>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_vat_amount" model="web.report.column">
+            <field name="web_report_id" ref="l10n_ae_vat201_report_detail"/>
+            <field name="name">Vat Amount</field>
+            <field name="expression_label">vat_amount</field>
+            <field name="sequence">6</field>
+            <field name="value_type">monetary</field>
+            <field name="sortable" eval="False"/>
+        </record>
+
+        <record id="l10n_ae_vat201_report_detail_amount_total" model="web.report.column">
+            <field name="web_report_id" ref="l10n_ae_vat201_report_detail"/>
+            <field name="name">Total Amount</field>
+            <field name="expression_label">amount_total</field>
+            <field name="sequence">7</field>
+            <field name="value_type">monetary</field>
+            <field name="sortable" eval="False"/>
+        </record>
+    </data>
+
+    <data>
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('name', '=', 'l10n_ae_vat201_report_detail'), ('module', '=', 'l10n_ae_vat_return'), ('model', '=', 'web.report')]"/>
+            </function>
+            <value eval="{'noupdate': False}"/>
+        </function>
+
+        <record id="l10n_ae_vat_return.l10n_ae_vat201_report_detail" model="web.report">
+            <field name="report_handler_python_code">
+record_domain = report_line.get('record_domain')
+move_lines = model.search(record_domain)
+moves = move_lines.mapped('move_id')
+partners = moves.mapped('partner_id')
+journals = moves.mapped('journal_id')
+move_type = moves.move_type
+sign = -1 if move_type in ['out_invoice', 'out_refund'] else 1
+
+doc_type = {
+  'out_invoice': 'Customer Invoice',
+  'out_refund': 'Credit Note',
+  'in_invoice': 'Vendor Bill',
+  'in_refund': 'Vendor Credit Note'
+}
+
+result = {
+    'party_trn': partners and partners[0].vat or '',
+    'document_type': doc_type.get(move_type, ''),
+    'sign': sign
+}
+            </field>
+        </record>
+
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('name', '=', 'l10n_ae_vat201_report_detail'), ('module', '=', 'l10n_ae_vat_return'), ('model', '=', 'web.report')]"/>
+            </function>
+            <value eval="{'noupdate': True}"/>
+        </function>
+
+    </data>
+
+    <data>
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('name', 'in', ['l10n_ae_vat201_report_detail_report_vat_amount', 'l10n_ae_vat201_report_detail_report_taxable_amount']), ('module', '=', 'l10n_ae_vat_return'),
+                    ('model', '=', 'web.report.expression')]"/>
+            </function>
+            <value eval="{'noupdate': False}"/>
+        </function>
+
+        <record id="l10n_ae_vat_return.l10n_ae_vat201_report_detail_report_vat_amount" model="web.report.expression">
+            <field name="formula_expression">balance / (price_total - l10n_ae_vat_amount) * sign if l10n_ae_vat_amount &gt; 0 else 0</field>
+        </record>
+
+        <record id="l10n_ae_vat_return.l10n_ae_vat201_report_detail_report_taxable_amount" model="web.report.expression">
+            <field name="formula_expression">0 if non_tax_amount &gt; 0 else balance * sign</field>
+        </record>
+
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('name', 'in', ['l10n_ae_vat201_report_detail_report_vat_amount', 'l10n_ae_vat201_report_detail_report_taxable_amount']), ('module', '=', 'l10n_ae_vat_return'),
+                    ('model', '=', 'web.report.expression')]"/>
+            </function>
+            <value eval="{'noupdate': True}"/>
+        </function>
+
+    </data>
+
+</odoo>

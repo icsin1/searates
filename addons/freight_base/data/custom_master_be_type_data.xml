@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data>
+        <record id="custom_master_be_type_ex_bond" model="custom.master.be.type">
+            <field name="name">Ex-bond</field>
+        </record>
+        <record id="custom_master_be_type_house_consumption" model="custom.master.be.type">
+            <field name="name">House Consumption</field>
+        </record>
+        <record id="custom_master_be_type_warehouse" model="custom.master.be.type">
+            <field name="name">Warehouse</field>
+        </record>
+    </data>
+
+</odoo>

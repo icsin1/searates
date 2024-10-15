@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_us_country_freight_house_shipment_view_form" model="ir.ui.view">
+        <field name="name">freight.house.shipment.view.form.inherit</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="inherit_id" ref="freight_management.freight_house_shipment_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='customer_remarks']" position="after">
+                <field name="country_id" invisible="1"/>
+                <field name="ams_no" attrs="{'invisible': ['|', ('country_id', '!=', %(base.us)d),('shipment_type', '!=', 'IMP')]}"/>
+                <field name="it_number" attrs="{'invisible': ['|', ('country_id', '!=', %(base.us)d),('shipment_type', '!=', 'IMP')]}"/>
+                <field name="aes_number" attrs="{'invisible': ['|', ('country_id', '!=', %(base.us)d),('shipment_type', '!=', 'EXP')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="freight_house_shipment_inherit_view_tree_us_localization" model="ir.ui.view">
+        <field name="name">freight.house.shipment.inherit.view.tree.us.localization</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="inherit_id" ref="freight_management.freight_house_shipment_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='shipment_date']" position="after">
+                <field name="country_id" invisible="1"/>
+                <field name="shipment_type" invisible="1"/>
+                <field name="ams_no" optional="hide" attrs="{'invisible': ['|', ('country_id', '!=', %(base.us)d),('shipment_type', '!=', 'IMP')]}"/>
+                <field name="it_number" optional="hide" attrs="{'invisible': ['|', ('country_id', '!=', %(base.us)d),('shipment_type', '!=', 'IMP')]}"/>
+                <field name="aes_number" optional="hide" attrs="{'invisible': ['|', ('country_id', '!=', %(base.us)d),('shipment_type', '!=', 'EXP')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

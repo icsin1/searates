@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_dashboard_account" name="Show Dashboard Account" customize_show="True" inherit_id="ics_customer_portal_base.dashboard" priority="100">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Total Paid Amount</t>
+                <t t-set="classes">bg-info text-white</t>
+                <t t-set="hint"></t>
+                <t t-set="placeholder_count" t-value="'dashboard_account_total'"/>
+            </t>
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Total Due Amount</t>
+                <t t-set="classes">bg-warning text-white</t>
+                <t t-set="placeholder_count" t-value="'dashboard_account_due_total'" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/>
+            </t>
+        </xpath>
+    </template>
+    <template id="portal_web_layout_ff_shipment" inherit_id="ics_customer_portal_base.ics_customer_portal_menu">
+        <xpath expr="//ul[hasclass('sidebar-menu')]" position="inside">
+            <li class="nav-item">
+                <a href="/dashboard/account_invoice" class="nav-link text-400">
+                  <i class="fa fa-sticky-note-o"></i> Invoices
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="/dashboard/account_credit_note" class="nav-link text-400">
+                  <i class="fa fa-id-card"></i> Credit Note
+                </a>
+            </li>
+        </xpath>
+    </template>
+</odoo>

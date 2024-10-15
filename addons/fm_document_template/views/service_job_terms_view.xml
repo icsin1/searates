@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="service_job_terms_inherit_view_form" model="ir.ui.view">
+        <field name="name">service.job.terms.inherit.view.form</field>
+        <field name="model">freight.service.job.terms</field>
+        <field name="inherit_id" ref="fm_service_job.freight_service_job_terms_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='service_job_id']" position="before">
+                <field name="service_template_domain" invisible="1"/>
+                <label for="document_template_id"/>
+                    <div class="oe_title">
+                        <h2><field name="document_template_id" domain="service_template_domain" options="{'no_create': 1}"/></h2>
+                    </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="service_job_terms_inherit_view_tree" model="ir.ui.view">
+        <field name="name">service.job.terms.view.tree</field>
+        <field name="model">freight.service.job.terms</field>
+        <field name="inherit_id" ref="fm_service_job.freight_service_job_terms_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='document_type_id']" position="after">
+                <field name="document_template_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,19 @@
+{
+  "name": "stimulsoft-nodejs-pdf",
+  "version": "1.0.0",
+  "description": "Stimulsoft PDF Generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "stimulsoft",
+    "searateserp"
+  ],
+  "author": "Dharmang Soni",
+  "license": "ISC",
+  "dependencies": {
+    "stimulsoft-reports-js": "^2023.3.1",
+    "tiny-json-http": "^7.5.1"
+  }
+}

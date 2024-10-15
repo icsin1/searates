@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="shipment_quote_status_history_view_search" model="ir.ui.view">
+        <field name="name">shipment.quote.status.history.view.search</field>
+        <field name="model">shipment.quote.status.history</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="quote_id" />
+                <field name="status_change_date" />
+
+                <filter name="filter_date" string="Changed On" date="status_change_date" />
+                <filter name="group_by_quote" string="Quote" context="{'group_by': 'quote_id'}" />
+                <filter name="group_by_change_date" string="Changed Date" context="{'group_by': 'status_change_date:day'}" />
+                <filter name="group_by_change_status" string="By Status" context="{'group_by': 'status'}" />
+                <filter name="group_by_change_user" string="By User" context="{'group_by': 'user_id'}" />
+            </search>
+        </field>
+    </record>
+
+    <record id="shipment_quote_status_history_view_tree" model="ir.ui.view">
+        <field name="name">shipment.quote.status.history.view.tree</field>
+        <field name="model">shipment.quote.status.history</field>
+        <field name="arch" type="xml">
+            <tree create="false" delete="false">
+                <field name="quote_id" />
+                <field name="status" />
+                <field name="status_change_date" string="Changed On"/>
+                <field name="user_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="shipment_quote_status_history_action" model="ir.actions.act_window">
+        <field name="name">Quote Analysis by Status</field>
+        <field name="res_model">shipment.quote.status.history</field>
+        <field name="view_mode">tree</field>
+        <field name="domain">[]</field>
+        <field name="context">{'search_default_group_by_quote': 1, 'search_default_group_by_change_date': 1}</field>
+    </record>
+
+    <menuitem
+        id="menu_shipment_quote_status_history"
+        name="Quote Analysis by Status"
+        action="shipment_quote_status_history_action"
+        parent="fm_sale_crm.fm_sales_crm_reports"/>
+</odoo>

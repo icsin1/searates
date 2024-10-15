@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="ics_account_pdc_view_account_payment_register_form" model="ir.ui.view">
+            <field name="name">ics_account_pdc.account.payment.register.form</field>
+            <field name="model">account.payment.register</field>
+            <field name="inherit_id" ref="account.view_account_payment_register_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_bank_id']" position="after">
+                    <field name="show_cheque_information" invisible="1" />
+                    <field name="cheque_no"
+                           attrs="{'invisible': [('show_cheque_information', '=', False)],
+                           'required': [('show_cheque_information', '=', True)]}"/>
+                    <field name="cheque_date"
+                           attrs="{'invisible': [('show_cheque_information', '=', False)],
+                           'required': [('show_cheque_information', '=', True)]}"/>
+                    <field name="cheque_ref"
+                           attrs="{'invisible': [('show_cheque_information', '=', False)],
+                           'required': [('show_cheque_information', '=', True)]}"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

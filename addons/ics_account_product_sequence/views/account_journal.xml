@@ -1,0 +1,25 @@
+<odoo>
+    <data>
+        <record id="view_account_journal_form_sequence_freight_product" model="ir.ui.view">
+            <field name="name">account.journal.form.inherit</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="arch" type="xml">
+                <field name="sequence_id" position="after">
+                    <field name="seq_base_on_product"/>
+                </field>
+                <xpath expr="//page[@name='bank_account']" position="inside">
+                    <field name="journal_move_sequence_ids" nolable="1"
+                           attrs="{'invisible': [('seq_base_on_product','=',False)]}">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="freight_product_id" required="1"/>
+                            <field name="sequence_id" required="1"/>
+                            <field name="reverse_sequence_id" attrs="{'column_invisible': [('parent.type', 'not in', ['purchase', 'sale'])], 'required': [('parent.type', 'in', ['purchase', 'sale'])]}"/>
+                        </tree>
+                    </field>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_shipment_quote_reject_reason_form" model="ir.ui.view">
+        <field name="name">shipment.quote.reject.reason.form</field>
+        <field name="model">shipment.quote.reject.reason</field>
+        <field name="arch" type="xml">
+            <form>
+                <group colspan="2">
+                    <field name="quote_id" invisible="1"/>
+                    <field name="reason" required="1"/>
+                </group>
+                <footer>
+                    <button type="object" string="Submit" name="submit_rejection" class="btn btn-primary"/>
+                    <button type="special" special="cancel" string="Cancel" class="btn btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="shipment_quote_reject_reason_wizard_action">
+        <field name="name">Quote Reject Reason</field>
+        <field name="res_model">shipment.quote.reject.reason</field>
+        <field name="view_mode">form</field>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

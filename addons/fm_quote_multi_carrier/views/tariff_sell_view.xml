@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="inherit_tariff_sell_view_form" model="ir.ui.view">
+        <field name="name">tariff.sell.form.inherit</field>
+        <field name="model">tariff.sell</field>
+        <field name="inherit_id" ref="fm_tariff.tariff_sell_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='carrier_id']" position="after">
+                <field name="incoterm_id" options="{'no_open': 1, 'no_create': 1}" attrs="{'invisible': [('tariff_for', '=', 'job')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

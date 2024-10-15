@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="ics_account_partner_outstanding_report" model="web.report">
+            <field name="name">Partner Outstanding Report</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="data_match_domain" eval="[('move_id.state', '=', 'posted'), ('partner_id', '!=', False)]"/>
+            <field name="filter_multi_company">selector</field>
+            <field name="filter_date_type">as_on_today</field>
+            <field name="default_opening_date">today</field>
+            <field name="date_field" ref="account.field_account_move_line__date"/>
+            <field name="report_handler_model_id" ref="fm_operation_reports.model_partner_outstanding_statement_report"/>
+            <field name="enable_report_handler_code" eval="False"/>
+            <field name="is_account_report" eval="True"/>
+        </record>
+
+        <record id="fm_account_partner_section_line" model="web.report.line">
+            <field name="web_report_id" ref="ics_account_partner_outstanding_report"/>
+            <field name="name">Partners</field>
+            <field name="code">PRTOTS</field>
+            <field name="sequence">1</field>
+            <field name="hierarchy_level">1</field>
+            <field name="group_total" eval="False"/>
+            <field name="group_by_fields">partner_id,id</field>
+            <field name="action_id" ref="account.action_move_journal_line"/>
+            <field name="action_field_id" ref="account.field_account_move_line__move_id"/>
+            <field name="strict_on_date_range" eval="True" />
+        </record>
+
+        <!-- Expression -->
+        <record id="fm_report_partner_outstnading_move_name" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_account_partner_section_line"/>
+            <field name="name">move_name</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">move_name</field>
+            <field name="value_type">string</field>
+        </record>
+
+        <record id="fm_report_partner_outstnading_title" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_account_partner_section_line"/>
+            <field name="name">title</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">move_name</field>
+            <field name="value_type">string</field>
+        </record>
+
+        <record id="fm_report_partner_outstnading_voucher_number" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_account_partner_section_line"/>
+            <field name="name">voucher_number</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">move_name</field>
+            <field name="value_type">string</field>
+        </record>
+
+        <record id="fm_report_partner_outstnading_currency_id" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_account_partner_section_line"/>
+            <field name="name">currency_id</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">currency_id and currency_id[1]</field>
+            <field name="value_type">string</field>
+        </record>
+
+        <record id="fm_report_partner_outstnading_invoice_date" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_account_partner_section_line"/>
+            <field name="name">invoice_date</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">invoice_date</field>
+            <field name="value_type">date</field>
+        </record>
+
+        <record id="fm_report_partner_outstnading_date" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_account_partner_section_line"/>
+            <field name="name">date</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">date</field>
+            <field name="value_type">date</field>
+        </record>
+
+        <record id="fm_report_partner_outstnading_date_maturity" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_account_partner_section_line"/>
+            <field name="name">date_maturity</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">date_maturity</field>
+            <field name="value_type">date</field>
+        </record>
+
+        <record id="fm_report_partner_outstnading_amount" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_account_partner_section_line"/>
+            <field name="name">amount</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">_report_handler_partner_outstanding_report_data</field>
+            <field name="value_type">monetary</field>
+            <field name="currency_field_name">currency_id</field>
+        </record>
+
+        <record id="fm_report_partner_outstnading_narration" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_account_partner_section_line"/>
+            <field name="name">narration</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">_report_handler_partner_outstanding_report_data</field>
+            <field name="subformula_expression">narration</field>
+            <field name="value_type">text</field>
+        </record>
+
+        <record id="fm_report_partner_outstnading_os_amount" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_account_partner_section_line"/>
+            <field name="name">os_amount</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">_report_handler_partner_outstanding_report_data</field>
+            <field name="subformula_expression">os_amount</field>
+            <field name="value_type">monetary</field>
+        </record>
+
+        <record id="fm_report_partner_outstnading_running_total" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_account_partner_section_line"/>
+            <field name="name">running_total</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">_report_handler_partner_outstanding_report_data</field>
+            <field name="subformula_expression">running_total</field>
+            <field name="value_type">monetary</field>
+        </record>
+
+        <record id="fm_report_partner_outstnading_ageing" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_account_partner_section_line"/>
+            <field name="name">ageing</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">_report_handler_partner_outstanding_report_data</field>
+            <field name="subformula_expression">ageing</field>
+            <field name="value_type">integer</field>
+        </record>
+
+        <!-- Columns -->
+        <record id="fm_report_partner_outstanding_column_date" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_outstanding_report"/>
+            <field name="name">Date</field>
+            <field name="expression_label">invoice_date</field>
+            <field name="sequence">0</field>
+            <field name="sortable" eval="True"/>
+            <field name="value_type">date</field>
+        </record>
+
+        <record id="fm_report_partner_outstanding_column_voucher_number" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_outstanding_report"/>
+            <field name="name">Voucher Number</field>
+            <field name="expression_label">voucher_number</field>
+            <field name="sequence">1</field>
+            <field name="value_type">string</field>
+        </record>
+
+        <record id="fm_report_partner_outstanding_column_narration" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_outstanding_report"/>
+            <field name="name">Narration</field>
+            <field name="expression_label">narration</field>
+            <field name="sequence">2</field>
+            <field name="value_type">text</field>
+        </record>
+
+        <record id="fm_report_partner_outstanding_column_date_maturity" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_outstanding_report"/>
+            <field name="name">Due Date</field>
+            <field name="expression_label">date_maturity</field>
+            <field name="sequence">3</field>
+            <field name="value_type">date</field>
+        </record>
+
+        <record id="fm_report_partner_outstanding_column_amount" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_outstanding_report"/>
+            <field name="name">Amount</field>
+            <field name="expression_label">amount</field>
+            <field name="sequence">4</field>
+            <field name="value_type">monetary</field>
+        </record>
+
+        <record id="fm_report_partner_outstanding_column_os_amount" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_outstanding_report"/>
+            <field name="name">O/S Amount</field>
+            <field name="expression_label">os_amount</field>
+            <field name="sequence">5</field>
+            <field name="value_type">monetary</field>
+        </record>
+
+        <record id="fm_report_partner_outstanding_column_running_total" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_outstanding_report"/>
+            <field name="name">Running Total</field>
+            <field name="expression_label">running_total</field>
+            <field name="sequence">6</field>
+            <field name="value_type">monetary</field>
+        </record>
+
+        <record id="fm_report_partner_outstanding_column_ageing" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_outstanding_report"/>
+            <field name="name">Ageing</field>
+            <field name="expression_label">ageing</field>
+            <field name="sequence">7</field>
+            <field name="value_type">integer</field>
+        </record>
+
+        <record id="fm_report_partner_outstanding_filter_customer" model="web.report.filter">
+            <field name="web_report_id" ref="ics_account_partner_outstanding_report"/>
+            <field name="name">Customers</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="ir_model_field_id" ref="account.field_account_move_line__partner_id"/>
+            <field name="filter_type">multi_relation</field>
+            <field name="filter_key">filter_customers</field>
+        </record>
+
+        <record id="ics_report_partner_outstanding_filter_based_on_date" model="web.report.filter">
+            <field name="web_report_id" ref="ics_account_partner_outstanding_report"/>
+            <field name="name">Based On</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="filter_key">filter_based_on</field>
+            <field name="filter_type">choice</field>
+            <field name="icon">fa-file</field>
+            <field name="sequence">2</field>
+            <field name="choice_ids" eval="[
+                (6, False, []),
+                (0, 0, {
+                    'name': 'Due Date',
+                    'choice_key': 'due_date',
+                    'is_default': True,
+                    'sequence': 1
+                }),
+                (0, 0, {
+                    'name': 'Invoice Date',
+                    'choice_key': 'date',
+                    'sequence': 2
+                }),
+            ]"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--  Freight Admin Manage -->
+    <menuitem
+        id="root_freight_admin_configurations"
+        name="Administration"
+        groups="base.group_system"
+        web_icon="freight_base,static/src/images/config_app_icon.png"
+        sequence="1"/>
+
+    <menuitem
+        id="root_freight_admin_manage_menu"
+        name="Manage"
+        parent="root_freight_admin_configurations"
+        sequence="1"/>
+
+    <menuitem
+        id="root_freight_users_companies"
+        name="Companies &amp; Users"
+        parent="root_freight_admin_configurations"
+        sequence="2"/>
+
+    <!-- Companies, departments and users -->
+    <menuitem
+        id="menu_fm_res_companies"
+        name="Companies"
+        action="base.action_res_company_form" 
+        parent="root_freight_users_companies"
+        sequence="1"
+    />
+    <menuitem
+        id="menu_fm_res_users"
+        name="Users"
+        action="base.action_res_users" 
+        parent="root_freight_users_companies"
+        sequence="4"
+    />
+
+    <!-- System Admin Masters -->
+    <menuitem
+        id="root_freight_master_configuration"
+        name="Freight Masters"
+        groups="odoo_base.group_freight_technical_support_team"
+        parent="root_freight_admin_configurations"
+        sequence="10"/>
+    
+    <menuitem
+        id="incoterms_master_menu"
+        name="Incoterm"
+        action="account.action_incoterms_tree"
+        parent="root_freight_admin_manage_menu"
+        sequence="1"/>
+    
+    <menuitem
+        id="fe_uom_uom_master_menu"
+        name="Unit of Measures"
+        action="uom.product_uom_categ_form_action"
+        parent="root_freight_master_configuration"
+        sequence="2"/>
+
+    <menuitem
+        id="root_freight_operations"
+        name="Operations"
+        web_icon="freight_base,static/src/images/freight_app_icon.png"
+        groups="freight_base.group_operation_associate,freight_base.group_manage_documents,base.group_erp_manager"
+        sequence="3"/>
+
+    <menuitem
+        id="freight_operations_configuration"
+        name="Configuration"
+        parent="freight_base.root_freight_operations"
+        sequence="100"/>
+
+    <data>
+        <record id="root_freight_operations" model="ir.ui.menu">
+            <field name="theme_menu_access_allowed" eval="True"/>
+        </record>
+
+        <record id="root_freight_admin_configurations" model="ir.ui.menu">
+            <field name="theme_menu_access_allowed" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

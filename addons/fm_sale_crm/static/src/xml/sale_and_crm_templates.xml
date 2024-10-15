@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="dashboard.fm_sale_crm" owl="1">
+        <div class="o_content">
+            <div class="container-fluid">
+                <div class="row py-4">
+                    <div class="col-12">
+                        <GraphView
+                        title="'Target vs Actual'"
+                        method="'get_budget_data'"
+                        labelField="'Label'"
+                        dataField="'Value'"
+                        multi="true"
+                        type="['table', 'bar']"
+                        kwargs="self => { return {'filter': self.state.filter, 'type': self.state.type} }"
+                        filter="'teu'"
+                        limit="5"
+                        filterOptions="{
+                            'weight': 'Weight',
+                            'volume': 'Volume',
+                            'gross_revenue': 'Gross Revenue',
+                            'gross_margin': 'Gross Margin',
+                            'teu': 'TEUs',
+                        }"
+                        download="true"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

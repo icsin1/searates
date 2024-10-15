@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="freight_house_shipment_view_search_dashboard" model="ir.ui.view">
+        <field name="name">freight.house.shipment.view.search</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="arch" type="xml">
+            <search string="Shipment">
+                <field name="name" string="Search Shipment" filter_domain="['|', '|', '|', '|', ('booking_nomination_no', 'ilike', self), ('hbl_number', 'ilike', self), ('package_ids.container_number', 'ilike', self), ('container_ids.container_number', 'ilike', self), ('tag_ids.name', 'ilike', self)]"/>
+                <field name="hbl_number" optional="hide"/>
+                <field name="booking_nomination_no" string="Booking Ref / Nomination No" />
+                <field name="carrier_booking_reference_number" string="MBL Number"/>
+                <field name="parent_id" string="Master Shipment" />
+                <field name="tag_ids"/>
+                <field name="client_id" />
+                <field name="shipper_id" />
+                <field name="consignee_id" />
+                <field name="transport_mode_id"/>
+                <field name="origin_un_location_id"/>
+                <field name="destination_un_location_id"/>
+                <separator/>
+                <filter string="My Shipments" name="filter_my_shipments" domain="[('user_id', '=', uid)]" />
+                <separator/>
+                <filter string="Open House" name="open_house" invisible="context.get('show_master_shipment', False)" domain="[('state', '!=', 'cancelled')]" />
+                <separator/>
+                <filter name="current_month" string="Current Month" domain="[
+                    ('shipment_date', '&gt;=', (context_today()).strftime('%Y-%m-01')),
+                    ('shipment_date', '&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                <filter name="shipment_date" string="Shipment Date" date="shipment_date"/>
+                <filter name="create_date" string="Create Date" date="create_date"/>
+                <filter name="ata_time" string="ATA" date="ata_time"/>
+                <filter name="atd_time" string="ATD" date="atd_time"/>
+                <filter name="eta_time" string="ETA" date="eta_time"/>
+                <filter name="etd_time" string="ETD" date="etd_time"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="fm_shipment_dashboard" model="ir.actions.client">
+        <field name="name">Shipment Dashboard</field>
+        <field name="tag">fm_shipment_dashboard</field>
+        <field name="context">{'search_default_current_month': 1, 'search_view_ref': 'freight_management_charges.freight_house_shipment_view_search_dashboard'}</field>
+        <field name="res_model">freight.house.shipment</field>
+    </record>
+
+    <record id="fm_bookings_dashboard" model="ir.actions.client">
+        <field name="name">Carrier Booking Dashboard</field>
+        <field name="tag">fm_bookings_dashboard</field>
+        <field name="context">{'search_default_current_month': 1}</field>
+        <field name="res_model">freight.master.shipment</field>
+    </record>
+
+    <menuitem name="Shipment Dashboard"
+        id="menu_fm_shipment_dashboard"
+        parent="fm_dashboard.fm_dashboard_root_menu"
+        action="fm_shipment_dashboard"
+              groups="freight_base.group_operation_manager,base.group_system"
+        sequence="2"
+    />
+    <menuitem name="Carrier Booking Dashboard"
+        id="menu_fm_bookings_dashboard"
+        parent="fm_dashboard.fm_dashboard_root_menu"
+        action="fm_bookings_dashboard"
+              groups="freight_base.group_operation_associate,base.group_system"
+        sequence="3"
+    />
+</odoo>

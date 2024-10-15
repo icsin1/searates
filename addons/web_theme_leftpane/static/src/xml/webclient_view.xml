@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-inherit="web.WebClient" t-inherit-mode="extension" owl="1">
+        <xpath expr="//body" position="replace">
+            <body class="o_web_client" t-att-class="{'o_is_superuser': user.userId === 1, 'o_rtl': localization.direction === 'rtl' }">
+                <div class="wtl-container">
+                    <div class="wtl-left-menu">
+                        <t t-call="web_theme_leftpane.NavBar.AppsMenu"/>
+                    </div>
+                    <div class="wtl-main-body">
+                        <NotUpdatable>
+                            <NavBar/>
+                        </NotUpdatable>
+                        <NotUpdatable>
+                            <ActionContainer/>
+                        </NotUpdatable>
+                        <MainComponentsContainer/>
+                    </div>
+                </div>
+            </body>
+        </xpath>
+    </t>
+    <t t-name="web_theme_leftpane.MenuItem" owl="1">
+        <div class="menu-container">
+            <div class="menu-header">
+                <img t-att-src="'/web/image?model=res.users&amp;field=avatar_128&amp;id=' + props.user.userId"/> <span class="user-name font-weight-bold"><t t-esc="props.user.name"/></span>
+            </div>
+            <div class="menu-items flex-fill">
+                <t t-foreach="props.apps" t-as="app">
+                    <t t-set="background_url" t-value="'/web/image/?model=ir.ui.menu&amp;field=web_icon&amp;id=' + app.id"/>
+                    <a role="menuitem" t-att-href="getMenuItemHref(app)"
+                        t-key="app.id"
+                        t-on-click="onClick(app)"
+                        t-att-class="'o_app ' + (isActiveMenu(app) ? 'active': '')"
+                        t-att-data-id="app.id"
+                        t-att-data-menu-id="app.menuID"
+                        t-att-data-menu-xmlid="app.xmlID"
+                        t-att-data-action-id="app.actionID">
+                            <img class="o-app-icon" draggable="false" t-att-src="'data:image/png;base64,' + app.webIconData" />
+                            <t t-esc="app.name"/>
+                    </a>
+                </t>
+            </div>
+        </div>
+    </t>
+    <t t-name="web_theme_leftpane.NavBar.AppsMenu" owl="1">
+        <MenuItemCustom apps="menuService.getApps()" user="user" />
+    </t>
+</templates>

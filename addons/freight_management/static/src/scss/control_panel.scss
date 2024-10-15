@@ -1,0 +1,29 @@
+$master-base-color: #cbe4f9;
+$master-base-darker: darken($master-base-color, 15%);
+$house-base-color: #eff9da;
+$house-base-darker: darken($house-base-color, 15%);
+
+.o_view_controller {
+    .o_control_panel.master {
+        background-color: $master-base-color;
+        border-color: $master-base-darker;
+        .breadcrumb {
+            background-color: $master-base-color;
+        }
+        button.dropdown-toggle,.o_pager_previous,.o_pager_next {
+            background-color: $master-base-darker;
+            border-color: $master-base-darker;
+        }
+    }
+    .o_control_panel.house {
+        background-color: $house-base-color;
+        border-color: $house-base-darker;
+        .breadcrumb {
+            background-color: $house-base-color;
+        }
+        button.dropdown-toggle,.o_pager_previous,.o_pager_next {
+            background-color: $house-base-darker;
+            border: $house-base-darker;
+        }
+    }
+}

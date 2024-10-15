@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_move_inherited_form" model="ir.ui.view">
+        <field name="name">account.move.inherited.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_incoterm_id']" position="before">
+                <label for="booking_reference" string="Booking Reference" attrs="{'invisible': [('move_type', 'not in', ('in_invoice'))]}" />
+                <field name="booking_reference" nolabel="1" attrs="{'invisible': [('move_type', 'not in', ('in_invoice'))]}" force_save="1"/>
+            </xpath>
+            <xpath expr="//field[@name='invoice_user_id']" position="attributes">
+                <attribute name="string">Sales Agent</attribute>
+            </xpath>
+            <xpath expr="//field[@name='invoice_incoterm_id']" position="attributes">
+                <attribute name="string">Incoterms</attribute>
+                <attribute name="attrs">{'readonly': [('payment_state', 'in', ['paid', 'partial'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='ref']" position="after">
+                <field name="from_shipment_charge" invisible="1"/>
+            </xpath>
+            <xpath expr="//group[@id='other_tab_group']/group/field[@name='user_id']" position="before">
+                <field name="booking_reference"/>
+            </xpath>
+            <xpath expr="//group[@id='other_tab_group']/group/label[@for='ref']" position="replace"/>
+            <xpath expr="//group[@id='other_tab_group']/group/field[@name='ref']" position="replace"/>
+
+            <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='product_id']" position="before">
+                <field name="house_shipment_id" options="{'no_create':1}"
+                    attrs="{'column_invisible': ['|', ('parent.from_shipment_charge', '=', False), ('parent.add_charges_from', '!=', 'house')]}"/>
+                <field name="master_shipment_id" options="{'no_create':1}"
+                    attrs="{'column_invisible': ['|', ('parent.from_shipment_charge', '=', False), ('parent.add_charges_from', '!=', 'master')]}" />
+            </xpath>
+            <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='account_id']" position="after">
+                <field name="shipment_charge_currency_id" options="{'no_create':1}" readonly="1" force_save="1"
+                    attrs="{'column_invisible': [('parent.from_shipment_charge', '=', False)]}"/>
+                 <field name="acc_line_doc_id" invisible="1"/>
+                <field name="account_line_doc_ids" invisible="1"/>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="action_open_house_shipment" type="object"
+                    class="oe_stat_button" icon="fa-truck" attrs="{'invisible': [('house_shipment_ids', '=', [])]}">
+                    <field name="house_shipment_ids" invisible="1"/>
+                    <span class="o_stat_text">House Shipment</span>
+                </button>
+                <button name="action_open_invoices" type="object" attrs="{'invisible': [('move_type', '!=', 'out_refund')]}" class="oe_stat_button" icon="fa-pencil-square-o">
+                    <field name="invoice_total" string="Invoice Total" widget="statinfo"/>
+                </button>
+                <button name="action_open_credit_notes" type="object" attrs="{'invisible': [('move_type', '!=', 'out_invoice')]}" class="oe_stat_button" icon="fa-pencil-square-o">
+                    <field name="credit_total" string="Credit Note" widget="statinfo"/>
+                </button>
+                <button name="action_open_bills" type="object" attrs="{'invisible': [('move_type', '!=', 'in_refund')]}" class="oe_stat_button" icon="fa-pencil-square-o">
+                    <field name="bill_total" string="Bill Total" widget="statinfo"/>
+                </button>
+                <button name="action_open_debit_notes" type="object" attrs="{'invisible': [('move_type', '!=', 'in_invoice')]}" class="oe_stat_button" icon="fa-pencil-square-o">
+                    <field name="debit_total" string="Debit Note" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//group[@id='header_left_group']" position="inside">
+                <field name="add_charges_from" widget="radio" options="{'horizontal': True}" attrs="{'invisible': [('move_type', 'not in', ['in_invoice', 'out_invoice'])], 'readonly': ['|', ('payment_state', 'in', ['paid', 'partial']), ('state', '!=', 'draft')]}"/>
+                <field name="allowed_house_shipment_ids" widget="many2many_tags" invisible="1"/>
+                <label for="charge_house_shipment_ids" attrs="{'invisible': ['|', ('move_type', 'not in', ['in_invoice', 'out_invoice']), ('add_charges_from', '!=', 'house')]}"/>
+                <div class="o_row" name="house_shipments" attrs="{'invisible': ['|', ('move_type', 'not in', ['in_invoice', 'out_invoice']), ('add_charges_from', '!=', 'house')]}">
+                    <field name="charge_house_shipment_ids" domain="[('id', 'in', allowed_house_shipment_ids)]"
+                           widget="many2many_tags" attrs="{'readonly': ['|', ('payment_state', 'in', ['paid', 'partial']), ('state', '!=', 'draft')]}" options="{'no_create': True}"/>
+                    <button id="house_charge_update_button" name="add_charges_from_house_shipment" type="object" string="Add/Update Charges"
+                            class="oe_highlight oe_edit_only"
+                            attrs="{'invisible': ['|', ('charge_house_shipment_ids', '=', False), ('payment_state', 'in', ['paid', 'partial'])]}"/>
+                </div>
+                <field name="allowed_master_shipment_ids" widget="many2many_tags" invisible="1"/>
+                <label for="charge_master_shipment_ids" attrs="{'invisible': ['|', ('move_type', 'not in', ['in_invoice', 'out_invoice']), ('add_charges_from', '!=', 'master')]}" />
+                <div class="o_row" name="master_shipments" attrs="{'invisible': ['|', ('move_type', 'not in', ['in_invoice', 'out_invoice']), ('add_charges_from', '!=', 'master')]}">
+                    <field name="charge_master_shipment_ids" domain="[('id', 'in', allowed_master_shipment_ids)]"
+                           widget="many2many_tags" options="{'no_create': True}" />
+                    <button id="master_charge_update_button" name="add_charges_from_master_shipment" type="object" string="Add/Update Charges"
+                            class="oe_highlight oe_edit_only"
+                            attrs="{'invisible': [('charge_master_shipment_ids', '=', False)]}"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//field[@name='narration']" position="attributes">
+                <attribute name="attrs">{'readonly': [('payment_state', 'in', ['paid', 'partial'])]}</attribute>
+            </xpath>
+
+            <xpath expr="//group[@id='header_left_group']/field[@name='ref']" position="attributes">
+                <attribute name="attrs">{'invisible':[('move_type', 'not in', ('in_invoice', 'in_receipt', 'in_refund'))], 'readonly': [('payment_state', 'in', ['paid', 'partial'])],
+                    'required': [('move_type', 'in', ['in_invoice', 'in_refund']), ('country_code', '=', 'IN')]}</attribute>
+            </xpath>
+            <xpath expr="//group[@id='header_left_group']/field[@name='ref'][2]" position="attributes">
+                <attribute name="attrs">{'invisible':[('move_type', 'in', ('in_invoice', 'in_receipt', 'in_refund', 'out_invoice', 'out_refund'))], 'readonly': [('payment_state', 'in', ['paid', 'partial'])]}</attribute>
+            </xpath>
+            <xpath expr="//group[@id='other_tab_group']/group/field[@name='invoice_user_id']" position="attributes">
+                <attribute name="attrs">{'readonly': [('payment_state', 'in', ['paid', 'partial'])]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='to_check']" position="attributes">
+                <attribute name="attrs">{'readonly': [('payment_state', 'in', ['paid', 'partial'])]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='partner_bank_id']" position="after">
+                <div class="o_row o_td_label">
+                    <label for="invoice_id" attrs="{'invisible':[('move_type','!=','out_refund')]}"/>
+                    <label for="invoice_id" string="Vendor Bill" attrs="{'invisible':[('move_type','!=','in_refund')]}"/>
+                </div>
+                <div class="o_row" attrs="{'invisible':[('move_type','not in', ('out_refund', 'in_refund'))]}">
+                    <field name="invoice_id" domain="[('id', 'in', allowed_invoice_bill_moves)]"
+                        options="{'no_create':1}" attrs="{'readonly':[('state' ,'!=', 'draft')]}"/>
+                    <button name="action_fetch_invoice" type="object" string="Fetch Invoice"
+                        class="oe_highlight oe_edit_only" attrs="{'invisible': ['|', ('invoice_id', '=', False), ('state' ,'!=', 'draft')]}"/>
+                </div>
+            </xpath>
+
+            <xpath expr="//field[@name='to_check']" position="after">
+                <field name="allowed_invoice_bill_moves" widget="many2many_tags" invisible="1"/>
+            </xpath>
+             <xpath expr="//field[@name='narration']" position="attributes">
+                 <attribute name="placeholder">Remarks</attribute>
+            </xpath>
+
+            <xpath expr="//button[@name='action_post']" position="after">
+                <button string="Adjust Invoice" name="action_adjust_invoice_against_credit" type="object" class="oe_highlight"
+                    attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('payment_state', '=', 'paid'),('move_type','!=', 'out_refund')]}"/>
+                <button string="Adjust Bill" name="action_adjust_invoice_against_credit" type="object" class="oe_highlight"
+                    attrs="{'invisible':['|', '|',('state', '!=', 'posted'), ('payment_state', '=', 'paid'),('move_type','!=', 'in_refund')]}"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <record id="inherit_view_invoice_tree" model="ir.ui.view">
+        <field name="name">account.move.tree.inherit</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="invoice_date" position="after">
+                <field name="house_shipment_ids" widget="many2many_tags"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_move_line_tree_grouped_booking" model="ir.ui.view">
+        <field name="name">account.move.line.tree.grouped.booking</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_tree_grouped"/>
+        <field name="arch" type="xml">
+            <field name="name" position="before">
+                <field name="booking_reference" string="Booking Reference" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_move_reversal" model="ir.ui.view">
+        <field name="name">account.move.reversal.inherited</field>
+        <field name="model">account.move.reversal</field>
+        <field name="inherit_id" ref="account.view_account_move_reversal"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='reverse_moves']" position="attributes">
+                <attribute name="context">{'from_reverse': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

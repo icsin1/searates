@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<template>
+
+    <t t-name="odoo_web.preview">
+        <button type="button" t-attf-class="btn btn-primary btn-preview {{ widget.class }}">
+            <span><t t-esc="widget.text"/></span>
+        </button>
+    </t>
+
+    <t t-name="odoo_web.pdf_viewer">
+        <div class="modal o_modal_fullscreen" tabindex="-1" data-keyboard="false" role="dialog">
+            <div class="o_viewer_content o_AttachmentViewer">
+                <t t-set="model" t-value="widget.modelName"/>
+                <div class="o_AttachmentViewer_header">
+                    <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_name">
+                        <span class="o_AttachmentViewer_nameText text-truncate" t-esc="widget.activeAttachment.name"/>
+                    </div>
+                    <div class="o-autogrow"/>
+                    <div class="o_AttachmentViewer_buttonDownload o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton btn btn-light" style="border-radius: 0 !important;" role="button" title="Download">
+                        <i class="o_AttachmentViewer_headerItemButtonIcon fa fa-download fa-fw pr-1" role="img"/>
+                        <span>Download</span>
+                    </div>
+                    <t t-foreach="widget.buttons" t-as="button">
+                        <div class="o_AttachmentViewer_buttonAction o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton" role="button" title="Download" t-att-data-method="button.method">
+                            <i t-if="button.class" t-att-class="button.class" role="img"/>
+                            <span t-esc="button.string"/>
+                        </div>
+                    </t>
+                    <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_headerItemButton o_AttachmentViewer_headerItemButtonClose" role="button" title="Close (Esc)" aria-label="Close">
+                        <i class="fa fa-fw fa-times" role="img"/>
+                    </div>
+                </div>
+                <div class="o_AttachmentViewer_main">
+                    <iframe class="o_AttachmentViewer_view o_AttachmentViewer_viewIframe o_AttachmentViewer_viewPdf" t-att-src="widget.preview_url"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>

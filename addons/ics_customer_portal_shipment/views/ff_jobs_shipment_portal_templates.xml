@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="ff_jobs_portal_layout" name="FF Jobs Portal Layout" inherit_id="portal.portal_breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'ff_jobs_shipment' or ff_job" t-attf-class="breadcrumb-item active">
+                <a t-if="ff_job" t-attf-href="/dashboard/ff_jobs_shipment?{{ keep_query() }}">FF Jobs</a>
+                <t t-else="">FF Jobs</t>
+            </li>
+
+            <li t-if="ff_job" class="breadcrumb-item active">
+                <t t-esc="ff_job.booking_nomination_no"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_ff_jobs_shipment" name="Show FF Jobs Shipment" customize_show="True"
+              inherit_id="portal.portal_my_home" priority="31">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">FF Jobs</t>
+                <t t-set="url" t-value="'/dashboard/ff_jobs_shipment'"/>
+                <t t-set="placeholder_count" t-value="'ff_jobs_shipment_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="dialog_box">
+        <div class="modal fade" t-att-id="dialog_id" tabindex="-1" role="dialog" aria-labelledby="UploadDocument" aria-hidden="true">
+            <form action="/upload/ff_jobs/document" method="post" enctype="multipart/form-data" name="upload_document">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content text-center">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="UploadDocument">Upload Document</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group col-lg-12">
+                                <label class="form-label">
+                                    <strong>Document Name:</strong>
+                                </label>
+                                <input type="hidden" name="shipment_id" t-att-value="ff_job.id"/>
+                                <input type="hidden" name="selected_document_id" t-att-value="selected_document and selected_document.id"/>
+                                <input type="text" class="o_input form-control" t-att-value="selected_document and selected_document.name" name="name" required="required"/>
+                                <br/>
+                                <label class="form-label">
+                                    <strong>Document Type:</strong>
+                                </label>
+                                <select class="form-group form-control" name="document_id" required="required">
+                                    <option value=""/>
+                                    <t t-foreach="document_type_ids" t-as="document">
+                                        <option t-att-data-id="document.id" t-att-selected="selected_document and selected_document.document_type_id.id == document.id" t-att-value="document.id">
+                                            <t t-esc="document.name"/>
+                                        </option>
+                                    </t>
+                                </select>
+                            </div>
+                            <div class="form-group col-lg-12">
+                                <label for="file_name" class="control-label">
+                                    <strong>Upload File:</strong>
+                                </label>
+                                <input type="file" name="file_name" class="form-control h-100"
+                                        id="uploadFile" t-att-required="not selected_document"/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"
+                                    data-dismiss="modal">
+                                Close
+                            </button>
+                            <button type="submit" t-attf-href="/upload/ff_jobs/document" class="btn btn-primary">
+                                <t t-esc="selected_document and 'Update' or 'Upload Document'"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </template>
+
+    <template id="portal_my_ff_jobs_shipment" name="My FF Jobs">
+        <t t-call="ics_customer_portal_base.ics_customer_portal_layout">
+            <t t-call="ics_customer_portal_base.ics_customer_portal_searchbar">
+                <t t-set="title">FF Jobs</t>
+            </t>
+            <t t-if="not ff_jobs">
+                <p>There are currently no FF Jobs for your account.</p>
+            </t>
+            <t t-if="ff_jobs" t-call="portal.portal_table">
+                <t t-foreach="ff_jobs" t-as="each_job">
+                    <div class="container my-2">
+                        <div class="card">
+                          <div class="card-header alert-primary" data-toggle="collapse" t-att-data-target="'#collapseCard' + str(each_job.id)">
+                            <h5 class="mb-0">
+                                <t t-if="each_job.transport_mode_id.code == 'SEA'"><i class="fa fa-ship" aria-label="ship"></i></t>
+                                <t t-if="each_job.transport_mode_id.code == 'AIR'"><i class="fa fa-plane" aria-label="plane"></i></t>
+                                <t t-if="each_job.transport_mode_id.code == 'ROA'"><i class="fa fa-road" aria-label="road"></i></t>
+                                Shipment Number: <span t-field="each_job.name"></span>
+                            </h5>
+                          </div>
+                          <div t-att-id="'collapseCard' + str(each_job.id)" class="collapse">
+                            <div class="card-body">
+                                <div class="timeline-container d-flex justify-content-center">
+                                    <div class="row timeline_horizon_container align-content-center padding-bar" t-if="each_job.event_ids.filtered(lambda event: event.public_visible)">
+                                        <ul class="timeline_horizon">
+                                            <t t-foreach="each_job.event_ids.filtered(lambda event: event.public_visible)" t-as="event">
+                                                <t t-if="event.actual_datetime">
+                                                    <t t-set="actual_date" t-value="event.actual_datetime.strftime('%d %b, %Y')"/>
+                                                </t>
+                                                <t t-else="">
+                                                    <t t-set="actual_date" t-value=""/>
+                                                </t>
+                                                <li t-att-data-value="actual_date" t-att-data-text="event.event_type_id.name" t-att-data-location="event.location" t-att-data-datetime="event.estimated_datetime">
+                                                    <div class="border rounded text-center timeline-box align-content-center d-flex flex-wrap">
+                                                        <div class="font-weight-bold w-100 text-truncate" t-esc="event.location"/>
+                                                        <small t-esc="event.estimated_datetime"/>
+                                                    </div>
+                                                </li>
+                                            </t>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border-top m-2 p-2">
+                                <div class="col-6">
+                                    <div>Shipment Date: <span t-field="each_job.shipment_date"/></div>
+                                    <div t-if="each_job.mode_type == 'land'">Receiving Forwarder: <span t-field="each_job.consignee_id"/></div>
+                                    <div t-else="">Consignee: <span t-field="each_job.consignee_id"/></div>
+                                    <div>Shipment Type: <span t-field="each_job.shipment_type_id"/></div>
+                                    <div>Cargo Type: <span t-field="each_job.cargo_type_id"/></div>
+                                </div>
+                                <div class="col-6">
+                                    <div t-if="each_job.mode_type == 'land'">Sending Forwarder: <span t-field="each_job.shipper_id"/></div>
+                                    <div t-else="">Shipper: <span t-field="each_job.shipper_id"/></div>
+                                    <div>Transport Mode: <span t-field="each_job.transport_mode_id"/></div>
+                                </div>
+                            </div>
+                            <div class="row border-top mt-2 pt-2 pb-2">
+                                <div class="col-12 text-center">
+                                    <a class="btn btn-primary" t-att-href="each_job.get_ff_portal_url()">View FF Job</a>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="ff_jobs_shipment_portal_template" name="FF Jobs Portal" inherit_id="ics_customer_portal_base.ics_customer_portal_sidebar" primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <t t-set="o_portal_fullwidth_alert" groups="base.group_user">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url"
+                       t-value="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (ff_job._name, ff_job.id, action.id)"/>
+                </t>
+            </t>
+
+            <div class="row mt16 o_portal_quote_sidebar">
+                <div id="ff_job_content" class="col-12 col-lg justify-content-end">
+                    <!-- main content -->
+                    <t t-call="portal.portal_breadcrumbs"></t>
+                    <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}" id="portal_ff_jobs_content">
+                        <div t-call="ics_customer_portal_shipment.ff_jobs_portal_content"/>
+                    </div>
+
+                    <!-- chatter -->
+                    <div id="ff_jobs_communication" class="mt-4">
+                        <h2>History</h2>
+                        <t t-call="portal.message_thread">
+                            <t t-set="object" t-value="ff_job"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="ff_jobs_portal_content" name="FF Job Portal Content">
+        <div id="introduction" t-attf-class="pb-2 pt-3 #{'card-header bg-white' if report_type == 'html' else ''}">
+            <h2 class="my-0">
+                FF Job Number
+                <em t-esc="ff_job.booking_nomination_no"/>
+            </h2>
+        </div>
+        <div t-attf-class="#{'card-body' if report_type == 'html' else ''}">
+            <div id="informations">
+                <div class="row" id="ff_job_status">
+                    <div class="mb-3 col-6">
+                        <strong>Status:</strong>
+                        <span t-field="ff_job.state"/>
+                    </div>
+                    <div class="mb-3 col-6">
+                        <strong>Cargo Type:</strong>
+                        <span t-field="ff_job.cargo_type_id.name"/>
+                    </div>
+                </div>
+                <div class="row" id="ff_job_origin_to_destination">
+                    <div class="mb-6 col-10">
+                        <t t-if="ff_job.transport_mode_id.code == 'SEA'"><i class="fa fa-ship" aria-label="ship"></i></t>
+                        <t t-if="ff_job.transport_mode_id.code == 'AIR'"><i class="fa fa-plane" aria-label="plane"></i></t>
+                        <t t-if="ff_job.transport_mode_id.code == 'ROA'"><i class="fa fa-road" aria-label="road"></i></t>
+                        <img class="rounded-circle" style="height:20px; width:20px"
+                             t-att-src="ff_job.origin_un_location_id.country_id.image_url"/>
+                        <span t-field="ff_job.origin_un_location_id.name"/>,&amp;nbsp;
+                        <span t-field="ff_job.origin_port_un_location_id.name"
+                              t-if="ff_job.origin_port_un_location_id"/>
+                        <i class="fa fa-long-arrow-right"/>
+                        <img class="rounded-circle" style="height:20px; width:20px"
+                             t-att-src="ff_job.destination_un_location_id.country_id.image_url"/>
+                        <span t-field="ff_job.destination_un_location_id"/>,&amp;nbsp;
+                        <span t-field="ff_job.destination_port_un_location_id.name"
+                              t-if="ff_job.destination_port_un_location_id"/>
+                    </div>
+                </div>
+                <div class="timeline-container d-flex justify-content-center">
+                    <div class="row timeline_horizon_container align-content-center">
+                        <t t-if="ff_job.event_ids">
+                            <ul class="timeline_horizon">
+                                <t t-foreach="ff_job.event_ids.filtered(lambda event: event.public_visible)" t-as="event">
+                                    <t t-if="event.actual_datetime">
+                                        <t t-set="actual_date" t-value="event.actual_datetime.strftime('%d %b, %Y')"/>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-set="actual_date" t-value=""/>
+                                    </t>
+                                    <li t-att-data-value="actual_date" t-att-data-text="event.event_type_id.name"/>
+                                </t>
+                            </ul>
+                        </t>
+                    </div>
+                </div>
+<!--                 style="position: relative;"-->
+                <div class="portal_navbar">
+                    <ul class="nav nav-tabs o_wslides_lesson_nav" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <a href="#documents" aria-controls="documents" aria-selected="false" class="nav-link active"
+                               role="tab"
+                               data-toggle="tab">
+                                Documents
+                            </a>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <a href="#cargo_details" aria-controls="cargo_details" aria-selected="false"
+                               class="nav-link" role="tab"
+                               data-toggle="tab">
+                                Cargo Details
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div role="tabpanel" class="tab-pane fade show active" id="documents" aria-labelledby="documents-tab">
+                            <div t-if="error" class="col-md-12 py-2 from-group">
+                                <div class="alert alert-danger m-0" role="alert">
+                                    Invalid file type
+                                    <br/>
+                                    <small>
+                                        Upload from the allowed Format docx, doc, txt, odt, xlsx, xls, jpeg, png, pdf
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-3 py-2 pl-md-0 pr-md-2 from-group">
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#upload_document_modal">
+                                    Upload Document
+                                </button>
+                                <t t-call="ics_customer_portal_shipment.dialog_box">
+                                    <t t-set="dialog_id" t-value="'upload_document_modal'"/>
+                                </t>
+                            </div>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Description</th>
+                                        <th scope="col">Document Type</th>
+                                        <th scope="col">Attachment</th>
+                                        <th scope="col">Edit</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="ff_job.document_ids.filtered(lambda doc: doc.is_publish)" t-as="document">
+                                        <tr>
+                                            <th scope="row">
+                                                <t t-esc="document.name"/>
+                                            </th>
+                                            <td>
+                                                <t t-esc="document.document_type_id.name"/>
+                                            </td>
+                                            <td>
+                                                <a t-attf-href="/web/content/freight.house.shipment.document/#{document.id}/document_file?download=true"
+                                                   class="text-decoration-none small" >
+                                                    <t t-if="document.document_file">
+                                                        <i class="fa fa-download mr-1"/>
+                                                        <span t-field="document.document_file_name"/>
+                                                    </t>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <button class="btn py-0 px-1 fa fa-edit" type="button" data-toggle="modal" t-attf-data-target="#upload_document_modal_#{document.id}"/>
+                                                <t t-call="ics_customer_portal_shipment.dialog_box">
+                                                    <t t-set="dialog_id" t-value="'upload_document_modal_' + str(document.id)"/>
+                                                    <t t-set="selected_document" t-value="document"/>
+                                                </t>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade py-4" id="cargo_details" aria-labelledby="cargo_details-tab">
+                            <div class="row">
+                                <t t-foreach="cargo_details" t-as="cargo">
+                                    <div class="mb-3 col-4">
+                                        <strong><t t-esc="cargo"/>:</strong>
+                                        <t t-raw="cargo_value"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

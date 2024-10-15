@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="level_charges_freight_master_charge_cost_view_tree" model="ir.ui.view">
+        <field name="name">level.charges.master.shipment.charge.cost.view.tree</field>
+        <field name="model">master.shipment.charge.cost</field>
+        <field name="inherit_id" ref="freight_management_charges.freight_master_charge_cost_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='charge_description']" position="after">
+                <field name="attached_house_shipment_ids" invisible="1"/>
+                <field name="house_shipment_id" domain="[('id', 'in', attached_house_shipment_ids)]"
+                       options="{'no_create': 1, 'no_open': 1}" force_save="1"
+                       attrs="{'readonly': [('status', '!=', 'no')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

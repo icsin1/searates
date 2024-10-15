@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('name', '=', 'account_send_payment_receipt_by_email_action_multi'),('module', '=', 'account')]"/>
+        </function>
+        <value eval="{'noupdate': False}"/>
+    </function>
+
+	<record id="account.account_send_payment_receipt_by_email_action_multi" model="ir.actions.act_window">
+		<field name="binding_model_id" eval="False"/>
+	</record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('name', '=', 'account_send_payment_receipt_by_email_action_multi'),('module', '=', 'account')]"/>
+        </function>
+        <value eval="{'noupdate': True}"/>
+    </function>
+
+</odoo>

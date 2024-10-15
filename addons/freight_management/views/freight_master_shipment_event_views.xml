@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="freight_master_shipment_event_view_tree" model="ir.ui.view">
+        <field name="name">freight.master.shipment.event.view.tree</field>
+        <field name="model">freight.master.shipment.event</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="event_type_id" />
+                <field name="description" optional="hide"/>
+                <field name="location" />
+                <field name="estimated_datetime" />
+                <field name="actual_datetime" />
+                <field name="house_shipment_event_id" invisible="1"/>
+                <field name="public_visible" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="freight_master_shipment_event_view_form" model="ir.ui.view">
+        <field name="name">freight.master.shipment.event.view.form</field>
+        <field name="model">freight.master.shipment.event</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <label for="event_type_id"/>
+                    <div class="oe_title">
+                        <h3><field name="event_type_id" placeholder="Event Type" options="{'no_create': True}"/></h3>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="location" />
+                            <field name="estimated_datetime" />
+                            <field name="actual_datetime"/>
+                        </group>
+                        <group>
+                            <field name="public_visible" optional="hide" widget="boolean_toggle" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="description" string="Description">
+                            <field name="description" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

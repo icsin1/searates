@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_actions_server_create_customer_invoices_from_revenues" model="ir.actions.server">
+        <field name="name">Create Invoice</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_service_job_charge_revenue"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_create_customer_invoice()
+        </field>
+        <field name="binding_model_id" ref="model_service_job_charge_revenue"/>
+        <field name="binding_view_types">list</field>
+    </record>
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_account_ics_view_form" model="ir.ui.view">
+        <field name="name">account.account.view.form</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_type_id']" position="before">
+                <field name="user_type_internal_group" />
+            </xpath>
+            <xpath expr="//field[@name='user_type_id']" position="after">
+                <field name="non_trade_payable" attrs="{'invisible': [('internal_type', 'not in', ['payable', 'receivable'])]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_account_ics_view_tree" model="ir.ui.view">
+        <field name="name">account.account.ics.view.tree</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_list"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_read_account']" position="before">
+                <field name="active" invisible="1" widget="boolean_toggle"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account_account_ics_view_search" model="ir.ui.view">
+        <field name="name">account.account.ics.inherit.view.search</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='accounttype']" position="before">
+                <filter name="group_by_account_group" string="Account Group" context="{'group_by': 'user_type_internal_group'}" />
+            </xpath>
+            <xpath expr="//filter[@name='activeacc']" position="after">
+                <separator/>
+                <filter name="filter_archived" string="Archived" domain="[('active', '=', False)]" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="account.action_account_form" model="ir.actions.act_window">
+        <field name="context">{'search_default_activeacc': True, 'search_default_group_by_account_group': 1, 'search_default_accounttype': 1}</field>
+    </record>
+</odoo>

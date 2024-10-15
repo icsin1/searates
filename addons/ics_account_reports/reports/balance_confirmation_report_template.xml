@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="balance_confirmation_report_template_document">
+        <t t-if="not o" t-set="o" t-value="docs"/>
+
+        <t t-if="not company">
+            <t t-if="company_id">
+                <t t-set="company" t-value="company_id"/>
+            </t>
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                <t t-set="company" t-value="o.company_id.sudo()"/>
+            </t>
+            <t t-else="else">
+                <t t-set="company" t-value="res_company"/>
+            </t>
+        </t>
+
+        <t t-call="web.external_layout">
+            <div class="page" style="page-break-inside: avoid;">
+                <style>
+                    #fontsize {
+                        font-size: 14px;
+                    }
+                </style>
+                <h6 style="padding-top:15px;">
+                    To,
+                    <address t-field="o.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                </h6>
+
+                <p style="padding-top:5%;" id="fontsize">
+                    Dear Sir,
+                </p>
+                <p style="font-weight:bold;" id="fontsize">
+                    Sub: Balance Confirmation as on <span t-field="o.date"/>
+                </p>
+                <p id="fontsize">
+                    In connection with the audit of our accounts, we request you to confirm the balance of <strong t-field="o.due_amount"/>
+                    <t t-if="o.other_currency_id">
+                        <strong>(<span t-field="o.due_amount_other_currency"/>)</strong>
+                    </t>
+                    As per our book, the Invoice value is <strong t-field="o.due_amount"/>
+                    <t t-if="o.other_currency_id">
+                        <strong>(<span t-field="o.due_amount_other_currency"/>)</strong>
+                    </t>
+                    is your correct due amount as per our records as of <span t-field="o.date"/>.
+                </p>
+                <p id="fontsize">
+                    If the balance is correct, please send back the copy of this letter duly signed in the space provided below. if the balance is incorrect, kindly 
+                    mention the balance as per your books and send the statement of accounts.
+                </p>
+                <p id="fontsize">
+                    Your co-operation in this regard will be highly appreciated.
+                </p>
+                <p id="fontsize">
+                    Thanking You,
+                </p>
+
+                <div style="padding-top:12%;">
+                    <span id="fontsize"> For </span> <span id="fontsize" t-esc="company.name"/>
+                    <br/>
+                    <span id="fontsize">Account &amp; Finance</span>
+                    <br/>
+                    <h6 style="padding-top:3%;">
+                        To,
+                        <address t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}' />
+                    </h6>
+
+                    <p id="fontsize">
+                        We confirm that the above stated amount is <strong t-field="o.due_amount"/> <t t-if="o.other_currency_id">
+                            <strong>(<span t-field="o.due_amount_other_currency"/>)</strong>
+                        </t>
+                        As per our book, the Invoice value is <strong t-field="o.due_amount"/> <t t-if="o.other_currency_id">
+                            <strong>(<span t-field="o.due_amount_other_currency"/>)</strong>
+                        </t> the amount is correct as of <strong t-field="o.date"/>.
+                    </p>
+                </div>
+
+                <div class="row" id="fontsize">
+                    <div class="col-3">
+                        Date: <span t-field="o.date"/>
+                    </div>
+                    <div class="col-6 text-right">
+                        <strong>Signature with seal</strong>
+                    </div>
+                    <div class="col-3">
+                    </div>
+                </div>
+            </div>
+
+        </t>
+
+    </template>
+
+    <template id="balance_confirmation_report_template">
+        <t t-call="web.html_container">
+            <t t-call="ics_account_reports.balance_confirmation_report_template_document"/>
+        </t>
+    </template>
+
+</odoo>

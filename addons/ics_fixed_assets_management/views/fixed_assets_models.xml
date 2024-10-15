@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="fixed_asset_models_view_tree" model="ir.ui.view">
+        <field name="name">fixed.asset.models.view.tree</field>
+        <field name="model">account.asset</field>
+        <field name="arch" type="xml">
+            <tree string="Asset Models">
+                <field name="name"/>
+                <field name="account_asset_id"/>
+                <field name="recognition_interval" invisible="1"/>
+                <field name="interval_period" invisible="1"/>
+                <field name="account_depreciation_id"/>
+                <field name="account_depreciation_expense_id" invisible="1"/>
+                <field name="method"/>
+                <field name="recognition_interval" string="Number of Depreciations"/>
+                <field name="interval_period" string="Interval Period"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="account_asset_view_form_inherited_fixed_asset_model" model="ir.ui.view">
+        <field name="name">account.asset.view.form.inherit.fixed.asset</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="ics_account_deferred_revenue_expense.account_asset_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]/h1" position="before">
+                <label for="name" name="name_label_asset_models"
+                       attrs="{'invisible': ['|', ('asset_type', '!=', 'asset'), ('state', '!=', 'model')]}"
+                       string="Asset Models Name"/>
+            </xpath>
+            <xpath expr="//field[@name='account_depreciation_id']" position="before">
+                <field name="expense_user_type_id" invisible="1"/>
+                <field name="account_asset_id"
+                       attrs="{'readonly': [('state', 'not in', ['draft', 'model'])], 'required': [('state', '!=', 'model'), ('asset_type', '=', 'asset')], 'invisible': [('asset_type', '!=', 'asset')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='asset_type']" position="after">
+                <field name="method"
+                       attrs="{'readonly': [('state', 'not in', ['draft', 'model'])], 'required': [('asset_type', '=', 'asset')], 'invisible': [('asset_type', '!=', 'asset')]}"/>
+                <label for="declining_factor" attrs="{'invisible': ['|', ('method', '!=', 'decline'), ('asset_type', '!=', 'asset')]}"/>
+                <div id="declining_factor" class="o_row"
+                     attrs="{'invisible': ['|', ('method', '!=', 'decline'), ('asset_type', '!=', 'asset')], 'required': [('method', '=', 'decline')]}">
+                    <field name="declining_factor" widget="float" class="oe_inline" attrs="{'readonly': [('state', 'not in', ['draft', 'model'])]}"/>
+                    <span class="oe_grey">%%</span>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fixed_asset_models_action" model="ir.actions.act_window">
+        <field name="name">Asset Models</field>
+        <field name="res_model">account.asset</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="fixed_asset_models_view_tree"/>
+        <field name="domain">[('asset_type', '=', 'asset'), ('state', '=', 'model')]</field>
+        <field name="context">{'default_asset_type': 'asset', 'default_state': 'model'}</field>
+    </record>
+
+    <menuitem
+            id="asset_models_menu"
+            name="Asset Models"
+            action="fixed_asset_models_action"
+            parent="account.account_management_menu"/>
+
+</odoo>

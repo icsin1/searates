@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_shipment_quote_template_tree" model="ir.ui.view">
+        <field name="name">shipment.quote.template.tree</field>
+        <field name="model">shipment.quote.template</field>
+        <field name="inherit_id" ref="fm_quote.shipment_quote_template_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='template_for']" position="after">
+                <field name="service_job_type_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_shipment_quote_template_form" model="ir.ui.view">
+        <field name="name">shipment.quote.template.form</field>
+        <field name="model">shipment.quote.template</field>
+        <field name="inherit_id" ref="fm_quote.shipment_quote_template_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='freight_product']" position="attributes">
+                <attribute name="attrs">{'invisible': [('template_for', '=', 'job')]}</attribute>
+            </xpath>
+            <xpath expr="//group[@name='freight_product']" position="after">
+                <group name="job_data">
+                    <field name="service_job_type_id"  options="{'no_open': True}" attrs="{'invisible': [('template_for', '!=', 'job')], 'required': [('template_for', '=', 'job')], 'readonly': [('id', '!=', False)]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

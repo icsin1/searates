@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="view_website_dashboard" name="Dashboard">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty"/>
+        </t>
+    </template>
+
+    <template id="my_account" name="Link to frontend" inherit_id="portal.user_dropdown">
+        <xpath expr="//*[@id='o_logout_divider']" position="before">
+            <a href="/dashboard" role="menuitem" class="dropdown-item">My Account</a>
+        </xpath>
+    </template>
+
+    <data noupdate="0">
+        <record id="website_dashboard_page" model="website.page">
+            <field name="url">/dashboard</field>
+            <field name="is_published">True</field>
+            <field name="view_id" ref="view_website_dashboard"/>
+            <field name="cache_time">0</field>
+            <field name="track">True</field>
+        </record>
+    </data>
+</odoo>

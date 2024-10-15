@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="opportunity_default_email_template" model="mail.template">
+            <field name="name">Opportunity: Default Email</field>
+            <field name="model_id" ref="crm_prospect_lead.model_crm_prospect_opportunity"/>
+            <field name="subject">{{ object.company_id.name }} {{ 'Opportunity' }} (Ref {{ object.name or 'n/a' }})</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 12px;">
+                        Hello,
+                        <br/><br/>
+                       Your Opportunity <strong t-out="object.name or ''"></strong> is ready for review.
+                        <br/><br/>
+                        <p>Do not hesitate to contact us if you have any questions.</p>
+                    </p>
+                </div>
+            </field>
+
+        </record>
+
+        <record id="opportunity_rate_request_email_template" model="mail.template">
+            <field name="name">Opportunity: Rate Request Email</field>
+            <field name="model_id" ref="crm_prospect_lead.model_crm_prospect_opportunity"/>
+            <field name="subject">{{ object.company_id.name }} {{ 'Opportunity' }} (Ref {{ object.name or 'n/a' }})</field>
+            <field name="email_from">{{ user.email_formatted }}</field>
+            <field name="partner_to">{{ object.agent_id.id if object.agent_id.email else False }}</field>
+            <field name="body_html" type="html">
+                <div style="margin: 0px; padding: 0px;">
+                    <p style="margin: 0px; padding: 0px; font-size: 12px;">
+                        Hello <strong t-out="object.agent_id.name"/>,
+                        <br/><br/></p>
+                    <table style="width:60%;border: 1px solid black;" width="60%">
+                       <tr style="border: 1px solid black;">
+                          <td style="background-color: #C4C2C2; border: 1px solid black;text-align:left;padding:1mm;"><strong>Mode of Shipment</strong></td>
+                          <td style="text-align:left;padding:1mm;"><t t-out="object.transport_mode_id.name"/>-
+                          <t t-out="object.shipment_type_id.name"/>- <t t-out="object.cargo_type_id.name"/></td>
+                       </tr>
+                        <tr style="border: 1px solid black;">
+                          <td style="padding:1mm;background-color: #C4C2C2; border: 1px solid black;text-align:left;"><strong>Commodity</strong></td>
+                          <td style="padding:1mm;text-align:left;"><t t-out="object.commodity_id.name"/></td>
+                        </tr>
+                        <tr style="border: 1px solid black;">
+                          <td style="padding:1mm;background-color: #C4C2C2; border: 1px solid black;text-align:left;"><strong>Pick Up Location/Shipper Name &amp; Address</strong></td>
+                          <td style="padding:1mm;text-align:left;"><t t-out="object.sudo().prospect_id.name"/><br/>
+                          <t t-out="object.street1"/>, <t t-out="object.street2"/><br/>
+                          <t t-out="object.state_id.name"/>, <t t-out="object.country_id.name"/><br/>
+                          <t t-out="object.city_id.name"/> - <t t-out="object.zip"/></td>
+                        </tr>
+                        <tr style="border: 1px solid black;">
+                          <td style="padding:1mm;background-color: #C4C2C2; border: 1px solid black;text-align:left;"><strong>Origin</strong></td>
+                          <td style="padding:1mm;text-align:left;"><t t-out="object.origin_un_location_id.name"/></td>
+                        </tr>
+                        <tr style="border: 1px solid black;">
+                          <td style="padding:1mm;background-color: #C4C2C2; border: 1px solid black;text-align:left;"><strong>Destination</strong></td>
+                          <td style="padding:1mm;text-align:left;"><t t-out="object.destination_un_location_id.name"/></td>
+                        </tr>
+                    </table>
+                    <br/>
+                    <p>
+                        Kindly share the rate as soon as possible
+                    </p>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

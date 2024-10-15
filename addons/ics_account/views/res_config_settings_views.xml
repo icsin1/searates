@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_reference_number" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.reference_number</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='fiscal_localization_setting_container']" position="before">
+                <h2>Sequence</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="allow_reference_number"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="allow_reference_number"/>
+                            <div class="text-muted">
+                                Custom Reference number on the Invoice / Credit note / Bill / Refund
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='fiscal_localization_setting_container']" position="after">
+                <h2>Lumpsum Discount</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="module_ics_account_lumpsum_discount"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="module_ics_account_lumpsum_discount"/>
+                            <div class="text-muted">
+                                Lumpsum discount for the Invoices and Vendor Bills
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='fiscal_localization_setting_container']" position="after">
+                <h2>Deferred Revenue/Expenses</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_left_pane">
+                            <field name="module_ics_account_deferred_revenue_expense"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="module_ics_account_deferred_revenue_expense" class="o_form_label" string="Deferred Revenue/Expenses"/>
+                            <div class="text-muted">
+                                Manage Deferred Revenue/Expenses.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@id='print_vendor_checks_setting_container']" position="after">
+                <h2>PDC Payments</h2>
+                <div class="row mt16 o_settings_container" name="pdc_payment_settings">
+                    <div class="col-12 col-lg-6 o_setting_box" id="pdc_payment_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="module_ics_account_pdc" />
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="module_ics_account_pdc"/>
+                            <div class="text-muted" id="pdc_payment">
+                                Manage your Post Dated Cheque (PDC)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='fiscal_localization_setting_container']" position="after">
+                <h2>Fiscal Periods</h2>
+                <div class="row mt16 o_settings_container" name="fiscal_periods">
+                    <div class="col-12 col-lg-6 o_setting_box" id="fiscal_period">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Fiscal Year</span>
+                            <div class="content-group">
+                                <div class="row mt16">
+                                    <label for="fiscalyear_last_day" string="Last Day" class="col-lg-3 o_light_label"/>
+                                    <field name="fiscalyear_last_month" style="width:25%;margin-right:2%;"/>
+                                    <field name="fiscalyear_last_day" style="width:25%;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form_hide_account_ent_module_tag" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account.ent.tag</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="99"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='update_exchange_rates']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@id='taxcloud_settings']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@id='intrastat_statistics']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@id='account_batch_payment']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@id='collect_customer_payment']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@id='account_ocr_settings']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@id='sepa_payments']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//div[@id='bank_cash']/../h2" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//div[@id='bank_cash']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@id='accounting_import']/../h2" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@id='accounting_import']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//div[@id='accounting_reports']/../h2" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//div[@id='account_budget']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="//div[@name='main_currency_setting_container']" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box" id="adjust_payment_multi_currency">
+                    <div class="o_setting_left_pane">
+                        <field name="enable_adjust_payment_multi_currency" />
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label string="Adjust Payment With Multi Currency" for="enable_adjust_payment_multi_currency"/>
+                        <div class="text-muted">
+                            Allow Payment Adjustment in Multiple Currencies
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

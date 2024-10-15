@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="india_tds_report" model="account.tax.report">
+        <field name="name">TDS Report</field>
+        <field name="country_id" ref="base.in"/>
+    </record>
+
+    <record id="tds_report_line_tax_line_192a" model="account.tax.report.line">
+        <field name="name">Section 192A: Payment of accumulated balance of provident fund which is taxable</field>
+        <field name="code">TDS_SECTION_192A</field>
+        <field name="sequence" eval="1"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">192A</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_193" model="account.tax.report.line">
+        <field name="name">Section 193: Interest on securities</field>
+        <field name="code">TDS_SECTION_193</field>
+        <field name="sequence" eval="2"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">193</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194" model="account.tax.report.line">
+        <field name="name">Section 194: Income by way of dividend</field>
+        <field name="code">TDS_SECTION_194</field>
+        <field name="sequence" eval="3"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194a" model="account.tax.report.line">
+        <field name="name">Section 194A: Income by way of interest other than "Interest on securities"</field>
+        <field name="code">TDS_SECTION_194A</field>
+        <field name="sequence" eval="4"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194A</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194b" model="account.tax.report.line">
+        <field name="name">Section 194B: Income by way of winnings from lotteries, crossword puzzles, card games and other games of any sort</field>
+        <field name="code">TDS_SECTION_194B</field>
+        <field name="sequence" eval="5"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194B</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194bb" model="account.tax.report.line">
+        <field name="name">Section 194BB: Income by way of winnings from horse races</field>
+        <field name="code">TDS_SECTION_194BB</field>
+        <field name="sequence" eval="6"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194BB</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194c" model="account.tax.report.line">
+        <field name="name">Section 194C: Payment to contractor/sub-contractor</field>
+        <field name="code">TDS_SECTION_194C</field>
+        <field name="sequence" eval="7"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194C</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194d" model="account.tax.report.line">
+        <field name="name">Section 194D: Insurance commission</field>
+        <field name="code">TDS_SECTION_194D</field>
+        <field name="sequence" eval="8"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194D</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194da" model="account.tax.report.line">
+        <field name="name">Section 194DA: Payment in respect of life insurance policy</field>
+        <field name="code">TDS_SECTION_194DA</field>
+        <field name="sequence" eval="9"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194DA</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194e" model="account.tax.report.line">
+        <field name="name">Section 194E: Payment to non-resident sportsmen/sports association</field>
+        <field name="code">TDS_SECTION_194E</field>
+        <field name="sequence" eval="10"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194E</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194ee" model="account.tax.report.line">
+        <field name="name">Section 194EE: Payment in respect of deposit under National Savings scheme</field>
+        <field name="code">TDS_SECTION_194EE</field>
+        <field name="sequence" eval="11"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194EE</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194f" model="account.tax.report.line">
+        <field name="name">Section 194F: Payment on account of repurchase of unit by Mutual Fund or Unit Trust of India</field>
+        <field name="code">TDS_SECTION_194F</field>
+        <field name="sequence" eval="12"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194F</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194g" model="account.tax.report.line">
+        <field name="name">Section 194G: Commission, etc., on sale of lottery tickets</field>
+        <field name="code">TDS_SECTION_194G</field>
+        <field name="sequence" eval="13"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194G</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194h" model="account.tax.report.line">
+        <field name="name">Section 194H: Commission or brokerage</field>
+        <field name="code">TDS_SECTION_194H</field>
+        <field name="sequence" eval="14"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194H</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194i" model="account.tax.report.line">
+        <field name="name">Section 194-I: Rent</field>
+        <field name="code">TDS_SECTION_194I</field>
+        <field name="sequence" eval="15"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194I</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194ia" model="account.tax.report.line">
+        <field name="name">Section 194-IA: Payment on transfer of certain immovable property other than agricultural land</field>
+        <field name="code">TDS_SECTION_194IA</field>
+        <field name="sequence" eval="16"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194IA</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194ib" model="account.tax.report.line">
+        <field name="name">Section 194-IB: Payment of rent by individual or HUF not liable to tax audit</field>
+        <field name="code">TDS_SECTION_194IB</field>
+        <field name="sequence" eval="17"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194IB</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194ic" model="account.tax.report.line">
+        <field name="name">Section 194-IC: Payment of monetary consideration under Joint Development Agreements</field>
+        <field name="code">TDS_SECTION_194IC</field>
+        <field name="sequence" eval="18"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194IC</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194j" model="account.tax.report.line">
+        <field name="name">Section 194J: Fees for professional or technical services</field>
+        <field name="code">TDS_SECTION_194J</field>
+        <field name="sequence" eval="19"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194J</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194k" model="account.tax.report.line">
+        <field name="name">Section 194K: Income in respect of units payable to resident person</field>
+        <field name="code">TDS_SECTION_194K</field>
+        <field name="sequence" eval="20"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194K</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194la" model="account.tax.report.line">
+        <field name="name">Section 194LA: Payment of compensation on acquisition of certain immovable property</field>
+        <field name="code">TDS_SECTION_194LA</field>
+        <field name="sequence" eval="21"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194LA</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194lba_1" model="account.tax.report.line">
+        <field name="name">Section 194LBA(1): Business trust shall deduct tax while distributing, any interest received or receivable by it from a SPV or any income received from renting or leasing or letting out any real estate asset owned directly by it, to its unit holders.</field>
+        <field name="code">TDS_SECTION_194LBA(1)</field>
+        <field name="sequence" eval="22"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194LBA(1)</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194lb" model="account.tax.report.line">
+        <field name="name">Section 194LB: Payment of interest on infrastructure debt fund</field>
+        <field name="code">TDS_SECTION_194LB</field>
+        <field name="sequence" eval="23"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194LB</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194lbb" model="account.tax.report.line">
+        <field name="name">Section 194LBB: Investment fund paying an income to a unit holder [other than income which is exempt under Section 10(23FBB)]</field>
+        <field name="code">TDS_SECTION_194LBB</field>
+        <field name="sequence" eval="24"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194LBB</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194lbc" model="account.tax.report.line">
+        <field name="name">Section 194LBC: Income in respect of investment made in a securitisation trust (specified in Explanation of section115TCA)</field>
+        <field name="code">TDS_SECTION_194LBC</field>
+        <field name="sequence" eval="25"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194LBC</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194m" model="account.tax.report.line">
+        <field name="name">Section 194M: Payment of commission (not being insurance commission), brokerage, contractual fee, professional fee to a resident person by an Individual or a HUF who are not liable to deduct TDS under section 194C, 194H, or 194J.</field>
+        <field name="code">TDS_SECTION_194M</field>
+        <field name="sequence" eval="26"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194M</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194n" model="account.tax.report.line">
+        <field name="name">Section 194N: Cash withdrawal during the previous year from one or more account maintained by a person with a banking company, co-operative society engaged in business of banking or a post office</field>
+        <field name="code">TDS_SECTION_194N</field>
+        <field name="sequence" eval="27"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194N</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194o" model="account.tax.report.line">
+        <field name="name">Section 194O: Payment or credit of amount by the e-commerce operator to e-commerce participant</field>
+        <field name="code">TDS_SECTION_194O</field>
+        <field name="sequence" eval="28"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194O</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_194q" model="account.tax.report.line">
+        <field name="name">Section 194Q: Purchase of goods</field>
+        <field name="code">TDS_SECTION_194Q</field>
+        <field name="sequence" eval="29"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">194Q</field>
+    </record>
+
+    <record id="tds_report_line_tax_line_195" model="account.tax.report.line">
+        <field name="name">Section 195: Payment of any other sum to a Non -resident</field>
+        <field name="code">TDS_SECTION_195</field>
+        <field name="sequence" eval="30"/>
+        <field name="report_id" ref="india_tds_report"/>
+        <field name="tag_name">195</field>
+    </record>
+
+</odoo>

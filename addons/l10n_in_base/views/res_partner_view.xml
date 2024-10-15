@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_in_base_view_partner_form" model="ir.ui.view">
+        <field name="name">l10n.in.base.res.partner.vat.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="l10n_in.l10n_in_view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='l10n_in_gst_treatment']" position="before">
+                <field name="is_company_in_india" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='l10n_in_gst_treatment']" position="attributes">
+                <attribute name="attrs">{'readonly': [('parent_id', '!=', False)], 'invisible': [('is_company_in_india', '=', False)]}</attribute>
+            </xpath>
+			<xpath expr="//field[@name='vat']" position="replace">
+				<field name="vat" invisible="1"/>
+				<div class="o_td_label">
+					<b><field name="vat_label" nolabel="1"/></b>
+				</div>
+				<div class="o_row" name="vat_label">
+					<field name="vat" nolabel="1"/>
+				</div>
+				<field name="l10n_in_pan_number" attrs="{'invisible': [('is_company_in_india', '=', False)], 'readonly': [('vat', '!=', False)]}" force_save="1"/>
+			</xpath>
+        </field>
+    </record>
+
+ 	<record id="view_l10n_in_base_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.vat.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base_vat.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//span[hasclass('o_vat_label')]" position="replace">
+                <span class="o_vat_label"><field name="vat_label"/></span>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

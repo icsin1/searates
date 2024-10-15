@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="doc_version_history_view_tree" model="ir.ui.view">
+        <field name="name">doc.version.history.view.tree</field>
+        <field name="model">doc.version.history</field>
+        <field name="arch" type="xml">
+            <tree create="0" export_xlsx="0">
+                <field name="upload_time" />
+                <field name="description" />
+                <field name="user_id" />
+                <field name="filename" invisible="1"/>
+                <field name="upload_file" filename="filename" widget="binary"/>
+            </tree>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_partner_type_form_inherit_freight_base" model="ir.ui.view">
+        <field name="name">freight.base.view.partner.type.form.inherit</field>
+        <field name="model">res.partner.type</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"></field>
+                            <field name="code"></field>
+                        </group>
+                        <group>
+                            <field name="is_vendor"></field>
+                            <field name="color" widget="color_picker"/>
+                        </group>
+                    </group>
+                    <group string="Partner Type Field Line">
+                        <field name="field_mapping_ids" nolabel="1">
+                            <tree editable="bottom">
+                                <field name="model_id"></field>
+                                <field name="field_id" domain="[('model_id', '=', model_id), ('relation', '=', 'res.partner')]"></field>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="res_partner_type_action" model="ir.actions.act_window">
+        <field name="name">Party Type</field>
+        <field name="res_model">res.partner.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <menuitem
+        id="res_partner_type_menu"
+        name="Party Type"
+        action="res_partner_type_action"
+        parent="root_freight_master_configuration"
+        sequence="10"/>
+</odoo>

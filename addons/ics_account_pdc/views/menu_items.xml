@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="post_dated_cheque_menu" name="Post Dated Cheque (PDC)" parent="account.menu_finance_entries">
+        <menuitem id="pdc_payment_menu" name="PDC Payments" action="ics_account_pdc.action_pdc_payment" />
+    </menuitem>
+</odoo>

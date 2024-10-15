@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="freight_management.freight_shipment_house_menu"
+        name="House Shipment"
+        parent="freight_base.root_freight_operations"
+        groups="fm_sale_crm.group_sales_manager,freight_base.group_operation_associate,freight_base.group_manage_documents,base.group_erp_manager"
+        sequence="2"/>
+
+    <menuitem
+        id="freight_management.freight_shipment_master_menu"
+        name="Master Shipment (Consol)"
+        parent="freight_base.root_freight_operations"
+        groups="fm_sale_crm.group_sales_manager,freight_base.group_operation_associate,freight_base.group_manage_documents,base.group_erp_manager"
+        sequence="2"/>
+
+    <menuitem
+        id="freight_management.root_container_number"
+        name="Container Number"
+        parent="freight_base.freight_operations_configuration"
+        sequence="9"
+        groups="freight_base.group_operation_administrator,base.group_system,fm_sale_crm.group_sales_manager,base.group_no_one"
+    />
+</odoo>

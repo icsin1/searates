@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="paperformat_job_cost_sheet" model="report.paperformat">
+        <field name="name">Job Cost Sheet</field>
+        <field name="default" eval="False"/>
+        <field name="disable_shrinking" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_job_cost_sheet" model="ir.actions.report">
+        <field name="name">Job Cost Sheet (PDF)</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">fm_jobcost_sheet.report_job_cost_sheet</field>
+        <field name="report_file">fm_jobcost_sheet.report_job_cost_sheet</field>
+        <field name="print_report_name">'Job Cost Sheet - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_freight_house_shipment"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_job_cost_sheet"/>
+    </record>
+    <record id="action_report_master_job_cost_sheet" model="ir.actions.report">
+        <field name="name">Job Cost Sheet (PDF)</field>
+        <field name="model">freight.master.shipment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">fm_jobcost_sheet.report_master_job_cost_sheet</field>
+        <field name="report_file">fm_jobcost_sheet.report_master_job_cost_sheet</field>
+        <field name="print_report_name">'Job Cost Sheet - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_freight_master_shipment"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="server_action_download_house_job_cost_sheet" model="ir.actions.server">
+        <field name="name">Job Cost Sheet (Excel)</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_freight_house_shipment"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = record.action_download_grouped_job_cost_sheet()
+        </field>
+        <field name="binding_model_id" ref="model_freight_house_shipment"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+    <record id="server_action_download_master_job_cost_sheet" model="ir.actions.server">
+        <field name="name">Job Cost Sheet (Excel)</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_freight_master_shipment"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.action_download_grouped_job_cost_sheet()
+        </field>
+        <field name="binding_model_id" ref="model_freight_master_shipment"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+    <record id="server_action_send_house_job_cost_sheet" model="ir.actions.server">
+        <field name="name">Send Job Cost Sheet</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_freight_house_shipment"/>
+        <field name="state">code</field>
+        <field name="code">
+            action = record.action_send_jobcost_sheet()
+        </field>
+        <field name="binding_model_id" ref="model_freight_house_shipment"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+</odoo>

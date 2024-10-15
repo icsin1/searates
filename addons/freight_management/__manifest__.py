@@ -1,0 +1,63 @@
+# -*- coding: utf-8 -*-
+{
+    'name': 'Freight Management',
+    'version': '0.0.11',
+    'author': 'Intech Creative Services Pvt. Ltd.',
+    'company': 'Intech Creative Services Pvt. Ltd.',
+    'category': 'Freight Management',
+    'summary': 'Freight Management',
+    'license': 'Other proprietary',
+    'description': """
+Freight Management
+    - IMPORT/EXPORT
+    - OCEAN, LAND, AIR
+    """,
+    'depends': ['account', 'freight_base', 'freight_base_security', 'freight_base_portal', 'website', 'odoo_web_bus', 'base_document_reports_stimulsoft'],
+    'data': [
+        'security/freight_management_security.xml',
+        'data/docx_data.xml',
+        'data/account.xml',
+        'security/ir.model.access.csv',
+        'data/shipment_ir_sequence_data.xml',
+        'data/mail_template_data.xml',
+        'data/shipment_cron.xml',
+        'data/shipment_mail.xml',
+        'data/document_type.xml',
+        'data/res.partner.type.field.csv',
+        'data/freight_management_data.xml',
+        'data/freight_sequence_data.xml',
+        'wizard/wizard_house_shipment_status_view.xml',
+        'views/security.xml',
+        'views/freight_shipment_house_views.xml',
+        'views/freight_shipment_master_views.xml',
+        'views/freight_shipment_views.xml',
+        'views/freight_master_shipment_carrier_container_views.xml',
+        'views/freight_house_shipment_package_view.xml',
+        'views/freight_master_shipment_package_view.xml',
+        'views/freight_house_shipment_route_views.xml',
+        'views/freight_master_shipment_route_views.xml',
+        'views/freight_house_shipment_event_views.xml',
+        'views/freight_master_shipment_event_views.xml',
+        'views/freight_house_shipment_document_views.xml',
+        'views/freight_house_shipment_terms_views.xml',
+        'views/freight_master_shipment_document_views.xml',
+        'views/freight_master_shipment_terms_views.xml',
+        'views/shipment_change_reason_view.xml',
+        'views/tracking_shipment_portal.xml',
+        'data/tracking_website_data.xml',
+        'wizard/wizard_master_shipment_status_view.xml',
+        'views/freight_house_package_commodity_item_views.xml',
+        'views/freight_master_package_commodity_item_views.xml',
+        'views/res_config_settings_views.xml',
+    ],
+    'assets': {
+        'web.assets_backend': [
+            'freight_management/static/src/js/colored_control_panel.js',
+            'freight_management/static/src/js/field_binary.js',
+            'freight_management/static/src/scss/control_panel.scss',
+            'freight_management/static/src/scss/selection_view.scss'
+        ],
+    },
+    'installable': True,
+    'application': True,
+}

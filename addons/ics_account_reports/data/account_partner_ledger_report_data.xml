@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="ics_account_partner_ledger" model="web.report">
+            <field name="name">Partner Ledger</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="data_match_domain" eval="[('move_id.state', '=', 'posted'), ('account_id.internal_type', 'in', ['payable', 'receivable']), ('partner_id', '!=', False)]"/>
+            <field name="filter_multi_company">selector</field>
+            <field name="filter_date_type">date_range</field>
+            <field name="default_opening_date">this_month</field>
+            <field name="date_field" ref="account.field_account_move_line__date"/>
+            <field name="report_handler_model_id" ref="ics_report_base.model_mixin_report_handler"/>
+            <field name="enable_report_handler_code" eval="True"/>
+            <field name="is_account_report" eval="True"/>
+            <field name="report_handler_python_code">
+if not report_line.get('group_total') and report_line.get('group_by') == 'id':
+  record_domain = report_line.get('record_domain')
+  move_lines = model.search(record_domain)
+  moves = move_lines.mapped('move_id')
+  amount_foreign_currency = ''
+  if moves.mapped('company_currency_id.name') != moves.mapped('currency_id.name'):
+    amount_foreign_currency += model._format_currency(sum(move_lines.mapped('amount_currency')), currency=moves.currency_id)
+  result = {
+  'doc_no': ','.join(move_lines.mapped('move_id.name')),
+  'journal_code': ','.join(move_lines.mapped('journal_id.code')),
+  'account_code': ','.join(move_lines.mapped('account_id.code')),
+  'amount_foreign_currency': amount_foreign_currency
+  }
+else:
+  result = {'doc_no': '', 'journal_code': '', 'account_code': '', 'amount_foreign_currency': ''}
+            </field>
+        </record>
+
+        <record id="fm_report_partner_ledger_line" model="web.report.line">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Partners</field>
+            <field name="code">PRTLDG</field>
+            <field name="sequence">1</field>
+            <field name="hierarchy_level">1</field>
+            <field name="group_total" eval="True"/>
+            <field name="group_by_fields">partner_id,id</field>
+            <field name="compute_opening_and_closing_balance" eval="True"/>
+            <field name="action_id" ref="account.action_move_journal_line"/>
+            <field name="action_field_id" ref="account.field_account_move_line__move_id"/>
+            <field name="strict_on_date_range" eval="False" />
+        </record>
+
+        <record id="fm_report_partner_move_name" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">move_name</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">move_name</field>
+            <field name="value_type">string</field>
+        </record>
+
+        <record id="fm_report_partner_title" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">title</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">move_name</field>
+            <field name="value_type">string</field>
+        </record>
+
+        <record id="fm_report_partner_ledger_date" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">date</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">date</field>
+            <field name="value_type">date</field>
+        </record>
+        <record id="fm_report_partner_ledger_column_date" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Date</field>
+            <field name="expression_label">date</field>
+            <field name="sequence">1</field>
+            <field name="value_type">date</field>
+        </record>
+
+        <record id="fm_report_partner_ledger_doc_no" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">doc_no</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">doc_no</field>
+            <field name="value_type">string</field>
+        </record>
+        <record id="fm_report_partner_ledger_column_doc_no" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Doc. No.</field>
+            <field name="expression_label">doc_no</field>
+            <field name="sequence">2</field>
+            <field name="value_type">string</field>
+        </record>
+
+        <record id="fm_report_partner_ledger_journal_code" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">journal_code</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">journal_code</field>
+            <field name="value_type">string</field>
+        </record>
+        <record id="fm_report_partner_ledger_column_journal_code" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Journal</field>
+            <field name="expression_label">journal_code</field>
+            <field name="sequence">3</field>
+            <field name="value_type">string</field>
+        </record>
+
+        <record id="fm_report_partner_ledger_account_code" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">account_code</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">account_code</field>
+            <field name="value_type">string</field>
+        </record>
+        <record id="fm_report_partner_ledger_column_account_code" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Account</field>
+            <field name="expression_label">account_code</field>
+            <field name="sequence">3</field>
+            <field name="value_type">string</field>
+        </record>
+
+        <record id="fm_report_partner_ledger_ref" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">ref</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">ref</field>
+            <field name="value_type">string</field>
+        </record>
+        <record id="fm_report_partner_ledger_column_ref" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Reference</field>
+            <field name="expression_label">ref</field>
+            <field name="sequence">5</field>
+            <field name="value_type">string</field>
+        </record>
+
+        <record id="fm_report_partner_ledger_due_date" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">date_maturity</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">date_maturity</field>
+            <field name="value_type">date</field>
+        </record>
+        <record id="fm_report_partner_ledger_column_due_date" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Due Date</field>
+            <field name="expression_label">date_maturity</field>
+            <field name="sequence">6</field>
+            <field name="value_type">date</field>
+        </record>
+
+        <record id="fm_report_partner_ledger_matching_number" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">matching_number</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">matching_number</field>
+            <field name="value_type">string</field>
+        </record>
+        <record id="fm_report_partner_ledger_column_matching_number" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Matching Number</field>
+            <field name="expression_label">matching_number</field>
+            <field name="sequence">7</field>
+            <field name="value_type">string</field>
+        </record>
+
+        <record id="fm_report_partner_ledger_amount_fcy" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">amount_foreign_currency</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">amount_foreign_currency</field>
+            <field name="value_type">string</field>
+        </record>
+        <record id="fm_report_partner_ledger_column_amount_fcy" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">FCY amount</field>
+            <field name="expression_label">amount_foreign_currency</field>
+            <field name="sequence">8</field>
+            <field name="value_type">string</field>
+        </record>
+
+        <record id="fm_report_partner_ledger_currency" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">currency_id</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">currency_id and currency_id[1]</field>
+            <field name="value_type">string</field>
+        </record>
+        <record id="fm_report_partner_ledger_column_currency" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Currency</field>
+            <field name="expression_label">currency_id</field>
+            <field name="sequence">9</field>
+            <field name="value_type">string</field>
+        </record>
+
+        <record id="fm_report_partner_ledger_opening_balance" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">opening_balance</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">_report_handler_opening_closing_balance</field>
+            <field name="subformula_expression">opening_balance</field>
+            <field name="value_type">monetary</field>
+            <field name="allow_aggregate" eval="True"/>
+        </record>
+        <record id="fm_report_partner_ledger_column_opening_balance" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Opening Balance</field>
+            <field name="expression_label">opening_balance</field>
+            <field name="sequence">10</field>
+            <field name="value_type">monetary</field>
+            <field name="hide_if_zero" eval="True"/>
+        </record>
+
+        <record id="fm_report_partner_ledger_debit" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">debit</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">debit</field>
+            <field name="value_type">monetary</field>
+            <field name="allow_aggregate" eval="True"/>
+        </record>
+        <record id="fm_report_partner_ledger_column_debit" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Debit</field>
+            <field name="expression_label">debit</field>
+            <field name="sequence">11</field>
+            <field name="value_type">monetary</field>
+        </record>
+
+        <record id="fm_report_partner_ledger_credit" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">credit</field>
+            <field name="computation_engine">field</field>
+            <field name="formula_expression">credit</field>
+            <field name="value_type">monetary</field>
+            <field name="allow_aggregate" eval="True"/>
+        </record>
+        <record id="fm_report_partner_ledger_column_credit" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Credit</field>
+            <field name="expression_label">credit</field>
+            <field name="sequence">12</field>
+            <field name="value_type">monetary</field>
+        </record>
+
+        <record id="fm_report_partner_ledger_balance" model="web.report.expression">
+            <field name="web_report_line_id" ref="fm_report_partner_ledger_line"/>
+            <field name="name">balance</field>
+            <field name="computation_engine">python_code</field>
+            <field name="formula_expression">_report_handler_opening_closing_balance</field>
+            <field name="subformula_expression">closing_balance</field>
+            <field name="value_type">monetary</field>
+            <field name="allow_aggregate" eval="True"/>
+        </record>
+        <record id="fm_report_partner_ledger_column_balance" model="web.report.column">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Balance</field>
+            <field name="expression_label">balance</field>
+            <field name="sequence">13</field>
+            <field name="value_type">monetary</field>
+        </record>
+
+        <record id="fm_report_partner_ledger_filter_customer" model="web.report.filter">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Customers</field>
+            <field name="filter_key">filter_partner</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="ir_model_field_id" ref="account.field_account_move_line__partner_id"/>
+            <field name="filter_type">multi_relation</field>
+            <field name="sequence">0</field>
+        </record>
+
+        <record id="ics_report_partner_ledger_filter_account" model="web.report.filter">
+            <field name="web_report_id" ref="ics_account_partner_ledger"/>
+            <field name="name">Account:</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="filter_key">filter_account</field>
+            <field name="filter_type">choice_multi</field>
+            <field name="icon">fa-folder</field>
+            <field name="sequence">1</field>
+            <field name="choice_ids" eval="[
+                (6, False, []),
+                (0, 0, {
+                    'name': 'Payable',
+                    'choice_key': 'payable',
+                    'is_default': True,
+                    'sequence': 1
+                }),
+                (0, 0, {
+                    'name': 'Non Trade Payable',
+                    'choice_key': 'non_trade_payable',
+                    'sequence': 2
+                }),
+                (0, 0, {
+                    'name': 'Receivable',
+                    'choice_key': 'receivable',
+                    'sequence': 3
+                }),
+                (0, 0, {
+                    'name': 'Non Trade Receivable',
+                    'choice_key': 'non_trade_receivable',
+                    'sequence': 4
+                }),
+            ]"/>
+        </record>
+    </data>
+
+</odoo>

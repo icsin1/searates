@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="product_uom_categ_pack" model="uom.category">
+            <field name="name">Pack</field>
+        </record>
+        <record id="product_uom_categ_temperature" model="uom.category">
+            <field name="name">Temperature</field>
+        </record>
+    </data>
+</odoo>

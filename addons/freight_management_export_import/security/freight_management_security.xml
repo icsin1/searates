@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="access_export_to_import" model="res.groups">
+        <field name="name">Access Export To Import</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">The user acts as access on Freight House Shipment export to import.</field>
+    </record>
+
+</odoo>

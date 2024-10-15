@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="proforma_invoice_service_job_view_tree" model="ir.ui.view">
+        <field name="model">pro.forma.invoice.tree.service.charge</field>
+        <field name="model">pro.forma.invoice</field>
+        <field name="arch" type="xml">
+            <tree create="false">
+                <header>
+                <button string="Approve All" class="oe_highlight" type="object" name="action_approve_all_proforma"/>
+                </header>
+                <field name="name" />
+                <field name="partner_id"/>
+                <field name="service_job_id" invisible="1"/>
+                <field name="charge_service_job_ids" widget="many2many_tags"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="amount_untaxed" widget="monetary"/>
+                <field name="amount_total" widget="monetary"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+    <record id="inherit_proforma_invoice_view_form" model="ir.ui.view">
+        <field name="model">pro.forma.invoice.inherit.service.charge</field>
+        <field name="model">pro.forma.invoice</field>
+        <field name="inherit_id" ref="fm_proforma.pro_forma_invoice_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_reset_to_draft']" position="after">
+                <button name="add_charges_from_service_job" type="object" string="Add/Update Charges" class="oe_highlight"
+                    attrs="{'invisible': [('show_service_job_charge_button', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//field[@name='house_shipment_id']" position="after">
+                <field name="charge_service_job_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('service_job_id', '=', False)]}"/>
+                <field name="service_job_id" invisible="1"/>
+                <field name="show_service_job_charge_button" invisible="1"/>
+            </xpath>
+            <xpath expr="//field[@name='pro_forma_invoice_line_ids']/tree/field[@name='house_shipment_charge_revenue_id']"
+                   position="after">
+                <field name="service_job_charge_revenue_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_proforma_invoice_view_tree" model="ir.ui.view">
+        <field name="model">pro.forma.invoice.inherit.service.charge.tree</field>
+        <field name="model">pro.forma.invoice</field>
+        <field name="inherit_id" ref="fm_proforma.pro_forma_invoice_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='charge_house_shipment_ids']" position="before">
+                <field name="charge_service_job_ids" widget="many2many_tags" readonly="1" string="Service Jobs"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

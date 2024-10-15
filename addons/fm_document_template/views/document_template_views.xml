@@ -1,0 +1,72 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="shipment_document_template_view_tree" model="ir.ui.view">
+        <field name="name">shipment.document.template.view.tree</field>
+        <field name="model">shipment.document.template</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="document_template_for"/>
+                <field name="service_job_type_id" optional="show"/>
+                <field name="transport_mode_id" optional="show"/>
+                <field name="shipment_type_id" optional="show"/>
+                <field name="cargo_type_id" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="shipment_document_template_view_form" model="ir.ui.view">
+        <field name="name">shipment.document.template.view.form</field>
+        <field name="model">shipment.document.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="document_template_for" widget="radio" options="{'horizontal': True}" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        </group>
+                        <group name="freight_document_template">
+                            <field name="transport_mode_id" options="{'no_create': True}" attrs="{'readonly': [('id', '!=', False)], 'required': [('document_template_for', '=', 'shipment')], 'invisible': [('document_template_for', '=', 'job')]}" />
+                            <field name="shipment_type_id" options="{'no_create': True}" attrs="{'readonly': [('id', '!=', False)], 'required': [('document_template_for', '=', 'shipment')], 'invisible': [('document_template_for', '=', 'job')]}" />
+                            <field name="cargo_type_domain" invisible="1" />
+                            <field name="document_mode_domain" invisible="1" />
+                            <field name="cargo_type_id" domain="cargo_type_domain" attrs="{'readonly': [('id', '!=', False)], 'required': [('document_template_for', '=', 'shipment')], 'invisible': [('document_template_for', '=', 'job')]}" options="{'no_create': True}" />
+                            <field name="document_type_id" domain="document_mode_domain" options="{'no_create': True}" attrs="{'readonly': [('id', '!=', False)], 'required': [('document_template_for','in',['shipment', 'job'])]}" />
+                        </group>
+                        <group name="job_document_data">
+                            <field name="service_job_type_id"  options="{'no_open': True}" attrs="{'invisible': [('document_template_for', '!=', 'job')], 'required': [('document_template_for', '=', 'job')], 'readonly': [('id', '!=', False)]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="body_html" widget="html"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="shipment_document_template_action" model="ir.actions.act_window">
+        <field name="name">Document Template</field>
+        <field name="res_model">shipment.document.template</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Define a new Document template.
+              </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="document_template_menu"
+        name="Document Template"
+        parent="freight_base.root_freight_admin_manage_menu"
+        />
+    <menuitem
+        id="document_template_submenu"
+        name="Document Template"
+        action="shipment_document_template_action"
+        parent="document_template_menu"
+    />
+</odoo>

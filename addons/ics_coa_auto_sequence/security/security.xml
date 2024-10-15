@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+     <data noupdate="1">
+
+        <record id="model_account_type_sequence_company_rule" model="ir.rule">
+            <field name="name">COA Auto Sequence Multi-Company</field>
+            <field name="model_id" ref="ics_coa_auto_sequence.model_account_type_sequence"/>
+            <field name="domain_force">['|',('company_id','=',False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+    </data>
+
+</odoo>

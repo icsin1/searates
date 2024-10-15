@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="account_tds_rate_view_tree" model="ir.ui.view">
+        <field name="name">account.tds.rate.view.tree</field>
+        <field name="model">account.tds.rate</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="rate_percentage"/>
+                <field name="country_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="account_tds_rate_view_form" model="ir.ui.view">
+        <field name="name">account.tds.rate.view.form</field>
+        <field name="model">account.tds.rate</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <group>
+                        <group>
+                            <field name="name" class="text-break" default_focus="1"/>
+                            <label for="rate_percentage"/>
+                            <div>
+                                <field name="rate_percentage" class="oe_inline" nolabel="1"/>
+                                <span class="o_form_label oe_inline">%</span>
+                            </div>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                            <field name="country_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="account_tds_rate_view_search" model="ir.ui.view">
+        <field name="name">account.tds.rate.view.search</field>
+        <field name="model">account.tds.rate</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="rate_percentage"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <group expand="0" name="group_by" string="Group By">
+                    <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="account_tds_rate_action" model="ir.actions.act_window">
+        <field name="name">TDS Rates</field>
+        <field name="res_model">account.tds.rate</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new TDS Rate.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="account_tds_rate_menu"
+        name="TDS Rates"
+        action="account_tds_rate_action"
+        parent="account.account_account_menu"
+        sequence="2"/>
+
+</odoo>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//t[@t-set='address']" position="after">
+            <t t-set="shipments" t-value="list(set(o.invoice_line_ids.mapped('house_shipment_id')))"/>
+            <t t-call="fm_fta_account_reports.shipment_detail_layout"/>
+        </xpath>
+        <xpath expr="//div[@t-if='o.partner_id.vat']" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//div[@id='informations']" position="attributes">
+            <attribute name="class">d-none</attribute>
+        </xpath>
+        <xpath expr="//p[@t-if='o.invoice_incoterm_id']" position="replace"/>
+        <xpath expr="//span[@t-field='o.name']" position="replace">
+            <span t-if="o.name != '/'" t-field="o.name"/>
+        </xpath>
+
+        <xpath expr="//div[@t-if='not is_html_empty(o.narration)']" position="after">
+            <t t-set="container_number_list" t-value="','.join(o.invoice_line_ids.mapped('house_shipment_id.container_number'))"/>
+            <t t-if="container_number_list">
+                <table width="100%">
+                    <tr>
+                        <td><strong>Container Details: </strong></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span t-esc="container_number_list"/>
+                        </td>
+                    </tr>
+                </table>
+            </t>
+
+            <t t-set="banks_by_currency" t-value="o.get_bank_details()"/>
+
+            <div class="row mb-2 mt-2" t-if="banks_by_currency">
+                <div class="col-12 mb-2">
+                    <table class="table table-sm table-bg-white border-0">
+                        <tr>
+                            <td class="font-weight-bold">Bank Details</td>
+                        </tr>
+                        <t t-set="counter" t-value="1"/>
+                        <t t-foreach="banks_by_currency" t-as="currency">
+                            <tr>
+                                <td>Currency</td>
+                                <t t-foreach="banks_by_currency[currency]" t-as="bank">
+                                    <td>:&amp;nbsp;<t t-esc="bank.currency_id.name"/></td>
+                                </t>
+                            </tr>
+                            <tr>
+                                <td>Beneficiary Name</td>
+                                <t t-foreach="banks_by_currency[currency]" t-as="bank">
+                                    <td>:&amp;nbsp;<t t-esc="bank.acc_holder_name or bank.partner_id.name"/></td>
+                                </t>
+                            </tr>
+                            <tr>
+                                <td>Bank</td>
+                                <t t-foreach="banks_by_currency[currency]" t-as="bank">
+                                    <td>:&amp;nbsp;<t t-esc="bank.bank_id.name"/></td>
+                                </t>
+                            </tr>
+                            <tr>
+                                <td>A/C No</td>
+                                <t t-foreach="banks_by_currency[currency]" t-as="bank">
+                                    <td>:&amp;nbsp;<t t-esc="bank.acc_number"/></td>
+                                </t>
+                            </tr>
+                            <tr>
+                                <td>IBAN No</td>
+                                <t t-foreach="banks_by_currency[currency]" t-as="bank">
+                                    <td>:&amp;nbsp;<t t-esc="bank.bank_id.iban_number"/></td>
+                                </t>
+                            </tr>
+                            <tr>
+                                <td>Swift Code</td>
+                                <t t-foreach="banks_by_currency[currency]" t-as="bank">
+                                    <td>:&amp;nbsp;<t t-esc="bank.bank_id.bic"/></td>
+                                </t>
+                            </tr>
+                            <tr><td colspan="99">&amp;nbsp;</td></tr>
+                        </t>
+                    </table>
+                </div>
+            </div>
+
+        </xpath>
+    </template>
+</odoo>

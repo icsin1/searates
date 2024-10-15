@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="AccountReportSectionLine" owl="1">
+        <tr t-attf-class="ics_account_report_line_level_{{section.level}} {{section.row_class}} {{section.group_by or section.is_expandable ? 'ics_expandable_row' : ''}} {{section.parent_id ? 'd-none': ''}}" t-att-data-key="section.id" t-att-data-parent-key="section.parent_id">
+            <td>
+                <t t-if="section.group_by or section.is_expandable">
+                    <i class="fa fa-caret-right mr-2"/>
+                </t>
+                <t t-esc="section.title"/>
+            </td>
+            <t t-foreach="headers" t-as="header_key" t-key="header_key">
+                <td class="number">
+                    <t t-if="section.values[header_key] != undefined" t-esc="section.values[header_key][1]"/>
+                </td>
+            </t>
+        </tr>
+        <t t-if="section.children">
+            <t t-foreach="section.children" t-as="section" t-key="section">
+                <t t-call="AccountReportSectionLine"/>
+            </t>
+        </t>
+    </t>
+
+    <t t-name="AccountReportSection" owl="1">
+        <div class="table-responsive">
+            <table t-attf-class="ics_account_reports_table table-hover table table-sm {{ data.options.sortable ? 'sortable' : ''}}">
+                <thead>
+                    <tr>
+                        <th class="ics_account_report_column_header">
+                            <span class="label" data-key="#">#</span>
+                            <t t-set="sortingClass" t-value="data.options.reverse ? 'fa-sort-desc': 'fa-sort-asc'"/>
+                            <i t-if="data.options.sortable" t-attf-class="sorting pl-1 fa {{data.options.orderby == '#' ? sortingClass : 'fa-sort-desc d-none'}}"  aria-hidden="true"></i>
+                        </th>
+                        <t t-foreach="headers" t-as="label" t-key="label">
+                            <th t-attf-class="ics_account_report_column_header number {{headers_props[label] and headers_props[label].sortable and 'sortable' or ''}}">
+                                <span class="label" t-att-data-key="label"><t t-esc="label"/></span>
+                                <i t-if="data.options.sortable" t-attf-class="sorting pl-1 fa {{data.options.orderby == label ? sortingClass : 'fa-sort-desc d-none'}}" aria-hidden="true"></i>
+                            </th>
+                        </t>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="sections" t-as="section" t-key="section">
+                        <t t-call="AccountReportSectionLine"/>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+    </t>
+
+    <t t-name="ics_account_reports.AccountReportSectionGroupLine">
+        <tr t-attf-class="ics_account_report_line_level_{{section.level}} {{section.row_class}} {{section.group_by ? 'ics_expandable_row' : ''}} {{section.type == 'account' and !section.group_by ? 'ics_journal_entries_row': ''}}" t-att-data-key="section.id">
+            <td>
+                <t t-if="section.group_by">
+                    <i class="fa fa-caret-right mr-2"/>
+                </t>
+                <t t-if="section.move_id">
+                    <a href="#" class="ics_open_record" data-method="action_open_move" t-att-data-record-id="section.move_id"><t t-esc="section.title"/></a>
+                </t>
+                <t t-elif="section.house_bl_no">
+                    <a href="#" class="ics_open_record" data-method="action_open_house" t-att-data-record-id="section.id"><t t-esc="section.house_bl_no"/></a>
+                </t>
+                <t t-elif="section.payment_id">
+                    <a href="#" class="ics_open_record" data-method="action_open_payment" t-att-data-record-id="section.id"><t t-esc="section.payment_id"/></a>
+                </t>
+                <t t-else="">
+                    <t t-esc="section.title"/>
+                </t>
+
+            </td>
+            <t t-foreach="headers" t-as="header_key" t-key="header_key">
+                <td class="number">
+                    <t t-if="section.values[header_key] != undefined and Array.isArray(section.values[header_key])" t-esc="section.values[header_key][1]"/>
+                    <t t-if="section.values[header_key] != undefined and !Array.isArray(section.values[header_key])" t-esc="section.values[header_key]"/>
+                </td>
+            </t>
+        </tr>
+        <t t-if="section.children">
+            <t t-foreach="section.children || []" t-as="section" t-key="section">
+                <t t-call="ics_account_reports.AccountReportSectionGroupLine"/>
+            </t>
+        </t>
+    </t>
+    <t t-name="ics_account_reports.AccountReportSectionLineContainer">
+        <t t-foreach="lines" t-as="section" t-key="section">
+            <t t-call="ics_account_reports.AccountReportSectionGroupLine"/>
+        </t>
+    </t>
+</templates>

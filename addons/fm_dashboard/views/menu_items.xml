@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem
+        id="fm_dashboard_root_menu"
+        name="Dashboard"
+        web_icon="fm_dashboard,static/src/images/app_icon_dashboard.png"
+        sequence="0"/>
+
+    <record id="fm_dashboard_root_menu" model="ir.ui.menu">
+        <field name="theme_menu_access_allowed" eval="True"/>
+    </record>
+
+</odoo>

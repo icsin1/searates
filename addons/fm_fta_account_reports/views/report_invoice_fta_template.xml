@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="invoice_address_layout">
+        <h2 class="text-center h3 p-2" name="invoice_title">
+            <span class="text-900 font-weight-bold" t-if="o.move_type == 'out_invoice' and o.state == 'posted'" t-field="o.journal_id.name"/>
+            <span class="text-900 font-weight-bold" t-if="o.move_type == 'out_invoice' and o.state == 'draft'">Draft <span class="text-900 font-weight-bold" t-field="o.journal_id.name"/></span>
+            <span class="text-900 font-weight-bold" t-if="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled <span class="text-900 font-weight-bold" t-field="o.journal_id.name"/></span>
+            <span class="text-900 font-weight-bold" t-if="o.move_type == 'out_refund'">Credit Note</span>
+            <span class="text-900 font-weight-bold" t-if="o.move_type == 'in_refund'">Vendor Credit Note</span>
+            <span class="text-900 font-weight-bold" t-if="o.move_type == 'in_invoice'">Vendor Bill</span>
+        </h2>
+        <t t-if="address">
+            <div class="address row">
+                <div name="address" class="col-12">
+                    <table class="table table-bg-white border-0" name="customer_detail_block">
+                        <tr>
+                            <td rowspan="6" width="16%">
+                                <strong>Customer</strong>
+                            </td>
+                            <td rowspan="6" width="27%">
+                                <div class="d-flex">:&amp;nbsp;<span t-out="address"/></div>
+                            </td>
+                            <td rowspan="6" colspan="2" width="17%">
+                                <div id="informations">
+                                    <span t-out="information_block"/>
+                                    &amp;nbsp;
+                                </div>
+                            </td>
+                            <td width="15%">
+                                <strong>
+                                    <t t-if="o.move_type == 'out_invoice'"><strong>Invoice No</strong></t>
+                                    <t t-if="o.move_type == 'in_invoice'"><strong>Bill No</strong></t>
+                                    <t t-if="o.move_type == 'out_refund'"><strong>Credit Note No</strong></t>
+                                    <t t-if="o.move_type == 'in_refund'"><strong>Debit Note No</strong></t>
+                                </strong>
+                            </td>
+                            <td width="25%">
+                                : <span t-out="o.name"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>
+                                    <t t-if="o.company_id.account_fiscal_country_id.vat_label" t-esc="o.company_id.account_fiscal_country_id.vat_label" id="inv_tax_id_label"/>
+                                    <t t-else="">Tax ID</t>
+                                </strong>
+                            </td>
+                            <td>
+                                : <span t-field="o.partner_id.vat"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>
+                                    <t t-if="o.move_type == 'out_invoice'"><strong>Invoice Date</strong></t>
+                                    <t t-elif="o.move_type == 'out_refund'"><strong>Credit Note Date</strong></t>
+                                    <t t-elif="o.move_type == 'out_receipt'"><strong>Receipt Date</strong></t>
+                                    <t t-else=""><strong>Date</strong></t>
+                                </strong>
+                            </td>
+                            <td>
+                                : <span t-field="o.invoice_date"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Due Date</strong>
+                            </td>
+                            <td>
+                                : <span t-field="o.invoice_date_due"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Reference</strong>
+                            </td>
+                            <td>
+                                : <span t-field="o.ref"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="shipment_detail_layout">
+        <t t-set="shipment" t-value="shipments and shipments[0]"/>
+        <t t-if="len(shipments) > 1">
+            <t t-set="master_shipment" t-value="False"/>
+        </t>
+        <t t-else="">
+            <t t-set="master_shipment" t-value="shipments and shipments[0].parent_id"/>
+        </t>
+
+        <div class="row mb-2 mt-2" t-if="shipment">
+            <t t-set="weight_uom" t-value="shipment.get_weight_uom_in_invoice_report()"/>
+            <t t-set="volume_uom" t-value="shipment.get_volume_uom_in_invoice_report()"/>
+            <t t-set="house_shipment_hbl_number_lst" t-value="o.invoice_line_ids.mapped('house_shipment_id.hbl_number')"/>
+            <t t-set="hbl_number_lst" t-value="', '.join([hbl_number for hbl_number in house_shipment_hbl_number_lst if hbl_number])"/>
+
+            <div class="col-12 mb-2">
+                <table class="table table-bg-white border-0" name="shipment_details">
+                    <tr>
+                        <td>
+                            <strong>Shipper</strong>
+                        </td>
+                        <td>
+                            : <span t-field="shipment.shipper_id"/>
+                        </td>
+                        <td colspan="2" t-if="master_shipment and master_shipment.carrier_booking_reference_number">
+                        </td>
+                        <td t-if="master_shipment and master_shipment.carrier_booking_reference_number">
+                            <t>
+                                <strong>MBL number</strong>
+                            </t>
+                        </td>
+                        <td t-if="master_shipment and master_shipment.carrier_booking_reference_number">
+                            <t>
+                                : <span t-field="master_shipment.carrier_booking_reference_number"/>
+                            </t>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Consignee</strong>
+                        </td>
+                        <td>
+                            : <span t-field="shipment.consignee_id"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="16%">
+                            <strong>Port of Origin</strong>
+                        </td>
+                        <td width="27%">
+                            : <span t-field="shipment.origin_port_un_location_id"/>
+                        </td>
+                        <td width="4%">
+                            <strong>ETD</strong>
+                        </td>
+                        <td width="13%">
+                            : <span t-field="shipment.etd_time" t-options="{'date_only': True}"/>
+                        </td>
+                        <td width="15%">
+                            <strong>Number of Packs</strong>
+                        </td>
+                        <td width="25%">
+                            : <span t-field="shipment.pack_unit"/> <span t-field="shipment.pack_unit_uom_id"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Port of Destination</strong>
+                        </td>
+                        <td>
+                            : <span t-field="shipment.destination_un_location_id"/>
+                        </td>
+                        <td>
+                            <strong>ETA</strong>
+                        </td>
+                        <td>
+                           : <span t-field="shipment.eta_time" t-options="{'date_only': True}"/>
+                        </td>
+                        <td>
+                            <strong>Weight (<span t-esc="weight_uom.name"/>)</strong>
+                        </td>
+                        <td>
+                            : <span t-out="shipment._convert_weight_unit(weight_uom)"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Vessel</strong>
+                        </td>
+                        <td>
+                            : <span t-field="shipment.vessel_id"/>
+                        </td>
+                        <td colspan="2">
+                        </td>
+                        <td>
+                            <strong>Volume (<span t-esc="volume_uom.name"/>)</strong>
+                        </td>
+                        <td>
+                           : <span t-out="shipment._convert_volume_unit(volume_uom)"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Voyage Number</strong>
+                        </td>
+                        <td>
+                           : <span t-field="shipment.voyage_number"/>
+                        </td>
+                        <td colspan="2">
+                        </td>
+                        <td>
+                            <strong>Incoterm: </strong>
+                        </td>
+                        <td>
+                            <t t-if="o.invoice_incoterm_id">
+                                : <span t-field="o.invoice_incoterm_id.code"/> - <span t-field="o.invoice_incoterm_id.name"/>
+                            </t>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>Shipper Ref. No</strong>
+                        </td>
+                        <td>
+                            :
+                        </td>
+                        <td colspan="2">
+                        </td>
+                        <td colspan="2">
+                        </td>
+                    </tr>
+                    <tr t-if="hbl_number_lst">
+                        <td>
+                            <strong>HBL Number</strong>
+                        </td>
+                        <td colspan="99">
+                            : <span t-esc="hbl_number_lst"/>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+        </div>
+    </template>
+
+    <template id="external_layout_boxed" inherit_id="web.external_layout_boxed">
+        <xpath expr="//h4[@t-field='company.report_header']" position="replace"/>
+        <xpath expr="//img[@t-if='company.logo']" position="after">
+            <h5 class="mt0" t-field="company.report_header" t-if="not is_html_empty(company.report_header)"/>
+        </xpath>
+        <xpath expr="//t[@t-call='web.address_layout']/.." position="replace">
+            <div>
+                <t t-if="o and o._name == 'account.move'">
+                    <t t-call="fm_fta_account_reports.invoice_address_layout"/>
+                </t>
+                <t t-else="">
+                    <t t-call="web.address_layout"/>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//img[@t-att-src='image_data_uri(company.logo)']" position="attributes">
+            <attribute name="height">60px</attribute>
+        </xpath>
+    </template>
+
+    <template id="external_layout_bold" inherit_id="web.external_layout_bold">
+        <xpath expr="//t[@t-call='web.address_layout']" position="replace">
+            <t t-if="o and o._name == 'account.move'">
+                <t t-call="fm_fta_account_reports.invoice_address_layout"/>
+            </t>
+            <t t-else="">
+                <t t-call="web.address_layout"/>
+            </t>
+        </xpath>
+        <xpath expr="//img[@t-att-src='image_data_uri(company.logo)']" position="attributes">
+            <attribute name="height">60px</attribute>
+        </xpath>
+    </template>
+
+    <template id="external_layout_standard" inherit_id="web.external_layout_standard">
+        <xpath expr="//t[@t-call='web.address_layout']" position="replace">
+            <t t-if="o and o._name == 'account.move'">
+                <t t-call="fm_fta_account_reports.invoice_address_layout"/>
+            </t>
+            <t t-else="">
+                <t t-call="web.address_layout"/>
+            </t>
+        </xpath>
+        <xpath expr="//img[@t-att-src='image_data_uri(company.logo)']" position="attributes">
+            <attribute name="height">60px</attribute>
+        </xpath>
+    </template>
+
+    <template id="external_layout_striped" inherit_id="web.external_layout_striped">
+        <xpath expr="//t[@t-call='web.address_layout']" position="replace">
+            <t t-if="o and o._name == 'account.move'">
+                <t t-call="fm_fta_account_reports.invoice_address_layout"/>
+            </t>
+            <t t-else="">
+                <t t-call="web.address_layout"/>
+            </t>
+        </xpath>
+        <xpath expr="//img[@t-att-src='image_data_uri(company.logo)']" position="attributes">
+            <attribute name="height">60px</attribute>
+        </xpath>
+    </template>
+
+</odoo>

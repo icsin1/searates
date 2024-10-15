@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_schedule_selector_shipment_wizard_form" model="ir.ui.view">
+        <field name="name">air.schedule.selector.wizard.shipment.form</field>
+        <field name="model">air.schedule.selector.wizard</field>
+        <field name="inherit_id" ref="fm_air_schedule.view_air_schedule_selector_wizard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='schedule_ids']" position="before">
+                <group groups="base.group_no_one">
+                    <field name="master_shipment_id" force_save="1" attrs="{'invisible': [('master_shipment_id', '=', False)]}"/>
+                </group>
+            </xpath>
+              <xpath expr="//field[@name='schedule_ids']" position="before">
+                <group groups="base.group_no_one">
+                    <field name="house_shipment_id" force_save="1" attrs="{'invisible': [('house_shipment_id', '=', False)]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

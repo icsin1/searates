@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_crm_prospect_salesman,access_crm_prospect_salesman,model_crm_prospect,fm_sale_crm.group_salesman,1,1,1,0
+access_crm_prospect_sales_manager,access_crm_prospect_manager,model_crm_prospect,fm_sale_crm.group_sales_manager,1,1,1,0
+access_crm_prospect_administrator,access_crm_prospect_admin,model_crm_prospect,fm_sale_crm.group_sales_administrator,1,1,1,1
+access_crm_prospect_manage_documents,access_crm_prospect_documents,model_crm_prospect,freight_base.group_manage_documents,1,0,0,0
+access_crm_prospect_system_admin,access_crm_prospect_system_admin,model_crm_prospect,base.group_system,1,1,1,1

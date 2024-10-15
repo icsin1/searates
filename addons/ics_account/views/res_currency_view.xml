@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record model="ir.ui.view" id="view_res_currency_form">
+        <field name="name">res.currency.form.inherit</field>
+        <field name="model">res.currency</field>
+        <field name="inherit_id" ref="base.view_currency_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='rate_ids']" position="before">
+                <group col="6">
+                    <group>
+                        <field name="is_fixed_rate_currency" widget="boolean_toggle"/>
+                    </group>
+                    <group>
+                        <field name="fixed_rate" nolabel="1" digits="[12,6]" attrs="{'invisible': [('is_fixed_rate_currency', '=', False)], 'required': [('is_fixed_rate_currency', '=', True)]}"/>
+                    </group>
+                    <group>
+                    </group>
+                    <group>
+                        <field name="fetch_exchange_rate" widget="boolean_toggle"/>
+                    </group>
+                </group>
+            </xpath>
+            <xpath expr="//sheet" position="after">
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

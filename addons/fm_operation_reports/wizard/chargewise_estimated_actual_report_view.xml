@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record id="chargewise_estimated_actual_report_wizard_form" model="ir.ui.view">
+		<field name="name">chargewise.estimated.actual.report.wizard.form</field>
+		<field name="model">chargewise.estimated.actual.report</field>
+		<field name="arch" type="xml">
+			<form>
+				<group>
+					<group>
+						<field name="from_date" required="1"/>
+						<field name="transport_mode_id" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+						<field name="cargo_type_id" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+					</group>
+					<group>
+						<field name="to_date" required="1"/>
+						<field name="shipment_type_id" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"/>
+						<field name="service_job" widget="boolean_toggle"/>
+					</group>
+				</group>
+				<footer>
+					<button type="object" string="Generate Report" name="generate_report_xlsx" class="btn-primary"/>
+				</footer>
+			</form>
+		</field>
+	</record>
+
+	<record id="action_chargewise_estimated_actual_report" model="ir.actions.act_window">
+		<field name="name">Charge Wise Shipment Estimated VS Actual</field>
+		<field name="res_model">chargewise.estimated.actual.report</field>
+		<field name="view_mode">form</field>
+		<field name="target">new</field>
+	</record>
+
+	<menuitem
+		id="menu_chargewise_estimated_actual_report"
+		parent="menu_freight_operation_reporting"
+		action="action_chargewise_estimated_actual_report"
+		groups="freight_base.group_operation_manager,base.group_system"
+		name="Charge Wise Shipment Estimated VS Actual"/>
+</odoo>

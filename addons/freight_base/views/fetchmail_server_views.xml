@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_view_email_server_form" model="ir.ui.view">
+        <field name="name">fetchmail.server.form.inherit</field>
+        <field name="model">fetchmail.server</field>
+        <field name="inherit_id" ref="fetchmail.view_email_server_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='server_login_details']/group[last()]" position="after">
+                <group>
+                    <group>
+                        <field name="company_id" options="{'no_create':1}"/>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

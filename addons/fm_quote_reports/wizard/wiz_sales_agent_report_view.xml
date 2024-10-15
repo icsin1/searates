@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record id="sales_agent_report_wizard_form" model="ir.ui.view">
+		<field name="name">wiz.sales.agent.report.wizard.form</field>
+		<field name="model">wiz.sales.agent.report</field>
+		<field name="arch" type="xml">
+			<form>
+				<group>
+					<group>
+						<field name="from_date" required="1"/>
+						<field name="quote_status" required="1"/>
+						<field name="pdf_xls" widget="radio" options="{'horizontal': True}"/>
+					</group>
+					<group>
+						<field name="to_date" required="1"/>
+						<field name="sales_agent_ids" widget="many2many_tags" required="1" options="{'no_create': True, 'no_create_edit': True}"/>
+						<field name="remarks" />
+					</group>
+				</group>
+				<group>
+					<field name="field_ids" widget="many2many_tags" required="1" options="{'no_create': True, 'no_create_edit': True}" attrs="{'invisible': [('pdf_xls', '=', 'pdf')]}"/>
+				</group>
+				<footer>
+					<button type="object" string="PDF" name="print_pdf" class="btn btn-primary" attrs="{'invisible': [('pdf_xls', '=', 'xls')]}"/>
+					<button type="object" string="XLS" name="print_xls" class="btn btn-primary" attrs="{'invisible': [('pdf_xls', '=', 'pdf')]}"/>
+					<button type="special" special="cancel" string="Cancel" class="btn-default"/>
+				</footer>
+			</form>
+		</field>
+	</record>
+	
+	<record id="action_sales_agent_report" model="ir.actions.act_window">
+		<field name="name">Sales Agent Report</field>
+		<field name="res_model">wiz.sales.agent.report</field>
+		<field name="view_mode">form</field>
+		<field name="target">new</field>
+	</record>
+	
+	<menuitem 
+		id="menu_sales_agent_report" 
+		parent="fm_sale_crm.fm_sales_crm_reports" 
+		action="action_sales_agent_report"
+	/>
+</odoo>

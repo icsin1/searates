@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="import_charge_master_view_form" model="ir.ui.view">
+        <field name="name">import.charge.master.view.form</field>
+        <field name="model">import.charges</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="import_company_id" options="{'no_create': 1, 'no_open':1}"/>
+                        </group>
+                        <group>
+                            <field name="import_price"/>
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="action_import_charge_master" string="Import Charges" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="import_charge_message_form" model="ir.ui.view">
+        <field name="name">import.charge.message.form</field>
+        <field name="model">import.charge.message</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group attrs="{'invisible': [('imported_count', '=', 0)]}">
+                            <field name="message_for_new_charges"/>
+                            <field name="imported_count"/>
+                        </group>
+                        <group attrs="{'invisible': [('existed_count', '=', 0)]}">
+                            <field name="message_for_existed_charges"/>
+                            <field name="existed_count" />
+                        </group>
+                    </group>
+                </sheet>
+            <footer>
+                <button name="action_ok" string="Ok" type="object" default_focus="1" class="oe_highlight"/>
+            </footer>
+            </form>
+        </field>
+    </record>
+
+
+</odoo>

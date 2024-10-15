@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+{
+    'name': 'Indian - Accounting GST Reports',
+    'version': '0.0.1',
+    'author': 'Intech Creative Services Pvt. Ltd.',
+    'company': 'Intech Creative Services Pvt. Ltd.',
+    'category': 'Localization,Indian Accounting',
+    'summary': 'GST Reports for India',
+    'license': 'Other proprietary',
+    'description': """GST Reports for India""",
+    'depends': ['l10n_in_base', 'ics_report_base_account'],
+    'data': [
+        'security/ir.model.access.csv',
+        'data/account_report_gstr_1.xml',
+        'data/account_report_gstr_1_b2b.xml',
+        'data/account_report_gstr_1_b2cl.xml',
+        'data/account_report_gstr_1_b2c_small.xml',
+        'data/account_report_gstr_1_cdnr.xml',
+        'data/account_report_gstr_1_cdnur.xml',
+        'data/account_report_gstr_1_expin.xml',
+        'data/account_report_gstr_1_nil.xml',
+        'data/account_report_gstr_1_hsn_summary.xml',
+        'data/account_report_gstr_1_hsn_code_detail.xml',
+        'data/account_report_gstr_2_purchase_register.xml',
+        'views/menu_items.xml',
+    ],
+    'installable': True,
+    'application': False,
+    'auto_install': True
+}

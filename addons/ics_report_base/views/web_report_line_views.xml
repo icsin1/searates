@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="web_report_line_view_tree" model="ir.ui.view">
+        <field name="name">web.report.line.view.tree</field>
+        <field name="model">web.report.line</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence" widget="handle"/>
+                <field name="name" />
+                <field name="code" />
+                <field name="active" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="web_report_line_view_form" model="ir.ui.view">
+        <field name="name">web.report.line.view.form</field>
+        <field name="model">web.report.line</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <label for="name"/>
+                    <div class="oe_title">
+                        <h1><field name="name" /></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="parent_id" />
+                            <field name="hierarchy_level" />
+                            <field name="group_by_fields" />
+                            <field name="action_id" />
+                            <field name="model_id" invisible="1"/>
+                            <field name="action_field_id" options="{'no_create': 1}" attrs="{'invisible': [('action_id', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="code" />
+                            <field name="foldable" />
+                            <field name="hide_if_zero" />
+                            <field name="group_total" />
+                            <field name="strict_on_date_range" />
+                        </group>
+                    </group>
+                    <group string="Action Default Domain" attrs="{'invisible': [('action_id', '=', False)]}">
+                        <field name="model_name" invisible="1"/>
+                        <field name="default_action_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}" nolabel="1"/>
+                    </group>
+                    <notebook>
+                        <page name="expressions" string="Expressions">
+                            <field name="expression_ids" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="web_report_expression_view_tree" model="ir.ui.view">
+        <field name="name">web.report.expression.view.tree</field>
+        <field name="model">web.report.expression</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="computation_engine" />
+                <field name="formula_expression" />
+                <field name="subformula_expression" />
+                <field name="allow_aggregate" widget="boolean_toggle"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="web_report_expression_view_form" model="ir.ui.view">
+        <field name="name">web.report.expression.view.form</field>
+        <field name="model">web.report.expression</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <label for="name"/>
+                    <div class="oe_title">
+                        <h1><field name="name" /></h1>
+                    </div>
+                    <notebook>
+                        <page name="Defination" string="Defination">
+                            <group>
+                                <label for="computation_engine"/>
+                                <div class="o_row">
+                                    <field name="computation_engine" />
+                                    <field name="model_id" invisible="1"/>
+                                    <field name="group_by_field_id" options="{'no_create': 1}" placeholder="Grouping Field" attrs="{'invisible': [('computation_engine', '!=', 'domain')], 'required': [('computation_engine', '=', 'domain')]}"/>
+                                </div>
+                                <field name="formula_expression" />
+                                <field name="subformula_expression" attrs="{'required': [('computation_engine', '=', 'domain')]}"/>
+                            </group>
+                        </page>
+                        <page name="settings" string="Settings">
+                            <group>
+                                <group>
+                                    <label for="value_type"/>
+                                    <div class="o_row">
+                                        <field name="value_type" /> <field name="currency_field_name" attrs="{'invisible': [('value_type', '!=', 'monetary')]}"/>
+                                    </div>
+                                    <field name="date_scope" attrs="{'invisible': [('computation_engine', '!=', 'domain')]}"/>
+                                </group>
+                                <group>
+                                    <field name="hide_if_zero" />
+                                    <field name="allow_aggregate" />
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

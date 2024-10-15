@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_uom_categ_transport_mode_form_view" model="ir.ui.view">
+        <field name="name">freight.base.uom.category.form</field>
+        <field name="model">uom.category</field>
+        <field name="inherit_id" ref="uom.product_uom_categ_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_ids']/tree/field[@name='name']" position="after">
+                <field name="transport_mode_ids" widget="many2many_tags" options="{'no_create': True}" width="2"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_uom_transport_mode_form_view" model="ir.ui.view">
+        <field name="name">freight.base.uom.category.form</field>
+        <field name="model">uom.uom</field>
+        <field name="inherit_id" ref="uom.product_uom_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='uom_type']" position="after">
+                <field name="transport_mode_ids" widget="many2many_tags" options="{'no_create': True}" width="2"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

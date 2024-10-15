@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="deferred_revenue_models_view_tree" model="ir.ui.view">
+        <field name="name">account.asset.revenue.models.view.tree</field>
+        <field name="model">account.asset</field>
+        <field name="arch" type="xml">
+            <tree string="Deferred Revenue Models">
+                <field name="name" string="Revenue Name"/>
+                <field name="recognition_interval" invisible="1"/>
+                <field name="interval_period" invisible="1"/>
+                <field name="account_depreciation_id" string="Revenue Account"/>
+                <field name="account_depreciation_expense_id" string="Deferred Revenue Account"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="account_asset_view_form_inherited_revenue_models" model="ir.ui.view">
+        <field name="name">account.asset.view.form.inherit.revenue.models</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="account_asset_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]/h1" position="before">
+                <label for="name" name="name_label_revenue_models" attrs="{'invisible': ['|', ('asset_type', '!=', 'sale'), ('state', '!=', 'model')]}" string="Deferred Revenue Models Name"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="deferred_revenue_models_action" model="ir.actions.act_window">
+        <field name="name">Deferred Revenue Models</field>
+        <field name="res_model">account.asset</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="deferred_revenue_models_view_tree"/>
+        <field name="domain">[('asset_type', '=', 'sale'), ('state', '=', 'model')]</field>
+        <field name="context">{'default_asset_type': 'sale', 'default_state': 'model'}</field>
+    </record>
+
+    <menuitem
+            id="deferred_revenue_models_menu"
+            name="Deferred Revenue Models"
+            action="deferred_revenue_models_action"
+            parent="account.account_management_menu"/>
+</odoo>

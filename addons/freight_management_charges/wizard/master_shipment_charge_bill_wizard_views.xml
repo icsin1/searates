@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mastershipment_charge_bill_wizard_view_form" model="ir.ui.view">
+        <field name="name">master.shipment.charge.bill.wizard.view.form</field>
+        <field name="model">master.shipment.charge.bill.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Vendor Bill" class="pt-3">
+                <separator string="Billing Mode"/>
+                <group class="my-0">
+                    <group>
+                        <field name="partner_mode" widget="radio" options="{'horizontal': True}"/>
+                    </group>
+                    <group>
+                        <field name="partner_ids" widget="many2many_tags" options="{'no_create': 1}" string="For Vendors" attrs="{'invisible': [('partner_mode', '!=', 'specific')], 'required': [('partner_mode', '=', 'specific')]}"/>
+                    </group>
+                </group>
+                <group class="my-0">
+                    <group>
+                        <field name="single_currency_billing" widget="boolean_toggle"/>
+                        <field name="invoice_cash_rounding_id" options="{'no_create': 1, 'no_open': 1}" groups="account.group_cash_rounding"/>
+                    </group>
+                    <group>
+                        <field name="currency_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'invisible': [('single_currency_billing', '=', False)], 'required': [('single_currency_billing', '=', True)]}"/>
+                        <field name="show_exchange_rate" invisible="1"/>
+                        <field name="amount_conversion_rate" attrs="{'invisible': [('show_exchange_rate', '=', False)]}"/>
+                    </group>
+                </group>
+                <field name="master_shipment_id" invisible="1"/>
+                <group string="Generating For Charges" class="mt-0">
+                    <field nolabel="1" name="charge_ids">
+                        <tree create="0">
+                            <field name="charge_description"/>
+                            <field name="partner_id"/>
+                            <field name="company_id" optional="hide"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="amount_conversion_rate" attrs="{'column_invisible': [('parent.show_exchange_rate', '=', True)]}"/>
+                            <field name="amount_currency_id"/>
+                            <field name="amount_rate"/>
+                            <field name="amount_currency_residual" class="text-info font-weight-bold"/>
+                            <field name="total_amount" sum="Total" class="text-success font-weight-bold"/>
+                            <field name="status" widget="badge" decoration-success="status == 'fully_invoiced'" decoration-warning="status == 'partial'"/>
+                        </tree>
+                    </field>
+                </group>
+                <group string="Bill Will be Generated" class="mt-0">
+                    <field name="is_partial_bill" invisible="1"/>
+                    <div colspan="2" class="alert alert-warning" role="alert" attrs="{'invisible':[('is_partial_bill','=',False)]}">
+                        <strong>You are generating partial bill. Total amount will be devided based on due amount for each charge line after converting to the bill currency.</strong>
+                    </div>
+                    <field name="line_ids" nolabel="1" colspan="2">
+                        <tree create="0" editable="bottom">
+                            <field name="partner_id" readonly="1" force_save="1" options="{'no_open': 1}"/>
+                            <field name="currency_id" readonly="1" force_save="1"  options="{'no_open': 1}"/>
+                            <field name="no_of_charges" readonly="1" force_save="1"/>
+                            <field name="charge_ids" invisible="1"/>
+                            <field name="amount" class="font-weight-bold"/>
+                            <field name="full_amount" invisible="1"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button attrs="{'invisible': [('line_ids', '=', [])]}" name="action_generate_bills" string="Generate &amp; View" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-default" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="mastershipment_charge_bill_wizard_action" model="ir.actions.act_window">
+        <field name="name">Master Charge Generate Vendor Bills</field>
+        <field name="res_model">master.shipment.charge.bill.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_form_ics_account" model="ir.ui.view">
+        <field name="name">ics.account.account.payment.form.inherited</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]//h1[1]" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('state', '!=', 'draft'), ('allow_reference_number', '=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]//h1[2]" position="attributes">
+                <attribute name="attrs">{'invisible': [('state', '=', 'draft'), ('allow_reference_number', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]//field[@name='name']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]//field[@name='name']" position="after">
+                <field name="allow_reference_number" invisible="1"/>
+                <field name="name" attrs="{'readonly': ['|', ('allow_reference_number', '=', False), '&amp;', ('state', '!=', 'draft'), ('allow_reference_number', '=', True)]}"/>
+            </xpath>
+            <xpath expr="//group/group" position="inside">
+                <field name="company_currency_id" invisible="1" />
+                <label for="total_remaining_amount" string="Balance Amount"/>
+                <div class="o_row">
+                    <field name="total_remaining_amount" string="Balance" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                    <button name="action_adjust_payment" string="Adjust to Invoice/Bill" type="object" class="oe_highlight btn-sm"/>
+                </div>
+                <field name="outstanding_balance" force_save="1" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_bank_id'][last()]" position="after">
+                <field name="place_of_collection"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']/button[@name='button_open_invoices']" position="before">
+                <button name="button_open_opening_invoice_bill_ids" type="object" class="oe_stat_button" icon="fa-bars" attrs="{'invisible': [('opening_invoice_bill_ids_count','=', 0)]}">
+                    <field name="opening_invoice_bill_ids_count"/>
+                    <field name="opening_invoice_bill_ids" invisible="1" />
+                    <span>Opening Balance</span>
+                </button>
+            </xpath>
+            <xpath expr="//header" position="after">
+                <div groups="account.group_account_invoice,account.group_account_readonly"
+                     class="alert alert-warning mb-0" role="alert"
+                     attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('tax_lock_date_message', '=', False)]}">
+                    <field name="tax_lock_date_message" nolabel="1"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_payment_tree_inherit_ics_account" model="ir.ui.view">
+        <field name="name">account.payment.tree.inherit.ics_account</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_tree"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+	            <field name="invoice_bill_number" string="Invoice Number"/>
+	        </field>
+	    </field>
+    </record>
+
+    <record id="view_account_supplier_payment_tree_inherit_ics_account" model="ir.ui.view">
+        <field name="name">account.supplier.tree.inherit.ics_account</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_supplier_payment_tree"/>
+        <field name="arch" type="xml">
+			<xpath expr="//field[@name='invoice_bill_number']" position="attributes">
+				<attribute name="string">Bill Number</attribute>
+			</xpath>
+		</field>
+    </record>
+</odoo>

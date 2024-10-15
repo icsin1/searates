@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+
+        <record id="proforma_docx_ir_action_report_template" model="ir.actions.report">
+            <field name="name">Pro-Forma Invoice</field>
+            <field name="model">pro.forma.invoice</field>
+            <field name="report_type">docx</field>
+            <field name="report_name">Pro-Forma Docx Report</field>
+            <field name="binding_model_id" ref="fm_proforma.model_pro_forma_invoice"/>
+            <field name="report_res_model">docx.template</field>
+        </record>
+        <record id="proforma_docx_template_record" model="docx.template">
+            <field name="name">Pro-Forma Invoice</field>
+            <field name="res_model_id" ref="fm_proforma.model_pro_forma_invoice"/>
+            <field name="output_type">pdf</field>
+            <field name="lazy_load" eval="True"/>
+            <field name="filename">proforma_docx_template.docx</field>
+            <field name="report_id"  ref="proforma_docx_ir_action_report_template"/>
+            <field name="docx_file" type="base64" file="fm_proforma/data/proforma_docx_template.docx"/>
+        </record>
+        <record id="proforma_docx_ir_action_report_template" model="ir.actions.report">
+            <field name="report_res_id" eval="ref('fm_proforma.proforma_docx_template_record')"/>
+        </record>
+
+    </data>
+
+</odoo>

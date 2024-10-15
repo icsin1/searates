@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="15"/>
+        <field name="inherit_id" ref="fm_sailing_schedule.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='inttra_api_credentials']" position="replace">
+                <div class="col-12 col-lg-12 o_setting_box" id="inttra_api_credentials">
+                    <div class="o_setting_left_pane">
+                        <field name="module_fm_inttra_sailing_schedule" />
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <div class="row">
+                            <div class="col">
+                                <h3>INTTRA Sailing Schedule</h3>
+                                <p>Fetching realtime Sea Sailing Schedule</p>
+                            </div>
+                            <div class="col text-right">
+                                <img src="/fm_sailing_schedule/static/images/INTTRA_by_e2open_logo.png" alt="INTTRA"/>
+                            </div>
+                        </div>
+                        <group>
+                            <field name="inttra_environment" widget="radio" options="{'horizontal': True}"/>
+                            <field name="inttra_client_id" />
+                            <field name="inttra_client_secret" />
+                            <field name="inttra_grant_type" groups="base.group_no_one"/>
+                        </group>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

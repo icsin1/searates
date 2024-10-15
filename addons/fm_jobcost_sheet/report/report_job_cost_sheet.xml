@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!--House Shipment Specific Template-->
+    <template id="house_shipment_job_cost_sheet_detail">
+        <t t-set="company" t-value="o.company_id.sudo() or res_company"/>
+        <table class="table table-bordered table-sm o_main_table text-center mb-0">
+            <tr>
+                <td>
+                    <t t-if="o.parent_id">
+                        <strong>Master Shipment No:</strong><br/>
+                        <t t-if="o.parent_id.carrier_booking_reference_number">
+                            <span t-field="o.parent_id.carrier_booking_reference_number"/>
+                        </t>
+                        <t t-else="">
+                            <span t-field="o.parent_id.name"/>
+                        </t>
+                    </t>
+                </td>
+                <td colspan="2">
+                    <h4 class="text-center mt-2">
+                        <t t-if="o.hbl_number">
+                            <span>Job Cost Sheet: <span t-if="docs" t-out="o.hbl_number"/></span>
+                        </t>
+                        <t t-else="">
+                            <span>Job Cost Sheet: <span t-if="docs" t-out="o.name"/></span>
+                        </t>
+                    </h4>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Customer:</strong><span t-field="o.client_id" class="mb-1"/><br/>
+                </td>
+                <td>
+                    <strong>Shipper:</strong><span t-field="o.shipper_id" class="mb-1"/><br/>
+                </td>
+                <td>
+                    <strong>Consignee:</strong><span t-field="o.consignee_id" class="mb-1"/><br/>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Origin Port:</strong><span t-field="o.origin_port_un_location_id"/>
+                </td>
+                <td>
+                    <strong>Destination Port:</strong><span t-field="o.destination_port_un_location_id"/>
+                </td>
+                <td>
+                    <strong>Vessel &amp; Voyage No:</strong><span t-field="o.vessel_id"/> <span t-if="o.vessel_id and o.voyage_number">/</span> <span t-field="o.voyage_number"/>
+                </td>
+            </tr>
+        </table>
+    </template>
+
+    <!--Combined Shipment Template-->
+    <template id="job_cost_sheet_groupped_data">
+        <table class="table table-sm table-bordered text-left mb-0">
+            <tr t-if="is_sub_house_report" class="border bg-400">
+                <td colspan="3">
+                    <h6 class="mt-2">House Shipment:
+                        <t t-if="house_shipment.hbl_number">
+                            <span t-field="house_shipment.hbl_number"/>
+                        </t>
+                        <t t-else="">
+                            <span t-field="house_shipment.name"/>
+                        </t>
+                    </h6>
+                </td>
+            </tr>
+            <tr class="mb-0 pb-0">
+                <td colspan="3" class="p-0">
+                    <table class="table table-bordered table-sm o_main_table text-center mb-0">
+                        <thead>
+                            <tr class="bg-200 font-weight-bold">
+                                <th rowspan="2">Sr. No</th>
+                                <th rowspan="2">Charge Name</th>
+                                <th colspan="2">Revenue (Exl. Tax)</th>
+                                <th colspan="2">Cost (Exl. Tax)</th>
+                                <th colspan="2">Profit</th>
+                                <th colspan="2">Profit (%)</th>
+                            </tr>
+                            <tr class="bg-200 font-weight-bold">
+                                <th>Estimated</th>
+                                <th>Actual</th>
+                                <th>Estimated</th>
+                                <th>Actual</th>
+                                <th>Estimated</th>
+                                <th>Actual</th>
+                                <th>Estimated</th>
+                                <th>Actual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="counter" t-value="0"/>
+                            <t t-set="job_lines" t-value="house_shipment and house_shipment.job_costsheet_ids or o.job_costsheet_ids"/>
+                            <t t-foreach="job_lines" t-as="line">
+                                <tr>
+                                    <td>
+                                        <t t-set="counter" t-value="counter+1"/>
+                                        <span t-out="counter"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line.product_id"></span>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.revenue_total_amount"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.revenue_actual_total_amount"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.cost_total_amount"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.cost_actual_total_amount"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.estimated_margin"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-field="line.actual_margin"/>
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-out="round(line.estimated_margin_percentage, 3)"/>%
+                                    </td>
+                                    <td class="text-right">
+                                        <span t-out="round(line.actual_margin_percentage, 3)"/>%
+                                    </td>
+                                </tr>
+                            </t>
+                            <tr class="text-right bg-300 border-black o_total">
+                                <td colspan="2">
+                                    <b>Grand Total:</b>
+                                </td>
+                                <td class="text-right o_price_total">
+                                    <span class="text-nowrap" t-out="sum(job_lines.mapped('revenue_total_amount'))" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span>
+                                </td>
+                                <td class="text-right o_price_total">
+                                    <span class="text-nowrap" t-out="sum(job_lines.mapped('revenue_actual_total_amount'))" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span>
+                                </td>
+                                <td class="text-right o_price_total">
+                                    <span class="text-nowrap" t-out="sum(job_lines.mapped('cost_total_amount'))" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span>
+                                </td>
+                                <td class="text-right o_price_total">
+                                    <span class="text-nowrap" t-out="sum(job_lines.mapped('cost_actual_total_amount'))" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span>
+                                </td>
+                                <td class="text-right o_price_total">
+                                    <span class="text-nowrap" t-out="sum(job_lines.mapped('estimated_margin'))" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"></span>
+                                </td>
+                                <td class="text-right o_price_total">
+                                    <span class="text-nowrap" t-out="sum(job_lines.mapped('actual_margin'))" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
+                                </td>
+                                <td class="text-right o_price_total">
+                                    <span class="text-nowrap" t-out="round(sum(job_lines.mapped('estimated_margin')) / (sum(job_lines.mapped('cost_total_amount')) or 1) * 100, 3)"></span>%
+                                </td>
+                                <td class="text-right o_price_total">
+                                    <span class="text-nowrap" t-out="round(sum(job_lines.mapped('actual_margin')) / (sum(job_lines.mapped('cost_actual_total_amount')) or 1) * 100, 3)"></span>%
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            <tr t-if="show_signature">
+                <td colspan="3" class="text-right">
+                    <strong>Signature: </strong><br/><br/>
+                    <span>_________________________</span>
+                </td>
+            </tr>
+        </table>
+    </template>
+
+    <!--House Shipment Specific Template-->
+    <template id="report_job_cost_sheet_document">
+        <t t-call="web.internal_layout">
+            <div class="page">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="fm_jobcost_sheet.house_shipment_job_cost_sheet_detail"/>
+                    <t t-set="show_signature" t-value="True"/>
+                    <t t-set="is_sub_house_report" t-value="False"/>
+                    <t t-call="fm_jobcost_sheet.job_cost_sheet_groupped_data"/>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <!--Master Shipment Specific Template-->
+    <template id="master_shipment_job_cost_sheet_detail">
+        <t t-set="company" t-value="o.company_id.sudo() or res_company"/>
+        <table class="table table-bordered table-sm o_main_table text-center mb-0">
+            <tr>
+                <td colspan="3">
+                    <div class="col-12 text-center">
+                        <img t-if="company.logo" class="text-center" style="max-height: 45px;" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>MBL:</strong><br/><span t-field="o.carrier_booking_reference_number"/>
+                </td>
+                <td colspan="2">
+                    <h4 class="text-center mt-2">
+                        <t t-if="o.carrier_booking_reference_number">
+                            <span>Job Cost Sheet: <span t-if="docs" t-out="o.carrier_booking_reference_number"/></span>
+                        </t>
+                        <t t-else="">
+                            <span>Job Cost Sheet: <span t-if="docs" t-out="o.name"/></span>
+                        </t>
+                    </h4>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Origin Port:</strong><br/><span t-field="o.origin_port_un_location_id"/>
+                </td>
+                <td>
+                    <strong>Destination Port:</strong><br/><span t-field="o.destination_port_un_location_id"/>
+                </td>
+                <td>
+                    <strong>Vessel &amp; Voyage No:</strong><br/><span t-field="o.vessel_id"/> <span t-if="o.vessel_id and o.voyage_number">/</span> <span t-field="o.voyage_number"/>
+                </td>
+            </tr>
+        </table>
+    </template>
+
+    <!--Master Shipment Specific Template-->
+    <template id="report_master_job_cost_sheet_document">
+        <t t-call="web.internal_layout">
+            <div class="page">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="fm_jobcost_sheet.master_shipment_job_cost_sheet_detail"/>
+                    <t t-if="o.job_costsheet_ids">
+                        <t t-set="is_sub_house_report" t-value="False"/>
+                        <t t-call="fm_jobcost_sheet.job_cost_sheet_groupped_data"/>
+                    </t>
+                    <t t-foreach="o.house_shipment_ids" t-as="house_shipment">
+                        <t t-set="jobs" t-value="house_shipment"/>
+                        <t t-set="is_sub_house_report" t-value="True"/>
+                        <t t-set="show_signature" t-value="True if house_shipment_last else False"/>
+                        <t t-call="fm_jobcost_sheet.job_cost_sheet_groupped_data"/>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_job_cost_sheet">
+        <t t-call="web.html_container">
+            <t t-call="fm_jobcost_sheet.report_job_cost_sheet_document" t-lang="request.env.user.lang"/>
+        </t>
+    </template>
+
+    <template id="report_master_job_cost_sheet">
+        <t t-call="web.html_container">
+            <t t-call="fm_jobcost_sheet.report_master_job_cost_sheet_document" t-lang="request.env.user.lang"/>
+        </t>
+    </template>
+
+</odoo>

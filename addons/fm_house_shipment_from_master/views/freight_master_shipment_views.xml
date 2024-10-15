@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="freight_master_shipment_house_shipemnt_view_form" model="ir.ui.view">
+        <field name="name">freight.master.shipment.house_shipemnt.view.form</field>
+        <field name="model">freight.master.shipment</field>
+        <field name="inherit_id" ref="freight_management.freight_master_shipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button string="Create House Shipment"
+                        name="action_create_direct_shipment"
+                        type="object"
+                        class="oe_highlight"
+                        />
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <record id="fm_road_operation_freight_house_shipment_view_form_transportation_details" model="ir.ui.view">
+        <field name="name">fm_road_operation.freight.house.shipment.view.form</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="priority" eval="18"/>
+        <field name="inherit_id" ref="fm_road_operation.fm_road_operation_freight_house_shipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='transportation_detail_ids']//group[@name='container_details']" position="inside">
+                <group>
+                    <field name="is_refrigerated" widget="boolean_toggle" invisible="1"/>
+                    <label for="max_temperature" attrs="{'invisible': [('is_refrigerated', '=', False)]}"/>
+                    <div class="o_row">
+                        <field name="container_temperature" attrs="{'invisible': [('is_refrigerated', '=', False)], 'required': [('is_refrigerated', '=', True)]}"/>
+                        <field name="container_temperature_uom_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('is_refrigerated', '=', False)],
+                                    'required': [('is_refrigerated', '=', True)]}"/>
+                    </div>
+                    <label for="max_temperature" attrs="{'invisible': [('is_refrigerated', '=', False)]}"/>
+                    <div class="o_row">
+                        <field name="max_temperature" attrs="{'invisible': [('is_refrigerated', '=', False)], 'required': [('is_refrigerated', '=', True)]}"/>
+                        <field name="max_temperature_uom_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('is_refrigerated', '=', False)],
+                                    'required': [('is_refrigerated', '=', True)]}"/>
+                    </div>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='package_ids']//tree/field[@name='package_type_id']" position="before">
+                <field name="quote_transport_line_id" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="wizard_account_global_tds_tax_view_form" model="ir.ui.view">
+        <field name="name">wizard.account.global.tds.tax.view.form</field>
+        <field name="model">wizard.account.global.tds.tax</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="tds_tax_id" options="{'no_create': 1}"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Apply" name="action_apply_tds_on_moves" type="object" class="oe_highlight"/>
+                    <button string="Cancel" class="btn btn-default" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

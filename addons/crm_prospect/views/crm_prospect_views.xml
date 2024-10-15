@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="crm_prospect_view_tree" model="ir.ui.view">
+        <field name="name">crm.prospect.view.tree</field>
+        <field name="model">crm.prospect</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="mobile"/>
+                <field name="country_id"/>
+                <field name="contact_name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="crm_prospect_view_form" model="ir.ui.view">
+        <field name="name">crm.prospect.view.form</field>
+        <field name="model">crm.prospect</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <label for="name" string="Contact Name"/>
+                    <div class="oe_title">
+                        <field name="active" invisible="1"/>
+                        <h1>
+                            <field name="name" class="text-break" default_focus="1" placeholder="e.g. Brandom Freeman"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <label for="street1" string="Address"/>
+                            <div class="o_address_format">
+                                <field name="street1" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_create': True,'no_open':True}"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_create': True,'no_open':True}"/>
+                                <field name="city_id" placeholder="City" class="o_address_city" options="{'no_open':True}"
+                                    domain="[('country_id','=',country_id),('state_id','=',state_id)]"
+                                    context="{'default_country_id':country_id,'default_state_id':state_id,'default_zipcode':zip}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>  
+                            </div>
+                            <field name="designation" attrs="{'required':[('is_mandatory','!=',False)]}"/>
+                            <field name="is_party_type" invisible="1"/>
+                            <field name="is_mandatory" invisible="1"/>
+                            <field name="category_ids" widget="many2many_tags" attrs="{'invisible':[('is_party_type','=',False)],'required':[('is_party_type','!=',False)]}"/>
+                        </group>
+                        <group>
+                            <field name="phone_no" widget="phone"/>
+                            <field name="email" widget="email" attrs="{'required':[('is_mandatory','!=',False)]}"/>
+                            <field name="mobile" widget="phone" attrs="{'required':[('is_mandatory','!=',False)]}"/>
+                            <field name="contact_name" attrs="{'required':[('is_mandatory','!=',False)]}"/>
+                            <field name="department"/>
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="crm_prospect_view_search" model="ir.ui.view">
+        <field name="name">crm.prospect.view.search</field>
+        <field name="model">crm.prospect</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone_no" filter_domain="['|', ('phone_no', 'ilike', self), ('mobile', 'ilike', self)]"/>
+                <field name="contact_name"/>
+                <field name="designation"/>
+                <field name="department"/>
+                <field name="city_id"/>
+                <field name="country_id"/>
+                <field name="state_id"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <group expand="0" name="group_by" string="Group By">
+                    <filter name="group_city" string="City" context="{'group_by' : 'city_id'}"/>
+                    <filter name="group_country" string="Country" context="{'group_by': 'country_id'}"/>
+                    <filter name="group_state" string="State" context="{'group_by': 'state_id'}"/>
+                    <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="crm_prospect_action" model="ir.actions.act_window">
+        <field name="name">Prospect</field>
+        <field name="res_model">crm.prospect</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new Prospect.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="crm_prospect_menu"
+        name="Prospect"
+        action="crm_prospect_action"
+        parent="fm_sale_crm.fm_sales_root_menu"
+        groups="fm_sale_crm.group_salesman,base.group_system"
+        sequence="1"/>
+</odoo>

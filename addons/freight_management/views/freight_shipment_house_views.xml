@@ -1,0 +1,976 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="freight_house_shipment_view_form" model="ir.ui.view">
+        <field name="name">freight.house.shipment.view.form</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="arch" type="xml">
+            <form string="Shipment" js_class="colered_control_panel">
+                <header>
+                    <field name="state" invisible="1"/>
+                    <field name="domestic_export_state" widget="statusbar" statusbar_visible="created,hbl_generated,booked,confirmed,in_transit,arrived,cancelled,completed"
+                        attrs="{'invisible': [('shipment_type_key', '!=', 'domestic_export')]}"/>
+                    <field name="air_export_state" widget="statusbar" statusbar_visible="created,hawb_generated,booked,confirmed,in_transit,arrived,cancelled,completed"
+                        attrs="{'invisible': ['|', ('mode_type', '!=', 'air'), ('shipment_type_key', '!=', 'export')]}"/>
+                    <field name="export_state" widget="statusbar" statusbar_visible="created,hbl_generated,booked,confirmed,in_transit,arrived,cancelled,completed"
+                        attrs="{'invisible': ['|', ('shipment_type_key', '!=', 'export'), ('mode_type', 'not in', ['sea'])]}"/>
+                    <field name="reexport_state" widget="statusbar" statusbar_visible="created,hbl_generated,booked,confirmed,in_transit,arrived,cancelled,completed"
+                           attrs="{'invisible': [('shipment_type_key', '!=', 're_export')]}"/>
+                    <field name="import_state" widget="statusbar" statusbar_visible="created,nomination_generated,booked,confirmed,in_transit,arrived,cancelled,completed"
+                        attrs="{'invisible': [('shipment_type_key', '!=', 'import')]}"/>
+                    <field name="cross_state" widget="statusbar" statusbar_visible="created,nomination_generated,booked,confirmed,in_transit,arrived,cancelled,completed"
+                        attrs="{'invisible': [('shipment_type_key', '!=', 'cross')]}"/>
+                    <button string="Change Status" name="action_change_status" type="object" class="oe_highlight"/>
+                    <button string="Generate ReExport Shipment" name="action_gen_reexport_shipment" type="object"
+                            class="oe_highlight" groups="freight_management.group_user_reexport_creator_team"
+                            attrs="{'invisible': ['|','|','|','|',('mode_type', '=', 'land'),('shipment_type_key', '!=', 'import'),('state', '!=', 'completed'), ('is_reexported', '=', True),('enable_disable_reexport_hs', '=', False)]}"/>
+                    <button string="Create Master Shipment" name="action_create_master_shipment" type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|', '|', '|', ('state', 'in', ['cancelled', 'completed']), ('is_direct_shipment', '=', False), ('parent_id', '!=', False), ('allow_edit_external_carrier_bookings', '!=', False)]}"/>
+                </header>
+                <sheet>
+                    <field name="cargo_is_package_group" invisible="1" context="{'force_change': True}"/>
+                    <field name="packaging_mode" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_shipment_master" type="object" class="oe_stat_button" icon="fa-flag" string="Master Shipment" attrs="{'invisible': [('parent_id', '=', False)]}" groups="freight_base.group_operation_associate,base.group_system,freight_base.group_manage_documents"/>
+                        <button name="action_shipment_documents" type="object" class="oe_stat_button" icon="fa-file" groups="freight_base.group_operation_associate,base.group_system,freight_base.group_manage_documents">
+                            <field string="Documents" name="document_count" widget="statinfo"/>
+                        </button>
+                        <button name="action_open_re_export_job" type="object" class="oe_stat_button" icon="fa-flag"
+                                attrs="{'invisible': ['|',('shipment_type_key', '!=', 'import'),('enable_disable_reexport_hs', '=', False)]}">
+                            <field string="Export Job" name="reexport_job_count" widget="statinfo"/>                        </button>
+                        <button name="action_open_import_job" type="object" class="oe_stat_button" icon="fa-flag"
+                               attrs="{'invisible': ['|',('shipment_type_key', '!=', 're_export'),('enable_disable_reexport_hs', '=', False)]}">
+                            <field string="Import Job" name="import_job_count" widget="statinfo"/>
+                        </button>
+
+                    </div>
+                    <field name="shipment_type_key" invisible="1"/>
+                    <field name="calculated_dimension_lwh" invisible="1"/>
+                    <div class="row">
+                        <div class="col pr-0">
+                            <label for="booking_nomination_no" />
+                            <div class="oe_title">
+                                <h1>
+                                    <field name="booking_nomination_no" placeholder="Booking Ref / Nomination Number" force_save="1"/>
+                                </h1>
+                            </div>
+                        </div>
+                        <div class="col pl-0">
+                            <label for="hbl_number" string="House LR Number" attrs="{'invisible': [('mode_type', '!=', 'land')]}"/>
+                            <label for="hbl_number" string="House BL No" attrs="{'invisible': [('mode_type', '!=', 'sea')]}"/>
+                            <label for="hbl_number" string="HAWB Number" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                            <div class="oe_title">
+                                <h1>
+                                    <field name="hbl_number" placeholder="House LR Number" attrs="{'invisible': [('mode_type', '!=', 'land')]}"/>
+                                    <field name="hbl_number" placeholder="House BL No" attrs="{'invisible': [('mode_type', '!=', 'sea')]}"/>
+                                    <field name="hbl_number" placeholder="HAWB Number" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                    <field name="enable_disable_part_bl" invisible="1"/>
+                    <field name="is_reexported" invisible="1"/>
+                    <field name="enable_disable_reexport_hs" invisible="1"/>
+                    <field name="enable_cut_off_dates" invisible="1" />
+                    <field name="allow_edit_external_carrier_bookings" invisible="1"/>
+                    <group>
+                        <group>
+                            <field name="is_part_bl" widget="boolean_toggle" attrs="{'invisible':['|', '|', '|', ('enable_disable_part_bl', '=', False), ('packaging_mode', '!=', 'container'),('shipment_type_key', '!=', 'export'),('mode_type', '!=', 'sea')],
+                                                                                    'readonly': [('id', '>', 0)]}"/>
+                            <field name="id" invisible="1"/>
+                            <field name="parent_id" invisible="1"/>
+                            <field name="is_direct_shipment" widget="boolean_toggle" attrs="{'readonly':[('parent_id','!=',False)], 'invisible':[('state','=','cancelled')]}"/>
+                            <field name="is_courier_shipment" widget="boolean_toggle" attrs="{'readonly': [('id', '>', 0)]}"/>
+                            <field name="shipment_date" />
+                            <field name="currency_id" groups="base.group_no_one"/>
+                            <field name="container_number" invisible="1"/>
+                            <field name="container_type" invisible="1"/>
+                            <field name="shipment_for" widget="radio" options="{'horizontal': True}" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="no_of_part_bl" attrs="{'invisible':['|', '|', '|', '|', ('is_part_bl', '=', False), ('enable_disable_part_bl', '=', False), ('packaging_mode', '!=', 'container'),('shipment_type_key', '!=', 'export'),('mode_type', '!=', 'sea')], 'required': [('is_part_bl', '=', True), ('packaging_mode', '=', 'container'),('shipment_type_key', '=', 'export'),('mode_type', '=', 'sea')]}"/>
+                            <field name="hbl_number_type" attrs="{'invisible': [('shipment_type_key', 'not in', ('import', 'cross'))], 'readonly': [('id', '>', 0)]}"/>
+                            <field name="company_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_company"/>
+                            <field name="sales_agent_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="tag_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group string="General Details">
+                        <group>
+                            <field name="shipment_type_domain" invisible="1" />
+                            <field name="shipment_type_id" domain="shipment_type_domain" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': ['&amp;', ('id', '>', 0),('shipment_type_id', '>', 0)], 'required': 1}" force_save="1"/>
+                            <field name="cargo_type_domain" invisible="1" />
+                            <field name="cargo_type_id" domain="cargo_type_domain" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': ['&amp;', ('id', '>', 0),('cargo_type_id', '>', 0)], 'required': 1}" force_save="1"/>
+                            <field name="inco_term_id" options="{'no_create': True, 'no_open': True}" attrs="{'required': [('is_courier_shipment', '=', False)]}"/>
+                            <field name="incoterm_check" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="transport_mode_id" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': ['&amp;', ('id', '>', 0),('transport_mode_id', '>', 0)], 'required': 1}" force_save="1"/>
+                            <field name="mode_type" invisible="1"/>
+                            <field name="service_mode_id" options="{'no_create': True, 'no_open': True}"/>
+                            <field name="user_id" options="{'no_create': True, 'no_open': True}"/>
+                        </group>
+                    </group>
+                    <separator string="Declared Weight &amp; Volume"/>
+                    <label for="auto_update_weight_volume" class="font-weight-bold"/>
+                    <field name="auto_update_weight_volume" widget="boolean_toggle" context="{'force_change': True}" nolable="1"/>
+                    <group>
+                        <group>
+                            <label for="pack_unit" string="Packs"/>
+                            <div class="o_row">
+                                <field name="pack_unit" force_save="1" attrs="{'readonly':[('auto_update_weight_volume','=',True)]}"/>
+                                <field name="pack_unit_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1" attrs="{'readonly':[('auto_update_weight_volume','=',True)]}"/>
+                            </div>
+                            <label for="gross_weight_unit"/>
+                            <div class="o_row">
+                                <field name="gross_weight_unit" force_save="1" attrs="{'readonly':[('auto_update_weight_volume','=',True)]}"/>
+                                <field name="gross_weight_unit_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1"
+                                    attrs="{'readonly':[('auto_update_weight_volume','=',True)]}"/>
+                            </div>
+                            <label for="weight_volume_unit"/>
+                            <div class="o_row">
+                                <field name="weight_volume_unit" attrs="{'readonly':[('auto_update_weight_volume','=',True)]}" force_save="1"/>
+                                <field name="weight_volume_unit_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1"
+                                    attrs="{'readonly':[('auto_update_weight_volume','=',True)]}"/>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="net_weight_unit"/>
+                            <div class="o_row">
+                                <field name="net_weight_unit" attrs="{'readonly':[('auto_update_weight_volume','=',True)]}" force_save="1"/>
+                                <field name="net_weight_unit_uom_id" class="ml-1" options="{'no_open': True, 'no_create': True}"
+                                       attrs="{'readonly':[('auto_update_weight_volume','=',True)]}" force_save="1"/>
+                            </div>
+                            <label for="volume_unit"/>
+                            <div class="o_row">
+                                <field name="volume_unit" attrs="{'readonly':[('auto_update_weight_volume','=',True)]}" force_save="1"/>
+                                <field name="volume_unit_uom_id" class="ml-1" options="{'no_open': True, 'no_create': True}"
+                                    attrs="{'readonly':[('auto_update_weight_volume','=',True)]}" force_save="1"/>
+                            </div>
+                            <label for="chargeable_kg"/>
+                            <div class="d-flex oe_inline">
+                                <field name="chargeable_kg" force_save="1" readonly="1"/>
+                                <field name="chargeable_uom_id" class="ml-2" options="{'no_open': True, 'no_create': True}" readonly="1" force_save="1"/>
+                            </div>
+                            <label for="chargeable_volume" attrs="{'invisible': [('mode_type', '!=', 'sea')]}"/>
+                            <div class="d-flex oe_inline" attrs="{'invisible': [('mode_type', '!=', 'sea')]}">
+                                <field name="chargeable_volume" force_save="1" readonly="1"/>
+                                <field name="chargeable_volume_uom_id" readonly="1" class="ml-2" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('mode_type', '!=', 'sea')]}" force_save="1"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group col="6">
+                        <group string="Customer" col="2" colspan="2">
+                            <field name="client_id" context="{'force_change': True}"/>
+                            <field name="client_address_id" string="Address"
+                                context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': client_id, 'default_type': 'invoice', 'form_view_ref': 'freight_base.res_partner_address_form'}"
+                                options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>
+                        </group>
+                        <group name="shipper" string="Shipper" col="2" colspan="2">
+                            <field name="shipper_consignee_check" invisible="1"/>
+                            <field name="shipper_id" string="Shipper" context="{'force_change': True}" attrs="{'required': [('is_courier_shipment', '=', False), ('mode_type', '!=', 'land'), ('shipper_consignee_check', '!=', True)]}"/>
+                            <field name="shipper_address_id" string="Address"
+                                context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': shipper_id, 'default_type': 'delivery', 'form_view_ref': 'freight_base.res_partner_address_form'}"
+                                options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>
+                            <field name="shipper_account_numbers"/>
+                        </group>
+                        <group name="consignee" string="Consignee" col="2" colspan="2">
+                            <field name="consignee_id" string="Consignee" context="{'force_change': True}" attrs="{'required': [('is_courier_shipment', '=', False), ('mode_type', '!=', 'land'), ('shipper_consignee_check', '!=', True)]}"/>
+                            <field name="consignee_address_id" string="Address"
+                                context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': consignee_id, 'default_type': 'delivery', 'form_view_ref': 'freight_base.res_partner_address_form'}"
+                                options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>
+                            <field name="consignee_account_numbers"/>
+                        </group>
+                    </group>
+
+                    <separator string="Part BL" attrs="{'invisible':['|', '|', '|', '|',('is_part_bl', '=', False), ('enable_disable_part_bl', '=', False), ('packaging_mode', '!=', 'container'),('shipment_type_key', '!=', 'export'),('mode_type', '!=', 'sea')]}"/>
+                    <field name="part_bl_ids" nolabel="1" attrs="{'invisible':['|', '|', '|', '|',('is_part_bl', '=', False), ('enable_disable_part_bl', '=', False), ('packaging_mode', '!=', 'container'),('shipment_type_key', '!=', 'export'),('mode_type', '!=', 'sea')]}">
+                        <tree editable="bottom">
+                            <field name="company_id" invisible="1"/>
+                            <field name="shipment_id" invisible="1"/>
+                            <field name="bl_no"/>
+                            <field name="client_id" context="{'force_change': True}"/>
+                            <field name="client_address_id" context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': client_id, 'default_type': 'delivery', 'form_view_ref': 'freight_base.res_partner_address_form'}"
+                            options="{'always_reload': True, 'highlight_first_line': True}"/>
+                            <field name="shipper_id" context="{'force_change': True}" attrs="{'required': [('parent.is_courier_shipment', '=', False)]}"/>
+                            <field name="shipper_address_id" context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': shipper_id, 'default_type': 'delivery', 'form_view_ref': 'freight_base.res_partner_address_form'}"
+                            options="{'always_reload': True, 'highlight_first_line': True}"/>
+                            <field name="consignee_id" context="{'force_change': True}" attrs="{'required': [('parent.is_courier_shipment', '=', False)]}"/>
+                            <field name="consignee_address_id" context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': consignee_id, 'default_type': 'delivery', 'form_view_ref': 'freight_base.res_partner_address_form'}"
+                            options="{'always_reload': True, 'highlight_first_line': True}"/>
+                            <field name="document_type_id" invisible="1"/>
+                            <field name="id" invisible="1" />
+                            <field name="report_action_id" string="Print" widget="web_preview" options="{'res_id': 'id', 'document_type': 'document_type_id', 'class': 'fa fa-eye btn-sm o_list_button pull-right', 'nolable': True, 'no_header': True}" attrs="{'invisible': [('report_action_id', '=', False)]}"/>
+                        </tree>
+                    </field>
+                    <notebook>
+                        <page name="carrier_details" string="Carriage">
+                            <group name="vessel_info" string="Vessel Info"  attrs="{'invisible': [('mode_type', '!=', 'sea')]}">
+                                <group>
+                                    <div class="o_td_label">
+                                        <label for="voyage_number" string="Voyage No"/>
+                                    </div>
+                                    <field name="voyage_number" nolabel="1"  attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                                    <field name="vessel_id" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                                </group>
+                                <group>
+                                    <div class="o_td_label">
+                                        <label for="shipping_line_id" string="Shipping Line"/>
+                                    </div>
+                                    <field name="shipping_line_id" nolabel="1" domain="[('mode_type', '=', mode_type)]"
+                                           context="{'default_transport_mode_id': transport_mode_id}" attrs="{'readonly': [('parent_id', '!=', False)]}"/>
+                                </group>
+                            </group>
+                            <field name="enable_feeder_details" invisible="1" />
+                            <group name="feeder_info" string="Feeder Info"  attrs="{'invisible': ['|', ('mode_type', '!=', 'sea'), ('enable_feeder_details', '=', False)]}">
+                                <group>
+                                    <field name="feeder_voyage_number" string="Voyage Number"/>
+                                    <field name="feeder_vessel_id" string="Vessel"/>
+                                </group>
+                                <group>
+                                    <field name="feeder_shipping_line_id" domain="[('mode_type', '=', mode_type)]"
+                                           context="{'default_transport_mode_id': transport_mode_id}" string="Shipping Line"/>
+                                </group>
+                            </group>
+                            <group name="airline_info" string="Airline Info"  attrs="{'invisible': [('mode_type', '!=', 'air')]}">
+                                <group>
+                                    <div class="o_td_label">
+                                        <label for="voyage_number" string="Flight No"/>
+                                    </div>
+                                    <field name="voyage_number" nolabel="1"/>
+                                    <div class="o_td_label">
+                                        <label for="aircraft_type" string="AirCraft Type"/>
+                                    </div>
+                                    <field name="aircraft_type" nolabel="1"/>
+                                </group>
+                                <group>
+                                    <div class="o_td_label">
+                                        <label for="shipping_line_id" string="Airlines"/>
+                                    </div>
+                                    <field name="shipping_line_id" nolabel="1" domain="[('mode_type', '=', mode_type)]"
+                                           context="{'default_transport_mode_id': transport_mode_id}"/>
+                                </group>
+                            </group>
+                            <group string="Other Related Information" attrs="{'invisible': [('mode_type', 'not in', ['air', 'land'])]}">
+                                <group>
+                                    <field name="handling_info" ttrs="{'invisible': [('mode_type', 'not in', ['air', 'land'])]}"/>
+                                    <field name="iata_code" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                                    <field name="declared_value_carrier" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                                    <field name="declared_value_customer" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                                    <div/>
+                                </group>
+                                <group>
+                                    <field name="accounting_info" attrs="{'invisible': [('mode_type', 'not in', ['air', 'land'])]}"/>
+                                    <field name="iata_rate" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                                    <field name="iata_rate_currency_id" invisible="1"/>
+                                    <field name="commodity" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                                    <div/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Origin" name="origin_details" attrs="{'invisible': [('mode_type', '=', 'land')]}">
+                                    <field name="house_check" invisible="1"/>
+                                    <field name="origin_un_location_id" string="Origin" attrs="{'required': [('mode_type', '!=', 'land'),('house_check', '!=', True)]}"/>
+                                    <field name="origin_country_id" invisible="1"/>
+                                    <div class="o_td_label">
+                                        <label for="origin_port_un_location_id" string="Origin Port" attrs="{'invisible': [('mode_type', '=', 'air')]}"/>
+                                        <label for="origin_port_un_location_id" string="Origin Airport" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                                    </div>
+                                    <field name="origin_port_un_location_id" nolabel="1" domain="[('transport_mode_id','=',transport_mode_id)]" context="{'default_country_id': origin_country_id, 'default_transport_mode_id': transport_mode_id}" attrs="{'required' :[('state','not in',['created','cancelled'])]}"/>
+                                    <field name="etd_time" attrs="{'required' :[('state','not in',['created','cancelled']), ('is_courier_shipment', '=', False)]}"/>
+                                    <field name="atd_time" />
+                                    <field name="pickup_address" attrs="{'invisible': ['|',('shipment_for','!=','shipment'),('incoterm_check', '!=', True)]}"/>
+                                </group>
+                                <group string="Destination" name="destination_details" attrs="{'invisible': [('mode_type', '=', 'land')]}">
+                                    <field name="destination_un_location_id" string="Destination" attrs="{'required': [('mode_type', '!=', 'land'),('house_check', '!=', True)]}"/>
+                                    <field name="destination_country_id" invisible="1"/>
+                                    <div class="o_td_label">
+                                        <label for="destination_port_un_location_id" string="Destination Port" attrs="{'invisible': [('mode_type', '=', 'air')]}"/>
+                                        <label for="destination_port_un_location_id" string="Destination Airport" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                                    </div>
+                                    <field name="destination_port_un_location_id" nolabel="1" domain="[('transport_mode_id','=',transport_mode_id)]" context="{'default_country_id': destination_country_id, 'default_transport_mode_id': transport_mode_id}" attrs="{'required' :[('state','not in',['created','cancelled'])]}"/>
+                                    <field name="eta_time" attrs="{'required' :[('state','not in',['created','cancelled']), ('is_courier_shipment', '=', False)]}"/>
+                                    <field name="ata_time" />
+                                    <field name="delivery_address" attrs="{'invisible': ['|',('shipment_for','!=','shipment'),('incoterm_check', '!=', True)]}"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="additional_details" string="Additional">
+                            <group name="hbl_details" string="HBL Details" attrs="{'invisible': [('mode_type', 'in', ['air', 'land'])]}">
+                                <group>
+                                    <field name="paid_place_id"/>
+                                    <field name="place_of_issue_id"/>
+                                    <field name="place_of_supply_id"/>
+                                    <field name="no_of_origin_docs" />
+                                    <field name="no_of_copy_docs" />
+                                    <field name="shipper_declared_value"/>
+                                    <field name="cargo_received_date"/>
+                                </group>
+                                <group>
+                                    <field name="issue_date"/>
+                                    <field name="receipt_date"/>
+                                    <field name="goods_co_id"/>
+                                    <field name="ship_onboard_date" />
+                                    <field name="line_number"/>
+                                    <field name="sub_line_number"/>
+                                    <field name="port_cut_off_date"/>
+                                </group>
+                            </group>
+                            <field name="shipment_type" invisible="1"/>
+                            <field name="cargo_type" invisible="1"/>
+                            <field name="is_proxy_bl_visible" invisible="1"/>
+                            <group string="Proxy BL Details" attrs="{'invisible': [('is_proxy_bl_visible', '=', False)]}">
+                                <group style="width:100%;">
+                                    <field name="is_proxy_bl" widget="boolean_toggle"/>
+                                </group>
+                                <group string="Proxy Shipper" style="width:50%;" attrs="{'invisible': [('is_proxy_bl', '=', False)]}">
+                                    <field name="proxy_shipper_id" string="Shipper" context="{'force_change': True}" attrs="{'required': [('is_proxy_bl', '=', True)]}"/>
+		                            <field name="proxy_shipper_address_id" string="Address"
+		                                context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': proxy_shipper_id, 'default_type': 'delivery', 'form_view_ref': 'freight_base.res_partner_address_form'}"
+		                                options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>
+                                </group>
+                                <group string="Proxy Consignee" style="width:50%;" attrs="{'invisible': [('is_proxy_bl', '=', False)]}">
+                                    <field name="proxy_consignee_id" string="Consignee" context="{'force_change': True}" attrs="{'required': [('is_proxy_bl', '=', True)]}"/>
+		                            <field name="proxy_consignee_address_id" string="Address"
+		                                context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': proxy_consignee_id, 'default_type': 'delivery', 'form_view_ref': 'freight_base.res_partner_address_form'}"
+		                                options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}"/>
+                                </group>
+                            </group>
+                            <group string="HAWB Details" attrs="{'invisible': [('mode_type', '!=', 'air')]}">
+                                <group>
+                                    <field name="paid_place_id"/>
+                                    <field name="place_of_issue_id"/>
+                                    <field name="place_of_supply_id"/>
+                                </group>
+                                <group>
+                                    <field name="issue_date"/>
+                                    <field name="receipt_date"/>
+                                    <field name="goods_co_id"/>
+                                </group>
+                            </group>
+                            <group string="HAZ Details" attrs="{'invisible': [('mode_type', '=', 'air')]}">
+                                <group>
+                                    <field name="is_hazardous" widget="boolean_toggle"/>
+                                </group>
+                                <group>
+                                </group>
+                                <group attrs="{'invisible': [('is_hazardous', '=', False)]}">
+                                    <field name="haz_class_id" options="{'no_create': True, 'no_open': True}" attrs="{'required': [('is_hazardous', '=', True)]}"/>
+                                    <field name="haz_un_number" attrs="{'required': [('is_hazardous', '=', True)]}"/>
+                                </group>
+                                <group attrs="{'invisible': [('is_hazardous', '=', False)]}">
+                                    <field name="haz_remark"/>
+                                </group>
+                            </group>
+                            <group string="STUFFING / DESTUFFING / INSTRUCTIONS" attrs="{'invisible': [('mode_type', '=', 'land')]}">
+                                <group>
+                                     <field name="contact_number"/>
+                                </group>
+                                <group>
+                                    <field name="location"/>
+                                </group>
+                                <group>
+                                    <field name="instructions"/>
+                                </group>
+                            </group>
+                            <group string="Other Details">
+                                <group>
+                                    <field name="entry_detail" widget="radio"/>
+                                    <field name="entry_detail_number"/>
+                                    <field name="lc_number"/>
+                                    <field name="customer_ref_no" string="Customer Ref. No"/>
+                                    <field name="shipment_note" string="Shipment Note"/>
+                                    <field name="marks_and_no"/>
+                                    <field name="lc_number_updated_on" invisible="1"/>
+                                    <field name="rate_class" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                                </group>
+                                <group>
+                                    <field name="release_type" widget="selection"/>
+                                    <field name="payment_terms" widget="radio"/>
+                                    <field name="free_day"/>
+                                    <field name="commercial_invoice"/>
+                                    <field name="customer_remarks" string="Customer Remarks"/>
+                                    <field name="commercial_invoice_updated_on" invisible="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="cutoff_dates" string="Cut-Off Dates" attrs="{'invisible': ['|', ('mode_type', '=', 'land'), ('enable_cut_off_dates', '=', False)]}">
+                            <group col="6" name="booking_details" string="Booking Details">
+                                <group col="2" colspan="2">
+                                    <field name="order_no" />
+                                    <field name="cy_date" />
+                                    <field name="cy_yard" />
+                                    <field name="closing_date" />
+                                    <field name="closing_time" widget="float_time" placeholder="HH:MM"/>
+                                </group>
+                                <group col="2" colspan="2">
+                                    <field name="booking" readonly="1"/>
+                                    <field name="paperless_code" />
+                                    <field name="return_date" />
+                                </group>
+                                <group col="2" colspan="2">
+                                    <field name="return_yard" />
+                                    <field name="port_regulations" />
+                                    <field name="remark" />
+                                </group>
+                            </group>
+                        </page>
+                        <page name="insurance" string="Insurance">
+                            <label for="is_insured"/>
+                            <field name="is_insured" widget="boolean_toggle"/>
+                            <group attrs="{'invisible': [('is_insured', '=', False)]}">
+                                <group>
+                                    <field name="policy_number" attrs="{'required': [('is_insured', '=', True)]}"/>
+                                    <field name="policy_holder"/>
+                                </group>
+                                <group>
+                                    <field name="issued_by"/>
+                                    <field name="issued_date"/>
+                                </group>
+                                <group>
+                                    <label for="goods_value_amount"/>
+                                    <div class="o_row">
+                                        <field name="goods_value_amount" attrs="{'required': [('is_insured', '=', True)]}"/>
+                                        <field class="oe_edit_only" name="goods_value_currency_id" attrs="{'required': [('is_insured', '=', True)]}" options="{'no_create': True, 'no_open': True}"/>
+                                    </div>
+                                </group>
+                                <group>
+                                    <label for="insurance_value_amount"/>
+                                    <div class="o_row">
+                                        <field name="insurance_value_amount" attrs="{'required': [('is_insured', '=', True)]}"/>
+                                        <field class="oe_edit_only" attrs="{'required': [('is_insured', '=', True)]}" name="insurance_value_currency_id" options="{'no_create': True, 'no_open': True}"/>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="customs" string="Customs">
+                            <group>
+                                <field name="has_customs" widget="boolean_toggle"/>
+                            </group>
+                            <group attrs="{'invisible': [('has_customs', '=', False)]}">
+                                <group>
+                                    <field name="customs_ad_code" attrs="{'required': [('has_customs', '=', True)]}"/>
+                                    <field name="customs_location_id" attrs="{'required': [('has_customs', '=', True)]}"/>
+                                    <field name="customs_declaration_number"/>
+                                    <field name="tariff_determination_number"/>
+                                    <field name="customs_procedure_code"/>
+                                </group>
+                                <group>
+                                    <field name="customs_be_type_id" options="{'no_create': 1, 'no_open':1}" attrs="{'required': [('has_customs', '=', True)]}"/>
+                                    <field name="customs_declaration_date"/>
+                                    <field name="customs_clearance_datetime"/>
+                                    <field name="value_determination_number"/>
+                                </group>
+                            </group>
+                            <group attrs="{'invisible': [('has_customs', '=', False)]}">
+                                <group string="BOE Details" attrs="{'invisible': [('shipment_type','not in','IMP')]}">
+                                    <field name="boe_number" />
+                                    <field name="boe_date" />
+                                    <field name="ownership" widget="radio" options="{'horizontal': True}"/>
+                                    <field name="ownership_id" attrs="{'required': ['|', ('boe_number', '!=', False), ('boe_date', '!=', False)]}"/>
+                                </group>
+                                <group string="Shipping Bill Details" attrs="{'invisible': [('shipment_type','not in','EXP')]}">
+                                    <field name="boe_number" string="SB Number"/>
+                                    <field name="boe_date" string="SB Date"/>
+                                    <field name="ownership" widget="radio" options="{'horizontal': True}"/>
+                                    <field name="ownership_id" attrs="{'required': ['|', ('boe_number', '!=', False), ('boe_date', '!=', False)]}"/>
+                                </group>
+                            </group>
+                            <separator string="Documents" attrs="{'invisible': [('has_customs', '=', False)]}"/>
+                            <field name="customs_document_ids" attrs="{'invisible': [('has_customs', '=', False)]}">
+                                <tree editable="bottom">
+                                    <field name="customs_clearance_datetime" />
+                                    <field name="declaration_number" string="Declaration Number"/>
+                                    <field name="declaration_date"/>
+                                    <field name="note"/>
+                                    <field name="file_name" invisible="True"/>
+                                    <field name="document_file" filename="file_name" widget="binary"/>
+                                </tree>
+                            </field>
+                            <separator string="Other Details" attrs="{'invisible': [('has_customs', '=', False)]}"/>
+                            <group attrs="{'invisible': [('has_customs', '=', False)]}">
+                                <group>
+                                    <field name="igm_number"/>
+                                    <field name="igm_date"/>
+                                    <field name="do_number"/>
+                                    <field name="do_date"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="carrier_booking_details" string="Ext. Carrier Bookings" attrs="{'invisible': [('mode_type', '=', 'land')]}">
+                            <group string="Booking Confirmation">
+                                <group>
+                                    <div class="o_td_label">
+                                        <label for="carrier_booking_reference_number" string="MBL" attrs="{'invisible': [('mode_type', '=', 'air')]}"/>
+                                        <label for="carrier_booking_reference_number" string="MAWB" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                                    </div>
+                                    <field name="carrier_booking_reference_number" nolabel="1" attrs="{'readonly': ['|', ('allow_edit_external_carrier_bookings', '=', False), ('state', 'in', ['completed', 'cancelled'])]}"/>
+                                    <field name="carrier_booking_carrier_number" attrs="{'readonly': ['|', ('allow_edit_external_carrier_bookings', '=', False), ('state', 'in', ['completed', 'cancelled'])]}"/>
+                                    <field name="carrier_agent_id" attrs="{'readonly': ['|', ('allow_edit_external_carrier_bookings', '=', False), ('state', 'in', ['completed', 'cancelled'])]}"/>
+                                    <field name="carrier_forwarder_reference_number" string="Forwarder Ref. Number" attrs="{'readonly': ['|', ('allow_edit_external_carrier_bookings', '=', False), ('state', 'in', ['completed', 'cancelled'])]}"/>
+                                    <field name="ams_number" attrs="{'readonly': ['|', ('allow_edit_external_carrier_bookings', '=', False), ('state', 'in', ['completed', 'cancelled'])]}"/>
+                                </group>
+                                <group>
+                                    <div class="o_td_label">
+                                        <label for="carrier_vessel_cut_off_datetime" string="Vessel Cut-Off" attrs="{'invisible': [('mode_type', '=', 'air')]}"/>
+                                        <label for="carrier_vessel_cut_off_datetime" string="Onboarding Cut-Off" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+                                    </div>
+                                    <field name="carrier_vessel_cut_off_datetime" nolabel="1" attrs="{'readonly': ['|', ('allow_edit_external_carrier_bookings', '=', False), ('state', 'in', ['completed', 'cancelled'])]}"/>
+                                    <field name="carrier_warehouse_cut_off_datetime" string="Warehouse Cut-Off" attrs="{'readonly': ['|', ('allow_edit_external_carrier_bookings', '=', False), ('state', 'in', ['completed', 'cancelled'])]}"/>
+                                    <field name="carrier_vgm_cut_off_datetime" string="VGM Cut-Off" attrs="{'invisible': [('mode_type', '=', 'air')], 'readonly': ['|', ('allow_edit_external_carrier_bookings', '=', False), ('state', 'in', ['completed', 'cancelled'])]}"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="parties" string="Parties">
+                            <field name="shipment_partner_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="partner_type_id" options="{'no_create': True, 'no_open': True}"/>
+                                    <field name="partner_id" domain="[('category_ids', 'in', partner_type_id)]" context="{'force_change': True, 'default_partner_type_id': partner_type_id, 'default_category_ids': [(4, partner_type_id)]}"  />
+                                    <field name="party_address_id" optional="hide" context="{'default_parent_id': partner_id, 'default_partner_type_id': partner_type_id, 'default_category_ids': [(4, partner_type_id)]}"/>
+                                    <field name="party_address"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="package_details" string="Packages">
+                            <div class="text-danger" attrs="{'invisible': [('transport_mode_id', '!=', False), ('shipment_type_id', '!=', False), ('cargo_type_id', '!=', False)]}">
+                                <b>You have to set Transport Mode, Shipment Type and Cargo Type at Shipment, to enable Packages entry!</b>
+                            </div>
+
+                            <h3 colspan="4" class="text-break text-danger bg-200 p-2"
+                                attrs="{'invisible': ['|', ('state', '=', 'cancelled'), ('upload_file_message', '=', False)]}">
+                                <button name="action_clear_upload_file_message" type="object"
+                                    class="oe_highlight fa fa-window-close pull-right p-0"
+                                    attrs="{'invisible': ['|', ('state', '=', 'cancelled'), ('upload_file_message', '=', False)]}"
+                                    title="Dismiss Message"/>
+                                <field name="upload_file_message" readonly="1" force_save="1" />
+                            </h3>
+
+                            <button name="action_download_container_numbers_template" type="object"
+                                    class="oe_highlight btn-icon mr-2 fa fa-download"
+                                    title="Download Container Details"
+                                     attrs="{'invisible': ['|', ('packaging_mode', '!=', 'container'), ('state', 'in', ['completed', 'cancelled'])]}"/>
+                            <widget id="attach_document" name="attach_document" string="Upload Containers"
+                                    action="action_upload_container_list" highlight="1"
+                                    attrs="{'invisible': ['|', ('packaging_mode', '!=', 'container'), ('state', 'in', ['completed', 'cancelled'])]}"/>
+
+                            <!-- LCL Type Packge Download/Upload Excel -->
+                            <button name="action_download_lcl_package_template" type="object"
+                                    class="oe_highlight btn-icon mr-2 fa fa-download"
+                                    title="Download Package Details"
+                                    attrs="{'invisible': ['|', ('packaging_mode', '!=', 'package'), ('state', 'in', ['completed', 'cancelled'])]}"/>
+
+                            <widget id="attach_document" name="attach_document" string="Upload Package"
+                                    action="action_upload_lcl_package_data" highlight="1"
+                                    attrs="{'invisible': ['|', ('packaging_mode', '!=', 'package'), ('state', 'in', ['completed', 'cancelled'])]}"/>
+
+                            <button type="object" name="action_remove_all_packages" string="Delete All Packages" class="btn btn-danger mb-2 mx-2 mt-2" confirm="Are you sure you want to remove all Packages?"
+                                attrs="{'invisible': ['|', '|', '|', '|', ('transport_mode_id', '=', False), ('shipment_type_id', '=', False), ('cargo_type_id', '=', False), ('package_ids', '=', []),
+                                                    ('container_ids', '=', []), ('state', 'in', ['completed', 'cancelled'])]}"/>
+                            <field nolabel="1" name="package_ids" context="{'default_package_mode': packaging_mode, 'force_change': True}" string="Package"
+                                attrs="{'invisible': ['|', '|', '|', ('packaging_mode', '!=', 'package'), ('transport_mode_id', '=', False), ('shipment_type_id', '=', False), ('cargo_type_id', '=', False)]}">
+                                <tree>
+                                    <field name="package_type_id"/>
+                                    <field name="package_mode" invisible="1"/>
+                                    <field name="container_number" attrs="{'column_invisible': [('parent.mode_type', '=', 'air')]}" options="{'no_open': True}"/>
+                                    <field name="stuffing_date" attrs="{'column_invisible': [('parent.mode_type', '!=', 'sea')]}" optional="show"/>
+                                    <field name="stuffing_cfs_id" attrs="{'column_invisible': [('parent.mode_type', '!=', 'sea')]}" optional="show"/>
+                                    <field name="stuffing_confirmed" attrs="{'column_invisible': [('parent.mode_type', '!=', 'sea')]}" optional="show"/>
+                                    <field name="destuffing_date" attrs="{'column_invisible': [('parent.mode_type', '!=', 'sea')]}" optional="show"/>
+                                    <field name="destuffing_cfs_id" attrs="{'column_invisible': [('parent.mode_type', '!=', 'sea')]}" optional="show"/>
+                                    <field name="destuffing_confirmed" attrs="{'column_invisible': [('parent.mode_type', '!=', 'sea')]}" optional="show"/>
+                                    <field name="quantity" string="Pack Count"/>
+                                    <field name="seal_number" attrs="{'column_invisible': [('parent.mode_type', '=', 'air')]}"/>
+                                    <field name="customs_seal_number" attrs="{'column_invisible': [('parent.mode_type', '=', 'air')]}"/>
+                                    <field name="total_weight_unit" optional="hide"/>
+                                    <field name="container_weight_unit_uom_id" optional="hide"/>
+                                    <field name="total_volume_unit" optional="hide"/>
+                                    <field name="container_volume_unit_uom_id" optional="hide"/>
+                                    <field name="total_volumetric_weight" optional="hide"/>
+                                    <field name="container_volumetric_weight_unit_uom_id" optional="hide"/>
+                                    <field name="marksnnums" optional="hide"/>
+                                    <field name="is_hazardous" optional="hide"/>
+                                    <field name="haz_class_id" optional="hide"/>
+                                    <field name="un_code" optional="hide"/>
+                                    <field name="is_refrigerated" optional="hide"/>
+                                    <field name="container_temperature" optional="hide"/>
+                                    <field name="container_temperature_uom_id" optional="hide"/>
+                                    <field name="max_temperature" optional="hide"/>
+                                    <field name="max_temperature_uom_id" optional="hide"/>
+                                    <field name="hbl_description" optional="hide"/>
+                                    <field name="commodity_types" optional="hide"/>
+                                </tree>
+                            </field>
+                            <field nolabel="1" name="container_ids" context="{'default_package_mode': packaging_mode, 'force_change': True}" string="Container"
+                                attrs="{'invisible': ['|', '|', '|', ('packaging_mode', '!=', 'container'), ('transport_mode_id', '=', False), ('shipment_type_id', '=', False), ('cargo_type_id', '=', False)]}">
+                                <tree>
+                                    <field name="transport_mode_id" invisible="1"/>
+                                    <field name="container_type_id" domain="[('transport_mode_id', '=', transport_mode_id)]"/>
+                                    <field name="package_mode" invisible="1"/>
+                                    <field name="container_number" attrs="{'column_invisible': [('parent.mode_type', '=', 'air')]}" optional="show"/>
+                                    <field name="stuffing_date" attrs="{'column_invisible': [('parent.mode_type', '!=', 'sea')]}" optional="show"/>
+                                    <field name="stuffing_cfs_id" attrs="{'column_invisible': [('parent.mode_type', '!=', 'sea')]}" optional="show"/>
+                                    <field name="stuffing_confirmed" attrs="{'column_invisible': [('parent.mode_type', '!=', 'sea')]}" optional="show"/>
+                                    <field name="destuffing_date" attrs="{'column_invisible': [('parent.mode_type', '!=', 'sea')]}" optional="show"/>
+                                    <field name="destuffing_cfs_id" attrs="{'column_invisible': [('parent.mode_type', '!=', 'sea')]}" optional="show"/>
+                                    <field name="destuffing_confirmed" attrs="{'column_invisible': [('parent.mode_type', '!=', 'sea')]}" optional="show"/>
+                                    <field name="pack_count"/>
+                                    <field name="quantity" string="Container Count" optional="hide"/>
+                                    <field name="no_of_teu" optional="hide"/>
+                                    <field name="seal_number"/>
+                                    <field name="total_weight_unit" optional="hide"/>
+                                    <field name="container_weight_unit_uom_id" optional="hide"/>
+                                    <field name="total_volume_unit" optional="hide"/>
+                                    <field name="container_volume_unit_uom_id" optional="hide"/>
+                                    <field name="total_volumetric_weight" optional="hide"/>
+                                    <field name="container_volumetric_weight_unit_uom_id" optional="hide"/>
+                                    <field name="is_hazardous" optional="hide"/>
+                                    <field name="haz_class_id" optional="hide"/>
+                                    <field name="un_code" optional="hide"/>
+                                    <field name="is_refrigerated" optional="hide"/>
+                                    <field name="container_temperature" optional="hide"/>
+                                    <field name="container_temperature_uom_id" optional="hide"/>
+                                    <field name="max_temperature" optional="hide"/>
+                                    <field name="max_temperature_uom_id" optional="hide"/>
+                                    <field name="customs_seal_number" optional="hide"/>
+                                    <field name="hbl_description" optional="hide"/>
+                                    <field name="container_package_types" optional="hide"/>
+                                    <field name="is_part_bl" optional="hide"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="routing" string="Routing">
+                            <field name="route_ids"
+                                context="{'default_debtor_partner_id': client_id, 'default_debtor_address_id': client_address_id, 'default_cost_currency_id': currency_id,
+                                    'default_sell_currency_id': currency_id, 'default_company_id': company_id, 'default_currency_id': currency_id, 'set_default_params': True}"/>
+                        </page>
+                        <page name="milestones" string="Milestones Tracking">
+                            <field name="event_ids" />
+                        </page>
+                        <page string="T &amp; C" name="terms_and_conditions">
+                            <field name="terms_ids" context="{'default_shipment_id': active_id}"/>
+                        </page>
+                        <page string="Remarks" name="shipment_remarks">
+                            <field name="remarks"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="freight_house_shipment_info_view_form" model="ir.ui.view">
+        <field name="name">freight.house.shipment.info.view.form</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="priority">100</field>
+        <field name="arch" type="xml">
+            <form string="Shipment">
+                <sheet>
+                    <field name="is_courier_shipment" invisible="1"/>
+                    <field name="state" invisible="1" />
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" special="cancel" icon="fa-list">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Shipment Type</span>
+                                <span class="o_stat_value">
+                                    <field name="shipment_type_id" options="{'no_open': True}"/>
+                                </span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" special="cancel" icon="fa-clock-o">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Shipment Date</span>
+                                <span class="o_stat_value">
+                                    <field name="shipment_date"/>
+                                </span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" special="cancel" icon="fa-area-chart">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Transport Mode</span>
+                                <span class="o_stat_value">
+                                    <field name="transport_mode_id" options="{'no_open': True}"/>
+                                </span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" special="cancel" icon="fa-usd">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Incoterm</span>
+                                <span class="o_stat_value">
+                                    <field name="inco_term_id" options="{'no_open': True}"/>
+                                </span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" special="cancel" icon="fa-users">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Cargo Type</span>
+                                <span class="o_stat_value">
+                                    <field name="cargo_type_domain" invisible="1" />
+                                    <field name="cargo_type_id" domain="cargo_type_domain" options="{'no_open': True}"/>
+                                </span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" special="cancel" icon="fa-pencil-square-o">
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_text">Service Mode</span>
+                                <span class="o_stat_value">
+                                    <field name="service_mode_id" options="{'no_open': True}"/>
+                                </span>
+                            </div>
+                        </button>
+                    </div>
+                    <group string="Declared Weight &amp; Volume">
+                        <label for="pack_unit" string="Packs"/>
+                        <div class="d-flex oe_inline">
+                            <field name="pack_unit" force_save="1"/>&amp;nbsp;
+                            <field name="pack_unit_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1"/>
+                        </div>
+                        <label for="gross_weight_unit"/>
+                        <div class="d-flex oe_inline">
+                            <field name="gross_weight_unit" force_save="1"/>&amp;nbsp;
+                            <field name="gross_weight_unit_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1"/>
+                        </div>
+                        <label for="weight_volume_unit"/>
+                        <div class="o_row">
+                            <field name="weight_volume_unit"/>
+                            <field name="weight_volume_unit_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1"/>
+                        </div>
+                        <label for="net_weight_unit"/>
+                        <div class="d-flex oe_inline">
+                            <field name="net_weight_unit" force_save="1"/>&amp;nbsp;
+                            <field name="net_weight_unit_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1"/>
+                        </div>
+                        <label for="volume_unit"/>
+                        <div class="d-flex oe_inline">
+                            <field name="volume_unit" force_save="1"/>&amp;nbsp;
+                            <field name="volume_unit_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1"/>
+                        </div>
+                        <label for="chargeable_kg"/>
+                        <div class="d-flex oe_inline">
+                            <field name="chargeable_kg" force_save="1" readonly="1"/>
+                            <field name="chargeable_uom_id" class="ml-2" options="{'no_open': True, 'no_create': True}" readonly="1" force_save="1"/>
+                        </div>
+                    </group>
+                    <group string="Parties Details">
+                        <field name="client_id"></field>
+                        <field name="shipper_id"></field>
+                        <field name="consignee_id"></field>
+                        <field name="company_id" invisible="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="freight_house_shipment_view_kanban" model="ir.ui.view">
+        <field name="name">freight.house.shipment.view.kanban</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" records_draggable="0" default_group_by="state" quick_create="false" >
+                <field name="name"/>
+                <field name="transport_mode_id"/>
+                <field name="origin_un_location_id"/>
+                <field name="destination_un_location_id"/>
+                <field name="client_id"/>
+                <field name="shipper_id"/>
+                <field name="consignee_id"/>
+                <field name="currency_id"/>
+                <field name="tag_ids"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="row mb4">
+                                <div id="title" class="col d-flex justify-content-between">
+                                    <h3 class="mb-0 pb-0 text-info"><t t-esc="record.name.value"/></h3>
+                                </div>
+                            </div>
+                            <div class="row mb4">
+                                <div class="col-12">
+                                    <t t-if="record.hbl_number.raw_value"><strong>HBL:</strong> <field name="hbl_number" class="font-weight-bold"/></t>
+                                    <field name="tag_ids" widget="many2many_tags"/>
+                                </div>
+                            </div>
+                            <t t-if="record.origin_un_location_id.value and record.destination_un_location_id.value">
+                                <t t-set="transport_mode" t-value="record.transport_mode_id.value"/>
+                                <h4>
+                                    <t t-if="transport_mode == '[SEA] Sea Freight'"><i class="fa fa-ship" aria-label="ship"></i></t>
+                                    <t t-if="transport_mode == '[AIR] Air Freight'"><i class="fa fa-plane" aria-label="plane"></i></t>
+                                    <t t-if="transport_mode == '[ROA] Road Freight'"><i class="fa fa-road" aria-label="road"></i></t>
+                                    <field name="origin_un_location_id"/> <span class="fa fa-arrow-right" aria-label="circle"/> <field name="destination_un_location_id"/>
+                                </h4>
+                            </t>
+                            <table class="table table-sm small mb-0" name="customer_details">
+                                <tr class="table-primary">
+                                    <th>Customer</th>
+                                    <th>Shipper</th>
+                                    <th>Consignee</th>
+                                </tr>
+                                <tr>
+                                    <td><field name="client_id"/></td>
+                                    <td><field name="shipper_id"/></td>
+                                    <td><field name="consignee_id"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_freight_house_shipment_calendar" model="ir.ui.view">
+        <field name="name">freight.house.shipment.calendar</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="arch" type="xml">
+            <calendar string="Freight House Shipment" date_start="shipment_date" date_stop="shipment_date" event_open_popup="true" mode="month" color="booking_nomination_no" quick_add="False">
+                <field name="shipment_date"/>
+                <field name="booking_nomination_no"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="freight_house_shipment_view_search" model="ir.ui.view">
+        <field name="name">freight.house.shipment.view.search</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="arch" type="xml">
+            <search string="Shipment">
+                <field name="name" string="Search Shipment" filter_domain="['|', '|', '|', '|', ('booking_nomination_no', 'ilike', self), ('hbl_number', 'ilike', self), ('package_ids.container_number', 'ilike', self), ('container_ids.container_number', 'ilike', self), ('tag_ids.name', 'ilike', self)]"/>
+                <field name="hbl_number" optional="hide"/>
+                <field name="booking_nomination_no" string="Booking Ref / Nomination No" />
+                <field name="carrier_booking_reference_number" string="MBL Number"/>
+                <field name="parent_id" string="Master Shipment" />
+                <field name="tag_ids"/>
+                <field name="client_id" />
+                <field name="shipper_id" />
+                <field name="consignee_id" />
+                <field name="transport_mode_id"/>
+                <field name="origin_un_location_id"/>
+                <field name="destination_un_location_id"/>
+                <separator/>
+                <filter string="My Shipments" name="filter_my_shipments" domain="[('user_id', '=', uid)]" />
+                <separator/>
+                <filter string="Open House" name="open_house" invisible="context.get('show_master_shipment', False)" domain="[('state', '!=', 'cancelled')]" />
+                <separator/>
+                <filter name="current_month" string="Current Month" domain="[
+                    ('shipment_date', '&gt;=', (context_today()).strftime('%Y-%m-01')),
+                    ('shipment_date', '&lt;', (context_today() + relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                <filter name="shipment_date" string="Shipment Date" date="shipment_date"/>
+                <filter name="create_date" string="Create Date" date="create_date"/>
+                <filter name="ata_time" string="ATA" date="ata_time"/>
+                <filter name="atd_time" string="ATD" date="atd_time"/>
+                <filter name="eta_time" string="ETA" date="eta_time"/>
+                <filter name="etd_time" string="ETD" date="etd_time"/>
+                <filter name="group_by_transport_mode" string="Transport Mode" context="{'group_by': 'transport_mode_id'}" />
+                <filter name="group_by_shipment_type" string="Shipment Type" context="{'group_by': 'shipment_type_id'}" />
+                <filter name="group_by_cargo_type" string="Cargo Type" context="{'group_by': 'cargo_type_id'}" />
+                <filter name="group_by_state" string="State" context="{'group_by': 'state'}" />
+                <separator/>
+                <filter name="group_by_shipment_date" string="Shipment Date" context="{'group_by': 'shipment_date'}"/>
+                <filter name="group_by_create_date" string="Create Date" context="{'group_by': 'create_date'}"/>
+                <filter name="group_by_ata_time" string="ATA" context="{'group_by': 'ata_time'}"/>
+                <filter name="group_by_atd_time" string="ATD" context="{'group_by': 'atd_time'}"/>
+                <filter name="group_by_eta_time" string="ETA" context="{'group_by': 'eta_time'}"/>
+                <filter name="group_by_etd_time" string="ETD" context="{'group_by': 'etd_time'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="freight_house_shipment_view_tree" model="ir.ui.view">
+        <field name="name">freight.house.shipment.view.tree</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="arch" type="xml">
+            <tree string="Shipment">
+                <header>
+                    <button string="Attach" name="action_attach_shipment_house" invisible="not context.get('select', 0)" type="object" class="oe_highlight mr-2"/>
+                    <button string="Detach" name="action_detach_shipment_house" invisible="not context.get('detach', 0)" type="object" class="oe_highlight mr-2"/>
+                    <button string="Cancel" class="btn-secondary d-inline-block" special="cancel"/>
+                </header>
+                <field name="booking_nomination_no"/>
+                <field name="hbl_number" />
+                <field name="parent_id" optional="hide"/>
+                <field name="transport_mode_id" optional="hide"/>
+                <field name="shipment_type_id" optional="hide"/>
+                <field name="cargo_type_domain" invisible="1" />
+                <field name="cargo_type_id" optional="hide" domain="cargo_type_domain"/>
+                <field name="currency_id" optional="hide"/>
+                <field name="shipment_date"/>
+                <field name="list_containers_count" widget="do_action" options="{'action': 'freight_management.freight_shipment_house_package_do_action_view_action'}"/>
+                <field name="state" string="State"/>
+                <field name="sales_agent_id" optional="hide"/>
+                <field name="tag_ids" widget="many2many_tags" optional="hide"/>
+                <field name="service_mode_id" optional="hide"/>
+                <field name="inco_term_id" optional="hide"/>
+                <field name="user_id" optional="hide"/>
+                <field name="pack_unit" optional="hide"/>
+                <field name="pack_unit_uom_id" optional="hide"/>
+                <field name="gross_weight_unit" optional="hide"/>
+                <field name="gross_weight_unit_uom_id" optional="hide"/>
+                <field name="weight_volume_unit" optional="hide"/>
+                <field name="weight_volume_unit_uom_id" optional="hide"/>
+                <field name="net_weight_unit" optional="hide"/>
+                <field name="net_weight_unit_uom_id" optional="hide"/>
+                <field name="volume_unit" optional="hide"/>
+                <field name="volume_unit_uom_id" optional="hide"/>
+                <field name="chargeable_kg" optional="hide"/>
+                <field name="chargeable_uom_id" optional="hide"/>
+                <field name="client_id" optional="hide"/>
+                <field name="shipper_id" optional="hide"/>
+                <field name="consignee_id" optional="hide"/>
+                <field name="voyage_number" optional="hide"/>
+                <field name="vessel_id" optional="hide"/>
+                <field name="shipping_line_id" optional="hide"/>
+                <field name="origin_un_location_id" optional="hide"/>
+                <field name="origin_port_un_location_id" optional="hide"/>
+                <field name="destination_un_location_id" optional="hide"/>
+                <field name="destination_port_un_location_id" optional="hide"/>
+                <field name="etd_time" optional="hide"/>
+                <field name="eta_time" optional="hide"/>
+                <field name="atd_time" optional="hide"/>
+                <field name="ata_time" optional="hide"/>
+                <field name="carrier_booking_reference_number" optional="hide"/>
+                <field name="carrier_booking_carrier_number" optional="hide"/>
+                <field name="carrier_forwarder_reference_number" optional="hide"/>
+                <field name="carrier_vessel_cut_off_datetime" optional="hide"/>
+                <field name="carrier_warehouse_cut_off_datetime" optional="hide"/>
+                <field name="carrier_vgm_cut_off_datetime" optional="hide"/>
+                <field name="boe_number" optional="hide"/>
+                <field name="boe_date" optional="hide"/>
+                <field name="ownership" optional="hide"/>
+                <field name="ownership_id" optional="hide"/>
+                <field name="notify_party_1" optional="hide"/>
+                <field name="destination_agent" optional="hide"/>
+                <field name="latest_milestone_id" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+     <!--Button always Visible for Super admin-->
+    <record id="freight_house_shipment_super_admin_form" model="ir.ui.view">
+        <field name="name">freight.house.shipment.super.admin.view.form</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="groups_id" eval="[(4, ref('freight_management.group_super_admin'))]"/>
+        <field name="inherit_id" ref="freight_management.freight_house_shipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_download_container_numbers_template']" position="attributes">
+                <attribute name="attrs">{'invisible': [('packaging_mode', '!=', 'container')]}</attribute>
+            </xpath>
+            <xpath expr="//widget[@action='action_upload_container_list']" position="attributes">
+                <attribute name="attrs">{'invisible': [('packaging_mode', '!=', 'container')]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_download_lcl_package_template']" position="attributes">
+                <attribute name="attrs">{'invisible': [('packaging_mode', '!=', 'package')]}</attribute>
+            </xpath>
+            <xpath expr="//widget[@action='action_upload_lcl_package_data']" position="attributes">
+                <attribute name="attrs">{'invisible': [('packaging_mode', '!=', 'package')]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_remove_all_packages']" position="attributes">
+                <attribute name="attrs">{'invisible':['|', '|', '|',('transport_mode_id', '=', False), ('shipment_type_id', '=', False), ('cargo_type_id', '=', False), ('package_ids', '=', []),
+                                                    ('container_ids', '=', [])]}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

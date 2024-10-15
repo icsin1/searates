@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="wizard_publish_quote_confirmation_view_form" model="ir.ui.view">
+        <field name="name">wizard.publish.quote.confirmation.form</field>
+        <field name="model">wizard.publish.quote.confirmation</field>
+        <field name="arch" type="xml">
+            <form>
+                <div>
+                    <span>Would you like to publish a quote without sending the customer an email?</span>
+                </div>
+                <footer>
+                    <button string="Yes, Publish &amp; Mark sent" name="action_publish_quote" type="object" class="oe_highlight"/>
+                    <button string="No, Send &amp; Publish" name="action_send_email" type="object"  />
+                </footer>
+            </form>
+
+        </field>
+    </record>
+
+</odoo>

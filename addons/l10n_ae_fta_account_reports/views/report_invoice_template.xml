@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="l10n_ae_report_invoice_document_inherit" inherit_id="fm_fta_account_reports.invoice_address_layout">
+        <xpath expr="//h2[@name='invoice_title']/span" position="before">
+            <span class="text-900 font-weight-bold" t-if="o.company_id.country_id.code == 'AE' and o.move_type in ['out_invoice', 'out_refund']">TAX
+            </span>
+        </xpath>
+    </template>
+</odoo>

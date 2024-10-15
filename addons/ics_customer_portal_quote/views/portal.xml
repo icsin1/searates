@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_my_dashboard_shipment_quote" name="Show Dashboard Shipment Quote" customize_show="True"
+              inherit_id="ics_customer_portal_base.dashboard" priority="20">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Approved Quotes</t>
+                <t t-set="classes">bg-primary text-white</t>
+                <t t-set="placeholder_count" t-value="'approved_shipment_quote_count'"/>
+                <t t-set="url" t-value="'/dashboard/shipment_quotes'"/>
+            </t>
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Un-Accepted Quotes</t>
+                <t t-set="classes">bg-secondary text-white</t>
+                <t t-set="placeholder_count" t-value="'approved_shipment_un_accepted_quote_count'"/>
+                <t t-set="url" t-value="'/dashboard/shipment_quotes?filterby=unaccepted'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="request_quote_portal_layout" name="Shipment Request Quote Portal Layout" inherit_id="ics_customer_portal_base.action_menu">
+        <xpath expr="//div[hasclass('action-buttons')]" position="inside">
+            <a role="button" class="btn btn-primary d-none d-xl-inline-block mt-2" href="/dashboard/request_quote" t-if="request.httprequest.path.startswith('/dashboard/shipment_quotes')">
+                <span class="">Request a Quote</span>
+            </a>
+        </xpath>
+    </template>
+
+    <template id="portal_dashboard_shipment_quote" name="My Quote">
+        <t t-call="ics_customer_portal_base.ics_customer_portal_layout">
+            <t t-call="ics_customer_portal_base.ics_customer_portal_searchbar">
+                <t t-set="title">Quote</t>
+            </t>
+            <t t-if="not shipment_quotes">
+                <p>There are currently no quote for your account.</p>
+            </t>
+            <t t-if="shipment_quotes" t-call="portal.portal_table">
+                <t t-foreach="shipment_quotes" t-as="each_quote">
+                    <div class="container my-2">
+                        <div class="card">
+                          <div class="card-header alert-primary" data-toggle="collapse" t-att-data-target="'#collapseCard' + str(each_quote.id)">
+                            <h5 class="mb-0">
+                                <t t-if="each_quote.transport_mode_id.code == 'SEA'"><i class="fa fa-ship" aria-label="ship"></i></t>
+                                <t t-if="each_quote.transport_mode_id.code == 'AIR'"><i class="fa fa-plane" aria-label="plane"></i></t>
+                                <t t-if="each_quote.transport_mode_id.code == 'ROA'"><i class="fa fa-road" aria-label="road"></i></t>
+                                Quote: <span t-field="each_quote.name"></span>
+                            </h5>
+                          </div>
+                          <div t-att-id="'collapseCard' + str(each_quote.id)" class="collapse">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-12 text-center">
+                                        <span t-field="each_quote.origin_country_id"/>
+                                        <i class="fa fa-long-arrow-right" aria-label="arrow-right"></i>
+                                        <t t-if="each_quote.transport_mode_id.code == 'SEA'"><i class="fa fa-ship" aria-label="ship"></i></t>
+                                        <t t-if="each_quote.transport_mode_id.code == 'AIR'"><i class="fa fa-plane" aria-label="plane"></i></t>
+                                        <t t-if="each_quote.transport_mode_id.code == 'ROA'"><i class="fa fa-road" aria-label="road"></i></t>
+                                        <i class="fa fa-long-arrow-right" aria-label="arrow-right"></i>
+                                        <span t-field="each_quote.destination_country_id"/>
+                                    </div>
+                                </div>
+                                <div class="row border-top mt-2 pt-2">
+                                    <div class="col-4 text-center">
+                                        Quote Date: <span t-field="each_quote.date"/>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        Quote Expiry Date: <span t-field="each_quote.quote_expiry_date"/>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        Quote For: <span t-field="each_quote.quote_for"/>
+                                    </div>
+                                </div>
+                                <div class="row border-top mt-2 pt-2">
+                                    <div class="col-6 text-center">
+                                        Shipper: <span t-field="each_quote.shipper_id"/>
+                                    </div>
+                                    <div class="col-6 text-center">
+                                        Consignee: <span t-field="each_quote.consignee_id"/>
+                                    </div>
+                                </div>
+                                <div class="row border-top mt-2 pt-2">
+                                    <div class="col-3 text-center">
+                                        Transport Mode: <span t-field="each_quote.transport_mode_id"/>
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        Shipment Type: <span t-field="each_quote.shipment_type_id"/>
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        Consolidation Type: <span t-field="each_quote.consolidation_type_id"/>
+                                    </div>
+                                    <div class="col-3 text-center">
+                                        Cargo Type: <span t-field="each_quote.cargo_type_id"/>
+                                    </div>
+                                </div>
+                                <div class="row border-top mt-2 pt-2 pb-2">
+                                    <div class="col-12 text-center">
+                                        <a class="btn btn-primary" t-att-href="each_quote.get_portal_url()">View Quote</a>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="shipment_quote_portal_layout" name="Shipment Quote Portal" inherit_id="portal.portal_breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'quote_menu'" t-attf-class="breadcrumb-item active">
+                <a t-attf-href="/dashboard/shipment_quotes/?{{ keep_query() }}">Shipment Quote</a>
+            </li>
+            <li t-if="page_name == 'quote_request_menu'" t-attf-class="breadcrumb-item active">
+                <a t-attf-href="/dashboard/shipment_quotes/?{{ keep_query() }}">Shipment Quote</a>
+            </li>
+            <li t-if="page_name == 'quote_menu' and shipment_quote" class="breadcrumb-item active">
+                <t t-esc="shipment_quote.name"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="shipment_quote_portal_menu" name="Shipment Quote Portal Menu" inherit_id="http_routing.400">
+        <xpath expr="//h1" position="before">
+            <a href="/dashboard" class="fa fa-home" t-if="request.httprequest.path.startswith('/dashboard/request_quote')"/>
+            <a t-attf-href="/dashboard/shipment_quotes/?{{ keep_query() }}" t-if="request.httprequest.path.startswith('/dashboard/request_quote')"> / Shipment Quote</a>
+        </xpath>
+    </template>
+
+    <template id="portal_my_request_quote" name="My request Quote">
+        <t t-call="ics_customer_portal_base.ics_customer_portal_layout">
+            <div class="mb64 container-fluid">
+                <t t-set="additional_title">Quote Request</t>
+                <form action="/dashboard/request_quote" method="post">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="row o_portal_details o_portal_request_quote text-center justify-content-around">
+                        <div class="col-lg-8">
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div t-if="error_message" class="alert alert-danger" role="alert">
+                                        <t t-foreach="error_message" t-as="err">
+                                            <t t-esc="err"/>
+                                            <br/>
+                                        </t>
+                                    </div>
+                                </div>
+                                <div t-attf-class="form-group #{error.get('name') and 'o_has_error' or ''} col-xl-6">
+                                    <label class="col-form-label" for="name">Customer Name</label>
+                                    <input type="text" name="name"
+                                           t-attf-class="form-control #{error.get('name') and 'is-invalid' or ''}"
+                                           t-att-value="name or partner.name" readonly="1"/>
+                                </div>
+                                <div t-attf-class="form-group #{error.get('email') and 'o_has_error' or ''} col-xl-6">
+                                    <label class="col-form-label" for="email">Customer Email</label>
+                                    <input type="email" name="email"
+                                           t-attf-class="form-control #{error.get('email') and 'is-invalid' or ''}"
+                                           t-att-value="email or partner.email" required="" readonly="1"/>
+                                </div>
+
+                                <div class="clearfix"/>
+                                <div t-attf-class="form-group #{error.get('address') and 'o_has_error' or ''} col-xl-6">
+                                    <label class="col-form-label" for="address">Customer Address</label>
+                                    <input type="text" name="address"
+                                           t-attf-class="form-control #{error.get('address') and 'is-invalid' or ''}"
+                                           t-att-value="address or partner_address" required="" t-att-readonly="bool(address or partner_address)"/>
+                                </div>
+
+                                <div t-attf-class="form-group #{error.get('date') and 'o_has_error' or ''} col-xl-6">
+                                    <label class="col-form-label" for="date">Date</label>
+
+                                    <input type="date" min="1900-01-01" name="date"
+                                           t-att-value="date"
+                                           t-attf-class="datetimepicker-input form-control set-availability-timeslots #{error.get('date') and 'is-invalid' or ''}"
+                                           data-date-format="YYYY-MM-DD" placeholder="YYYY-MM-DD" required=""/>
+                                </div>
+
+                                <div t-attf-class="form-group #{error.get('transport_mode') and 'o_has_error' or ''} col-xl-6">
+                                    <label class="col-form-label" for="transport_mode_id">Transport Mode</label>
+                                    <select name="transport_mode_id"
+                                            t-attf-class="form-control #{error.get('transport_mode_id') and 'is-invalid' or ''}"
+                                            required="">
+                                        <option value="">Select Transport Mode...</option>
+                                        <t t-foreach="transport_modes or []" t-as="transport_mode">
+                                            <option t-att-value="transport_mode.id">
+                                                <t t-esc=" transport_mode.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+
+                                <div t-attf-class="form-group #{error.get('shipment_type') and 'o_has_error' or ''} col-xl-6">
+                                    <label class="col-form-label" for="shipment_type_id">Shipment Type</label>
+                                    <select name="shipment_type_id"
+                                            t-attf-class="form-control #{error.get('shipment_type_id') and 'is-invalid' or ''}"
+                                            required="">
+                                        <option value="">Select Shipment Type...</option>
+                                        <t t-foreach="shipment_types or []" t-as="shipment_type">
+                                            <option t-att-value="shipment_type.id">
+                                                <t t-esc=" shipment_type.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+
+                                <div t-attf-class="form-group #{error.get('cargo_type') and 'o_has_error' or ''} col-xl-6">
+                                    <label class="col-form-label" for="cargo_type_id">Cargo Type</label>
+                                    <select name="cargo_type_id"
+                                            t-attf-class="form-control #{error.get('cargo_type_id') and 'is-invalid' or ''}"
+                                            required="">
+                                        <option value="">Select Cargo Type...</option>
+                                        <t t-foreach="cargo_types or []" t-as="cargo_type">
+                                            <option t-att-value="cargo_type.id"
+                                                    t-att-data-transport_mode_id="cargo_type.transport_mode_id.id">
+                                                <t t-esc=" cargo_type.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+
+                                <div t-attf-class="form-group #{error.get('incoterm') and 'o_has_error' or ''} col-xl-6">
+                                    <label class="col-form-label" for="incoterm_id">Incoterms</label>
+                                    <select name="incoterm_id"
+                                            t-attf-class="form-control #{error.get('incoterm_id') and 'is-invalid' or ''}">
+                                        <option value="">Select Incoterms...</option>
+                                        <t t-foreach="incoterms or []" t-as="incoterm">
+                                            <option t-att-value="incoterm.id">
+                                                <t t-esc=" incoterm.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+
+                                <div t-attf-class="form-group #{error.get('origin_country') and 'o_has_error' or ''} col-xl-6">
+                                    <label class="col-form-label" for="origin_country_id">Origin Country</label>
+                                    <select name="origin_country_id"
+                                            t-attf-class="form-control #{error.get('origin_country_id') and 'is-invalid' or ''}"
+                                            required="">
+                                        <option value="">Select Origin Country...</option>
+                                        <t t-foreach="origin_countrys or []" t-as="origin_country">
+                                            <option t-att-value="origin_country.id">
+                                                <t t-esc=" origin_country.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+
+                                <div t-attf-class="form-group #{error.get('destination_country') and 'o_has_error' or ''} col-xl-6">
+                                    <label class="col-form-label" for="destination_country_id">Destination Country
+                                    </label>
+                                    <select name="destination_country_id"
+                                            t-attf-class="form-control #{error.get('destination_country_id') and 'is-invalid' or ''}"
+                                            required="">
+                                        <option value="">Select Destination Country...</option>
+                                        <t t-foreach="destination_countrys or []" t-as="destination_country">
+                                            <option t-att-value="destination_country.id">
+                                                <t t-esc=" destination_country.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+
+                                <div t-attf-class="form-group #{error.get('origin') and 'o_has_error' or ''} col-xl-6">
+                                    <label class="col-form-label" for="origin_id">Origin</label>
+                                    <select name="origin_id"
+                                            t-attf-class="form-control #{error.get('origin_id') and 'is-invalid' or ''}"
+                                            required="">
+                                        <option value="">Select Origin...</option>
+                                        <t t-foreach="origins or []" t-as="origin">
+                                            <option t-att-value="origin.id"
+                                                    t-att-data-origin_country_id="origin.country_id.id">
+                                                <t t-esc=" origin.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+
+                                <div t-attf-class="form-group #{error.get('destination') and 'o_has_error' or ''} col-xl-6">
+                                    <label class="col-form-label" for="destination_id">Destination</label>
+                                    <select name="destination_id"
+                                            t-attf-class="form-control #{error.get('destination_id') and 'is-invalid' or ''}"
+                                            required="">
+                                        <option value="">Select Destination...</option>
+                                        <t t-foreach="destinations or []" t-as="destination">
+                                            <option t-att-value="destination.id"
+                                                    t-att-data-destination_country_id="destination.country_id.id">
+                                                <t t-esc=" destination.name"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+
+
+                                <div t-attf-class="form-group #{error.get('origin_port') and 'o_has_error' or ''} col-xl-6">
+                                    <label class="col-form-label" for="origin_port_id">Origin Port</label>
+                                    <select name="origin_port_id"
+                                            t-attf-class="form-control #{error.get('origin_port_id') and 'is-invalid' or ''}"
+                                            required="">
+                                        <option value="">Select Origin Port...</option>
+                                        <t t-foreach="origin_ports or []" t-as="origin_port">
+                                            <option t-att-value="origin_port.id"
+                                                    t-att-data-transport_mode_id="origin_port.transport_mode_id.id"
+                                                    t-att-data-origin_country_id="origin_port.country_id.id">
+                                                <t t-esc="origin_port.code"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+
+                                <div t-attf-class="form-group #{error.get('destination_port') and 'o_has_error' or ''} col-xl-6">
+                                    <label class="col-form-label" for="destination_port_id">Destination Port</label>
+                                    <select name="destination_port_id"
+                                            t-attf-class="form-control #{error.get('destination_port_id') and 'is-invalid' or ''}"
+                                            required="">
+                                        <option value="">Select Destination Port...</option>
+                                        <t t-foreach="destination_ports or []" t-as="destination_port">
+                                            <option t-att-value="destination_port.id"
+                                                    t-att-data-transport_mode_id="destination_port.transport_mode_id.id"
+                                                    t-att-data-destination_country_id="destination_port.country_id.id">
+                                                <t t-esc="destination_port.code"/>
+                                            </option>
+                                        </t>
+                                    </select>
+                                </div>
+
+                                <input type="hidden" name="redirect" t-att-value="redirect"/>
+                            </div>
+                            <div class="clearfix">
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary mb32">
+                                        Submit
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
+
+    <template id="quote_thank_you_template" name="Thank you">
+        <t t-call="ics_customer_portal_base.ics_customer_portal_layout">
+            <div id="wrap">
+                <div class="oe_structure" id="oe_structure_website_form_contact_us_thanks_1"/>
+                <div class="container " style="margin-top: 6rem">
+                        <span class="d-block fa fa-4x fa-thumbs-up mx-auto rounded-circle bg-primary"/>
+                        <br/>
+                        <h6 class="text-center">Thank you for submit a quote request.
+                            <div class="mt-2"/>
+                            Quote number is :
+                            <b>
+                                <t t-esc="name"/>
+                            </b>
+                        </h6>
+                        <h6>
+                            <p class="text-center">The responsible person for this quote will get back
+                                to you shortly.
+                            </p>
+                        </h6>
+                    </div>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="quote_error_msg_template" name="Error Message">
+        <t t-call="ics_customer_portal_base.ics_customer_portal_layout">
+            <div id="wrap">
+                <div class="oe_structure" id="oe_structure_website_form_contact_us_thanks_1"/>
+                <div class="container " style="margin-top: 6rem">
+                        <span class="d-block fa fa-4x fa-thumbs-down mx-auto rounded-circle bg-primary"/>
+                        <br/>
+                        <h6 class="text-center">Please contact your salesman or site administrator.
+                        </h6>
+                    </div>
+            </div>
+        </t>
+    </template>
+
+
+    <template id="portal_web_layout" inherit_id="ics_customer_portal_base.ics_customer_portal_menu">
+        <xpath expr="//li[@id='customer_portal_dashboard']" position="after">
+            <li class="nav-item">
+                <a href="/dashboard/shipment_quotes" class="nav-link">
+                    <i class="fa fa-file"></i> Quotation
+                </a>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="shipment_quote_portal_view_template" name="Shipment Quote Portal Template" inherit_id="portal.portal_sidebar" primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <t t-set="o_portal_fullwidth_alert" groups="base.group_user">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (shipment_quote._name, shipment_quote.id, action.id)"/>
+                </t>
+            </t>
+
+            <div class="row mt16 o_portal_quote_sidebar">
+                <!-- Sidebar -->
+                <t t-call="portal.portal_record_sidebar">
+                    <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
+
+                    <t t-set="title">
+                        <h2 class="mb-0"><b t-field="shipment_quote.estimated_total_revenue" data-id="total_revenue"/> </h2>
+                    </t>
+                    <t t-set="entries">
+                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                            <li class="list-group-item flex-grow-1">
+                                <t t-if="shipment_quote.state in ['sent']">
+
+                                </t>
+                                <t t-if="shipment_quote.state in ['sent']">
+                                    <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                        <div class="btn-group flex-grow-1">
+                                            <a role="button" class="btn btn-primary btn-block mb8 mr8" data-toggle="modal" data-target="#modalaccept" href="#">
+                                                <i class="fa fa-check pr-2"/>Accept &amp; Sign
+                                            </a>
+                                        </div>
+                                        <div class="btn-group flex-grow-1">
+                                            <a role="button" class="btn btn-danger btn-block mb8 mb8" data-toggle="modal" data-target="#modaldecline" href="#">
+                                                <i class="fa fa-times pr-2"/>Reject
+                                            </a>
+                                        </div>
+                                    </div>
+                                </t>
+                                <div t-if="shipment_quote.state not in ['expire', 'cancel']" class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                    <div class="btn-group flex-grow-1">
+                                        <a class="btn btn-secondary btn-block o_download_btn mb8"
+                                           t-att-href="shipment_quote.get_portal_url(report_type='pdf', download=True)"
+                                           title="Download"><i class="fa fa-download pr-2"/>Download</a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li t-if="shipment_quote.user_id" class="list-group-item flex-grow-1">
+                                <div class="small mb-1"><strong class="text-muted">Salesperson</strong></div>
+                                <div class="row flex-nowrap">
+                                    <div class="col flex-grow-0 pr-2">
+                                        <img class="rounded-circle mr4 float-left o_portal_contact_img" t-att-src="image_data_uri(shipment_quote.user_id.avatar_1024)" alt="Contact"/>
+                                    </div>
+                                    <div class="col pl-0" style="min-width: 150px">
+                                        <span t-field="shipment_quote.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
+                                        <a href="#discussion" class="small"><i class="fa fa-comment"></i> Send message</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </t>
+                </t>
+                <!-- Page content -->
+                <div id="quote_content" class="col-12 col-lg justify-content-end">
+                    <div role="dialog" class="modal fade" id="modalaccept">
+                        <div class="modal-dialog">
+                            <form id="accept" method="POST" t-att-data-order-id="shipment_quote.id" t-att-data-token="shipment_quote.access_token" class="js_accept_json modal-content js_website_submit_form">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <header class="modal-header">
+                                    <h4 class="modal-title">Validate Order</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                </header>
+                                <main class="modal-body" id="sign-dialog">
+                                    <p>
+                                        <span>By signing this quote, I agree to the following terms:</span>
+                                        <ul>
+                                            <li><span>Accepted on the behalf of:</span> <b t-field="shipment_quote.client_id.commercial_partner_id"/></li>
+                                        </ul>
+                                    </p>
+                                    <t t-call="portal.signature_form">
+                                        <t t-set="call_url" t-value="shipment_quote.get_portal_url(suffix='/accept')"/>
+                                        <t t-set="default_name" t-value="shipment_quote.client_id.name"/>
+                                    </t>
+                                </main>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div role="dialog" class="modal fade" id="modaldecline">
+                        <div class="modal-dialog">
+                            <form id="decline" method="POST" t-attf-action="/dashboard/shipment_quote/#{shipment_quote.id}/decline?access_token=#{shipment_quote.access_token}" class="modal-content">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <header class="modal-header">
+                                    <h4 class="modal-title">Reject This Quote</h4>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                                </header>
+                                <main class="modal-body">
+                                    <p>
+                                        Tell us why you are refusing this quote, this will help us improve our services.
+                                    </p>
+                                    <textarea name="decline_message" required="" class="form-control"/>
+                                </main>
+                                <footer class="modal-footer">
+                                    <button type="submit" t-att-id="shipment_quote.id" class="btn btn-danger"><i class="fa fa-times"></i> Reject</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                                </footer>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div t-if="message == 'sign_ok'" class="alert alert-success alert-dismissable d-print-none" role="status">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
+                        <strong>Thank You!</strong><br/>
+                        <t t-if="message == 'sign_ok' and shipment_quote.state == 'accept'">Your order has been signed and accepted.</t>
+                    </div>
+
+                    <div t-if="message == 'cant_reject'" class="alert alert-danger alert-dismissable d-print-none" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
+                        Your order is not in a state to be rejected.
+                    </div>
+
+                    <div t-if="shipment_quote.state == 'cancel'" class="alert alert-danger alert-dismissable d-print-none" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">×</button>
+                        <strong>This quote has been canceled.</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quote.</a>
+                    </div>
+
+                    <div t-if="shipment_quote.state == 'reject'" class="alert alert-danger alert-dismissable d-print-none" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">×</button>
+                        <strong>This quote has been rejected.</strong><br/>
+                        <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quote.</a>
+                    </div>
+                        <div t-if="shipment_quote.state == 'expire'" class="alert alert-warning alert-dismissable d-print-none" role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="close">×</button>
+                            <strong>This quote is expired!</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
+                        </div>
+
+                    <!-- main content -->
+                    <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}" id="portal_shipment_quote_content">
+                        <div t-call="fm_quote.shipment_quote_portal_content"/>
+                    </div>
+
+                    <div class="row justify-content-center text-center d-print-none pt-1 pb-4">
+                        <t>
+                            <div class="col-sm-auto mt8" t-if="shipment_quote.state in ['sent']">
+                                <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#">
+                                    <i class="fa fa-check"/>Accept &amp; Sign
+                                </a>
+                            </div>
+                            <div class="col-sm-auto mt8">
+                                <a role="button" class="btn btn-secondary" href="#discussion">
+                                    <i class="fa fa-comment"/> Feedback
+                                </a>
+                            </div>
+                            <div class="col-sm-auto mt8" t-if="shipment_quote.state in ['sent']">
+                                <a role="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldecline" href="#">
+                                    <i class="fa fa-times"/> Reject
+                                </a>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- chatter -->
+                    <div id="quote_order_communication" class="mt-4">
+                        <h2>History</h2>
+                        <t t-call="portal.message_thread">
+                            <t t-set="object" t-value="shipment_quote"/>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

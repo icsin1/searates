@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <div t-name="web.customization.ControlPanel" t-inherit="web.Legacy.ControlPanel" t-inherit-mode="extension" owl="1">
+        <xpath expr="//FavoriteMenu" position="after">
+            <CustomFieldsView t-if="props.view &amp;&amp; props.view.type == 'list' &amp;&amp; props.view.arch.attrs.editable == undefined &amp;&amp; props.has_view_customize_access"/>
+        </xpath>
+    </div>
+    <div t-name="web.customization.FieldDialog" class="o_export">
+        <div class="row o-export-panel">
+            <div class="col-12">
+                <div class="input-group mb-3">
+                    <input type="search" class="form-control o_export_search_input" id="o-export-search-filter" placeholder="Search" />
+                </div>
+            </div>
+            <div class="col-12 col-md-6 d-flex o_left_panel">
+                <div class="border o_left_field_panel"/>
+            </div>
+            <div class="col-12 col-md-6 d-flex o_right_panel mt-3 mt-md-0">
+                <div class="o_exported_lists"/>
+                <div class="border o_right_field_panel" contenteditable="1">
+                    <ul class="o_fields_list list-unstyled"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <t t-name="web.customization.TreeItems">
+        <t t-foreach="fields" t-as="field">
+            <div t-att-data-id="field.id" class="o_export_tree_item" tabindex="-1" role="treeitem">
+                <div t-attf-class="o_tree_column" t-att-title="debug and field.id or None">
+                    <t t-esc="field.string"/>
+                    <span title="Select field" class="fa fa-plus pull-right m-1 o_add_field"/>
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

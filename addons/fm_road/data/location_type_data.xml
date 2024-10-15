@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="location_type_terminal" model="freight.location.type">
+            <field name="name">Terminal</field>
+        </record>
+        <record id="location_type_cfs" model="freight.location.type">
+            <field name="name">CFS</field>
+        </record>
+        <record id="location_type_port" model="freight.location.type">
+            <field name="name">Port</field>
+        </record>
+        <record id="location_type_depot" model="freight.location.type">
+            <field name="name">Depot</field>
+        </record>
+        <record id="location_type_warehouse" model="freight.location.type">
+            <field name="name">Warehouse</field>
+        </record>
+        <record id="location_type_factory" model="freight.location.type">
+            <field name="name">Factory</field>
+        </record>
+    </data>
+</odoo>

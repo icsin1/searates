@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.quote.routing.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="50"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='freight_base']" position="inside">
+                <h2>Enable Quote Routing</h2>
+                <div class="row mt16 o_settings_container" name="quote_routing_settings">
+                    <div class="col-12 col-lg-6 o_setting_box" id="quote_routing_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_quote_routing" class="oe_inline"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="enable_quote_routing"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

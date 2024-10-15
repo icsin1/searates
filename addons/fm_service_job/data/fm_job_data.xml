@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="measurement_basis_unit" model="freight.measurement.basis">
+            <field name="name">Unit</field>
+            <field name="sequence">8</field>
+            <field name="package_group">all</field>
+            <field name="is_job_measurement">True</field>
+        </record>
+    </data>
+    <data noupdate="1">
+        <record id="job_charge_category" model="product.category">
+            <field name="parent_id" ref="product.product_category_all"/>
+            <field name="name">Service Job</field>
+            <field name="is_service_job_categ">True</field>
+        </record>
+    </data>
+</odoo>

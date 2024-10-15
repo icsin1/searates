@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="crm_lead_source_database" model="lead.source">
+            <field name="name">Database</field>
+            <field name="sequence">1</field>
+            <field name="allow_source_creation" eval="True"/>
+        </record>
+        <record id="crm_lead_source_social" model="lead.source">
+            <field name="name">Social</field>
+            <field name="sequence">2</field>
+            <field name="allow_source_creation" eval="True"/>
+        </record>
+        <record id="crm_lead_source_customer_reference" model="lead.source">
+            <field name="name">Customer Reference</field>
+            <field name="sequence">3</field>
+            <field name="allow_source_creation" eval="True"/>
+        </record>
+        <record id="crm_lead_trade_show" model="lead.source">
+            <field name="name">Trade Show</field>
+            <field name="sequence">4</field>
+            <field name="allow_source_creation" eval="True"/>
+        </record>
+        <record id="crm_lead_source_inbound" model="lead.source">
+            <field name="name">Inbound</field>
+            <field name="sequence">5</field>
+            <field name="allow_source_creation" eval="True"/>
+        </record>
+    </data>
+</odoo>

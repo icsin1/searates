@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_users_form_inherit_freight_base" model="ir.ui.view">
+        <field name="name">view.users.form.inherit.freight.base</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+
+            <!--Multicompanies field visible in view even when only one company created-->
+            <xpath expr="//field[@name='companies_count']/.." position="attributes">
+                <attribute name="attrs">{'invisible': [('companies_count', '&lt;', 1)]}</attribute>
+            </xpath>
+
+            <xpath expr="//field[@name='company_id']" position="attributes">
+                <attribute name="options">{'no_create': 1, 'no_open': 1}</attribute>
+                <attribute name="required">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='company_ids']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

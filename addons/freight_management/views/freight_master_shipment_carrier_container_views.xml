@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="freight_shipment_container_view_tree" model="ir.ui.view">
+        <field name="name">freight.master.shipment.carrier.container.view.tree</field>
+        <field name="model">freight.master.shipment.carrier.container</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="container_type_id" />
+                <field name="container_count" />
+                <field name="container_mode_id" />
+                <field name="no_of_teu" optional="hide"/>
+                <field name="is_hazardous"/>
+                <field name="container_number_ids" />
+                <field name="container_temperature" optional="hide"/>
+                <field name="container_temperature_uom_id" optional="hide"/>
+                <field name="max_temperature" optional="hide"/>
+                <field name="max_temperature_uom_id" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+    <record id="freight_shipment_container_view_form" model="ir.ui.view">
+        <field name="name">freight.master.shipment.carrier.container.view.form</field>
+        <field name="model">freight.master.shipment.carrier.container</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <label for="container_type_id"/>
+                    <div class="oe_title">
+                        <field name="transport_mode_id" invisible="1"/>
+                        <h3><field name="container_type_id" placeholder="Container Type" domain="[('transport_mode_id', '=', transport_mode_id)]" options="{'no_create': True}"/></h3>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="container_count" />
+                            <field name="no_of_teu" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="container_mode_id" required="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="no_of_packs" />
+                            <label for="weight_unit"/>
+                            <div class="o_row">
+                                <field name="weight_unit" />
+                                <field name="weight_unit_uom_id" options="{'no_create': 1, 'no_open': 1}"/>
+                            </div>
+                            <label for="volume_unit"/>
+                            <div class="o_row">
+                                <field name="volume_unit" />
+                                <field name="volume_unit_uom_id" options="{'no_create': 1, 'no_open': 1}"/>
+                            </div>
+                            <label for="volumetric_weight"/>
+                            <div class="o_row">
+                                <field name="volumetric_weight" />
+                                <field name="weight_volume_unit_uom_id" options="{'no_create': 1, 'no_open': 1}"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="is_hazardous" widget="boolean_toggle"/>
+                            <field name="un_code" attrs="{'invisible': [('is_hazardous', '=', False)]}"/>
+                            <field name="is_refrigerated" invisible="1"/>
+                            <label for="container_temperature" attrs="{'invisible': [('is_refrigerated', '=', False)]}"/>
+                            <div class="o_row">
+                                <field name="container_temperature" attrs="{'invisible': [('is_refrigerated', '=', False)], 'required': [('is_refrigerated', '=', True)]}"/>
+                                <field name="container_temperature_uom_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('is_refrigerated', '=', False)], 'required': [('is_refrigerated', '=', True)]}"/>
+                            </div>
+                            <label for="max_temperature" attrs="{'invisible': [('is_refrigerated', '=', False)]}"/>
+                            <div class="o_row">
+                                <field name="max_temperature" attrs="{'invisible': [('is_refrigerated', '=', False)], 'required': [('is_refrigerated', '=', True)]}"/>
+                                <field name="max_temperature_uom_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('is_refrigerated', '=', False)],
+                                    'required': [('is_refrigerated', '=', True)]}"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="is_oog_container" invisible="1"/>
+                        <group attrs="{'invisible': [('is_oog_container', '=', False)]}">
+                            <label for="over_lenght"/>
+                            <div class="d-flex oe_inline">
+                                <field name="over_lenght"/>&amp;nbsp;
+                                <field name="over_lenght_uom_id" options="{'no_open': True}"/>
+                            </div>
+                            <label for="over_height"/>
+                            <div class="d-flex oe_inline">
+                                <field name="over_height"/>&amp;nbsp;
+                                <field name="over_height_uom_id" options="{'no_open': True}"/>
+                            </div>
+                            <label for="over_width"/>
+                            <div class="d-flex oe_inline">
+                                <field name="over_width"/>&amp;nbsp;
+                                <field name="over_width_uom_id" options="{'no_open': True}"/>
+                            </div>
+                            <field name="is_req_loading_handling" widget="radio" options="{'horizontal': True}"/>
+                            <field name="is_under_deck_requested" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="containers" string="Container Numbers">
+                            <field name="container_number_ids" context="{'force_unlink_container_only': True,
+                            'tree_view_ref': 'freight_management.freight_shipment_container_number_view_tree_with_sr_no'}"/>
+                        </page>
+                        <page name="description" string="Description">
+                            <field name="description" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="freight_shipment_container_number_view_tree" model="ir.ui.view">
+        <field name="name">freight.master.shipment.container.number.view.tree</field>
+        <field name="model">freight.master.shipment.container.number</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="container_line_id" invisible="1"/>
+                <field name="container_type_id" invisible="1" />
+                <field name="sr_no" invisible="1"/>
+                <field name="container_number"/>
+                <field name="seal_number" invisible="1"/>
+                <field name="customs_seal_number" invisible="1"/>
+                <field name="status" />
+                <field name="package_ids" string="Linked Packages"/>
+                <field name="is_part_bl" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="freight_shipment_container_number_view_tree_with_sr_no" model="ir.ui.view">
+        <field name="name">freight.master.shipment.container.number.view.tree.with.sr.no</field>
+        <field name="model">freight.master.shipment.container.number</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="container_line_id" invisible="1"/>
+                <field name="container_type_id" invisible="1" />
+                <field name="sr_no"/>
+                <field name="container_number"/>
+                <field name="seal_number" invisible="1"/>
+                <field name="customs_seal_number" invisible="1"/>
+                <field name="status" />
+                <field name="package_ids" string="Linked Packages"/>
+                <field name="is_part_bl" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="freight_shipment_container_number_view_form" model="ir.ui.view">
+        <field name="name">freight.master.shipment.container.number.view.form</field>
+        <field name="model">freight.master.shipment.container.number</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <label for="name"/>
+                    <div class="oe_title">
+                        <h1><field name="name" /></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="container_number" />
+                        </group>
+                        <group>
+                            <field name="seal_number" invisible="1"/>
+                            <field name="container_line_id" invisible="1"/>
+                            <field name="container_type_id" invisible="1" force_save="1"/>
+                            <field name="shipment_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="customs_seal_number"/>
+                            <field name="status" />
+                            <field name="is_part_bl" readonly="1" force_save="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="packages" string="Master Shipment Packages">
+                            <field name="package_ids">
+                                <tree delete="0" create="0">
+                                    <field name="house_shipment_id"/>
+                                    <field name="package_mode" invisible="1"/>
+                                    <field name="package_type_id" attrs="{'invisible_column': [('package_mode', '=', 'container')]}"/>
+                                    <field name="container_type_id" />
+                                    <field name="container_number"/>
+                                    <field name="seal_number"/>
+                                    <field name="quantity" string="Pack Count"/>
+                                    <field name="no_of_teu" optional="hide"/>
+                                    <button name="action_unlink_shipment" type="object" class="btn btn-link btn-icon fa fa-close" title="Unlink Package from Container" confirm="Are you sure want to unlink container? This action can not be undone"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="house_shipment_packages" string="Packages" groups="base.group_no_one">
+                            <field name="house_shipment_package_ids" readonly="1">
+                                <tree create="0" edit="0" delete="0" editable="bottom">
+                                    <field name="package_mode" invisible="1"/>
+                                    <field name="package_type_id" attrs="{'invisible_column': [('package_mode', '=', 'container')]}"/>
+                                    <field name="container_type_id" />
+                                    <field name="container_number"/>
+                                    <field name="seal_number"/>
+                                    <field name="quantity" string="Pack Count"/>
+                                    <field name="no_of_teu" attrs="{'invisible_column': [('package_mode', '=', 'container')]}"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_container_number">
+        <field name="name">Container Number</field>
+        <field name="res_model">freight.master.shipment.container.number</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem
+        id="root_container_number"
+        name="Container Number"
+        action="action_container_number"
+        parent="freight_base.freight_operations_configuration"
+        sequence="9"/>
+</odoo>

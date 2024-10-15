@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+    <record id="freight_air_schedule_quote_changes_form" model="ir.ui.view">
+        <field name="name">freight.air.schedule.quote.changes.form</field>
+        <field name="model">shipment.quote</field>
+        <field name="inherit_id" ref="fm_quote.view_shipment_quote_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='quotation_line_ids']/.." position="after">
+                <separator string="Flight Details" attrs="{'invisible': ['|',('quote_for', '!=', 'shipment'),('mode_type','!=','air')]}"/>
+                <label for="add_flight_details" class="font-weight-bold" attrs="{'invisible': ['|','|',('quote_for', '!=', 'shipment'), ('state', '!=', 'draft'),('mode_type','!=','air')]}"/>
+                <field name="add_flight_details" widget="boolean_toggle" attrs="{'invisible': ['|','|',('quote_for', '!=', 'shipment'), ('state', '!=', 'draft'),('mode_type','!=','air')]}" nolable="1"/>
+
+                <field name="air_schedule_ids" nolabel="1" widget="one2many" attrs="{'invisible': ['|','|', ('quote_for', '!=', 'shipment'), ('add_flight_details','=', False),('mode_type','!=','air')]}"
+                    context="{'default_transport_mode_id': transport_mode_id,'default_carrier_id':carrier_id,
+                        'default_origin_port_id': port_of_loading_id, 'default_destination_port_id': port_of_discharge_id}">
+                    <tree editable="top">
+                        <field name="carrier_id" required="1" string="Airline" domain="[('transport_mode_id','=',transport_mode_id)]"/>
+                        <field name="aircraft_type" required="1"/>
+                        <field name="flight_number" required="1"/>
+                        <field name="service_name"/>
+                        <field name="origin_port_id"/>
+                        <field name="destination_port_id"/>
+                        <field name="estimated_departure_date" required="1"/>
+                        <field name="estimated_arrival_date" required="1"/>
+                        <field name="transit_time"/>
+                        <field name="transport_mode_id" invisible="1"/>
+                        <field name="name" invisible="1"/>
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+        
+    </record>
+
+</odoo>

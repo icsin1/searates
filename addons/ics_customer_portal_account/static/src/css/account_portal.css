@@ -1,0 +1,40 @@
+.nav-fill .nav-item, .nav-fill>.nav-link {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    text-align: center;
+}
+.bi-download::before {
+    content: "\f30a";
+}
+.bi::before, [class^="bi-"]::before, [class*=" bi-"]::before {
+    display: inline-block;
+    font-family: bootstrap-icons !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    vertical-align: -0.125em;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.o_portal_wrap .container-fluid .info{
+  margin: 20px;
+  color: #717171;
+  line-height: 25px;
+}
+.card.bg-primary {
+    background-color: #007bff!important;
+}
+.card.text-white {
+    color: #fff!important;
+}
+.card .card-body {
+	background-color:inherit !important;
+	color:inherit;
+}
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #007bff;
+}
+

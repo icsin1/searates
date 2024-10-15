@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="master_shipment_charge_cost_view_search" model="ir.ui.view">
+        <field name="name">master.shipment.charge.cost.view.search</field>
+        <field name="model">master.shipment.charge.cost</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id" />
+                <field name="partner_id" />
+                <filter name="filter_to_bill" string="To Bill" domain="[('status', '=', 'no')]"/>
+                <filter name="filter_partial_billed" string="Partial Billed" domain="[('status', '=', 'partial')]"/>
+                <filter name="filter_full_billed" string="Fully Billed" domain="[('status', '=', 'full_billed')]"/>
+                <filter name="group_by_status" string="Status" context="{'group_by': 'status'}" />
+                <filter name="group_by_product" string="Charge" context="{'group_by': 'product_id'}" />
+                <filter name="group_by_creditor" string="Creditor" context="{'group_by': 'partner_id'}" />
+                <filter name="group_by_amount_currency_id" string="Currency" context="{'group_by': 'amount_currency_id'}" />
+            </search>
+        </field>
+    </record>
+    <record id="freight_master_charge_cost_view_tree" model="ir.ui.view">
+        <field name="name">master.shipment.charge.cost.view.tree</field>
+        <field name="model">master.shipment.charge.cost</field>
+        <field name="arch" type="xml">
+            <!--Keep js_class in charges base module only-->
+            <tree multi_edit="1" export_xlsx="0" js_class="shipment_charge_additional_button" editable="bottom">
+                <header>
+                    <button type="object" name="action_adjust_costs_with_houses" class="btn btn-primary btn-sm master mx-1" string="Adjust to House" invisible="context.get('make_invisible', 0)"/>
+                </header>
+                <field name="sequence" widget="handle"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="transport_mode_id" invisible="1"/>
+                <field name="mode_type" invisible="1"/>
+                <field name="master_shipment_id" invisible="1"/>
+                <field name="domain_measurement_ids" invisible="1"/>
+                <field name="product_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="charge_description" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="partner_id" class="text-info" options="{'no_create': 1, 'no_open': 1}" required="1" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="due_by" attrs="{'readonly': [('status', '!=', 'no')], 'invisible': [('mode_type', '!=', 'air')]}"/>
+                <field name="charge_type" attrs="{'readonly': [('status', '!=', 'no')], 'invisible': [('mode_type', '!=', 'air')]}"/>
+                <field name="company_id" optional="hide" options="{'no_create': 1, 'no_open': 1}"/>
+                <field name="measurement_basis_id" options="{'no_create': 1, 'no_open': 1}" domain="[('id', 'in' , domain_measurement_ids), ('transport_mode_ids', 'in', transport_mode_id)]" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="is_container_type_basis" invisible="1"/>
+                <field name="parent_packaging_mode" invisible="1"/>
+                <field name="container_type_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('is_container_type_basis', '=', False)], 'required': [('is_container_type_basis', '=', True)]}"/>
+                <field name="quantity" class="font-weight-bold" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="amount_currency_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="amount_currency_mismatch" invisible="1"/>
+                <field name="amount_rate" class="font-weight-bold text-black" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="amount_conversion_rate" force_save="1" attrs="{'readonly': ['|', ('status', '!=', 'no'), ('amount_currency_mismatch', '=', False)]}"/>
+                <field name="total_currency_amount" class="text-info font-weight-bold" string="Amount" attrs="{'readonly': [('status', '!=', 'no')]}" sum="Total Currency Amount"/>
+                <field name="total_amount" sum="Total" class="text-success font-weight-bold" optional="hide"/>
+                <field name="tax_ids" invisible="1"/>
+                <field name="property_account_id" invisible="1"/>
+                <field name="partner_address_id" invisible="1"/>
+                <field name="status" widget="badge" decoration-success="status == 'fully_billed'"
+                       decoration-warning="status == 'partial'"/>
+                <button name="action_option_from_view" string=" " type="object" class="btn fa fa-ellipsis-h"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="freight_master_charge_cost_view_form" model="ir.ui.view">
+        <field name="name">master.shipment.charge.cost.view.form</field>
+        <field name="model">master.shipment.charge.cost</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="status" widget="statusbar" statusbar_visible="no"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="move_line_ids" invisible="1"/>
+                        <field name="count_credit_note" invisible="1"/>
+                        <button name="action_open_moves" type="object" context="{'move_type': 'in_invoice'}"
+                                class="oe_stat_button" icon="fa-money" string="View Bills"
+                                attrs="{'invisible': [('move_line_ids', '=', [])]}"/>
+                    </div>
+                    <field name="currency_id" invisible="1"/>
+                    <label for="product_id"/>
+                    <div class="oe_title">
+                        <h1><field name="product_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/></h1>
+                    </div>
+                    <group string="Charge">
+                        <group>
+                            <field name="charge_description" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                        <group>
+                            <label for="quantity"/>
+                            <div class="o_row">
+                                <field name="master_shipment_id" invisible="1" required="0"/>
+                                <field name="transport_mode_id" invisible="1"/>
+                                <field name="domain_measurement_ids" invisible="1"/>
+                                <field name="quantity" attrs="{'readonly': [('status', '!=', 'no')]}"/> <field name="measurement_basis_id" options="{'no_create': 1, 'no_open': 1}" domain="[('id', 'in' , domain_measurement_ids), ('transport_mode_ids', 'in', transport_mode_id)]"  attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group string="Cost">
+                        <group>
+                            <field name="partner_id" options="{'no_create': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            <field name="partner_address_id" context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': partner_id, 'default_type': 'invoice', 'form_view_ref': 'freight_base.res_partner_address_form'}" options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            <field name="company_id" invisible="1" />
+                            <field name="tax_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                        <group>
+                            <field name="amount_currency_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            <field name="amount_currency_mismatch" invisible="1"/>
+                            <field name="amount_rate" string="Rate Per Unit" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            <label for="amount_conversion_rate" attrs="{'invisible': [('amount_currency_mismatch', '=', False)]}"/>
+                            <div class="o_row" attrs="{'invisible': [('amount_currency_mismatch', '=', False)]}">
+                                <field name="amount_conversion_rate" force_save="1" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                                <button title="Re-fetch Latest Rate" name="action_update_exchange_rate" type="object" class="btn btn-sm btn-icon fa fa-refresh oe_edit_only" attrs="{'invisible': [('status', '!=', 'no')]}"/>
+                            </div>
+                            <field name="property_account_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="remarks" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                        <group>
+                            <field name="master_shipment_id" invisible="1" required="0"/>
+                            <field name="revenue_line_id" options="{'no_create': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                    </group>
+                    <group string="Charge Summary">
+                        <group>
+                            <field name="total_currency_amount" class="font-weight-bold text-info" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                        <group>
+                            <field name="total_amount" class="font-weight-bold text-danger"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="ir_actions_server_unadjust_cost" model="ir.actions.server">
+        <field name="name">Un-Adjust Lines</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_master_shipment_charge_cost"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_unadjust_cost_charges()
+        </field>
+        <field name="binding_model_id" ref="model_master_shipment_charge_cost"/>
+        <field name="binding_view_types">list</field>
+    </record>
+
+    <record id="action_master_shipment_charge_cost" model="ir.actions.server" >
+        <field name="name">Duplicate</field>
+        <field name="model_id" ref="freight_management_charges.model_master_shipment_charge_cost"/>
+        <field name="binding_model_id" ref="freight_management_charges.model_master_shipment_charge_cost" />
+        <field name="state">code</field>
+        <field name="binding_view_types">list</field>
+        <field name="code">[record.with_context(from_copy_method=True).copy() for record in records]</field>
+    </record>
+</odoo>

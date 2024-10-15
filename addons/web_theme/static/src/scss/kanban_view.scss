@@ -1,0 +1,22 @@
+.o_kanban_view {
+    .o_kanban_record {
+        @extend .shadow-sm;
+        border-radius: 5px;
+
+        .o_kanban_record_title {
+            font-weight: 700;
+        }
+    }
+    .o_kanban_group {
+        .o_kanban_record {
+            margin-bottom: 10px;
+        }
+        .o_kanban_header > .o_kanban_header_title {
+            height: 40px;
+            .o_column_title {
+                font-weight: bold;
+                color: $primary;
+            }
+        }
+    }
+}

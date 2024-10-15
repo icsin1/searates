@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_crm_prospect_opportunity_tree" model="ir.ui.view">
+        <field name="name">crm.prospect.opportunity.tree</field>
+        <field name="model">crm.prospect.opportunity</field>
+        <field name="inherit_id" ref="crm_prospect_lead.crm_prospect_opportunity_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='opportunity_for']" position="before">
+                <field name="opportunity_type"/>
+            </xpath>
+            <xpath expr="//field[@name='opportunity_for']" position="after">
+                <field name="service_job_type_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_crm_prospect_opportunity_form" model="ir.ui.view">
+        <field name="name">crm.prospect.opportunity.form</field>
+        <field name="model">crm.prospect.opportunity</field>
+        <field name="inherit_id" ref="crm_prospect_lead.crm_prospect_opportunity_view_form"/>
+        <field eval="99" name="priority"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='transport_mode_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('opportunity_for', '=', 'job')], 'required': [('opportunity_for', '!=', 'job')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='cargo_type_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('opportunity_for', '=', 'job')], 'required': [('opportunity_for', '!=', 'job')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='shipment_type_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('opportunity_for', '=', 'job')], 'required': [('opportunity_for', '!=', 'job')]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='service_mode_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('opportunity_for', '=', 'job')], 'required': [('opportunity_for', '!=', 'job')]}</attribute>
+            </xpath>
+            <xpath expr="//separator[@name='shipment_detail_label']" position="attributes">
+                <attribute name="attrs">{'invisible': [('opportunity_for', '=', 'job')], 'required': [('opportunity_for', '!=', 'job')]}</attribute>
+            </xpath>
+            <xpath expr="//separator[@name='shipment_detail_label']" position="after">
+                <separator string="Job Details" name="job_detail_label" attrs="{'invisible': [('opportunity_for', '!=', 'job')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='transport_mode_id']" position="after">
+                <field name="service_job_type_id" options="{'no_create': True}" attrs="{'invisible': [('opportunity_for', '!=', 'job')], 'required': [('opportunity_for', '=', 'job')]}"/>
+            </xpath>
+
+            <xpath expr="//field[@name='origin_un_location_id']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('mode_type', '=', False), ('mode_type', '=', 'land'), ('opportunity_for','!=','job')], 'required': [('mode_type', 'in', ['air', 'sea']),('opp_check','!=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='destination_un_location_id']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('mode_type', '=', False), ('mode_type', '=', 'land'), ('opportunity_for','!=','job')], 'required': [('mode_type', 'in', ['air', 'sea']),('opp_check','!=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='port_of_loading_id']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('mode_type', '=', False), ('mode_type', '=', 'land'), ('opportunity_for','!=','job')], 'required': [('mode_type', 'in', ['air', 'sea'])]}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='port_of_discharge_id']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('mode_type', '=', False), ('mode_type', '=', 'land'), ('opportunity_for','!=','job')], 'required': [('mode_type', 'in', ['air', 'sea'])]}</attribute>
+            </xpath>
+            <xpath expr="//label[@for='port_of_loading_id']/.." position="replace">
+                <div class="o_td_label">
+                    <label for="port_of_loading_id" string="Origin Port" attrs="{'invisible': ['|', ('mode_type', '=', False), ('mode_type', 'in', ['air', 'land'])]}"/>
+                    <label for="port_of_loading_id" string="Origin Airport" attrs="{'invisible': ['|', ('mode_type', '=', False), ('mode_type', 'in', ['sea', 'land'])]}"/>
+                    <label for="port_of_loading_id" string="Origin Port" attrs="{'invisible': [('opportunity_for','!=','job')]}"/>
+                </div>
+            </xpath>
+            <xpath expr="//label[@for='port_of_discharge_id']/.." position="replace">
+                <div class="o_td_label">
+                    <label for="port_of_discharge_id" string="Destination Port" attrs="{'invisible': ['|', ('mode_type', '=', False), ('mode_type', 'in', ['air', 'land'])]}"/>
+                    <label for="port_of_discharge_id" string="Destination Airport" attrs="{'invisible': ['|', ('mode_type', '=', False), ('mode_type', 'in', ['sea', 'land'])]}"/>
+                    <label for="port_of_loading_id" string="Destination Port" attrs="{'invisible': [('opportunity_for','!=','job')]}"/>
+                </div>
+            </xpath>
+            <!--<xpath expr="//field[@name='destination_country_id']" position="attributes">
+                <attribute name="attrs">{'required': [('opportunity_for','=','shipment')]}</attribute>
+            </xpath>-->
+            <xpath expr="//field[@name='destination_country_id']" position="replace">
+                <div class="o_td_label">
+                    <label for="destination_country_id" string="Delivery Country" attrs="{'invisible': ['|', ('mode_type', '=', False), ('mode_type', 'in', ['air', 'sea'])]}"/>
+                    <label for="destination_country_id" string="Destination Country" attrs="{'invisible': [('mode_type', '=', 'land')]}"/>
+                </div>
+                <div>
+                    <field name="destination_country_id" context="{'no_create': True, 'no_open': True}" attrs="{'required': [('opportunity_for', '=', 'shipment'),('opp_check','!=',True)]}"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

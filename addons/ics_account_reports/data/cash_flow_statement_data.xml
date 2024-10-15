@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <!-- Client Action -->
+        <record id="action_account_reports__cash_flow_statement" model="ir.actions.client">
+            <field name="name">Cash Flow Statement</field>
+            <field name="tag">ics_account_reports.finance_reports</field>
+            <field name="context" eval="{'model': 'account.finance.cash.flow.report'}"/>
+            <field name="res_model">account.move.line</field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem
+            id="menu_finance_report_cash_flow_statement"
+            name="Cash Flow Statement"
+            parent="menu_root_account_reports"
+            action="action_account_reports__cash_flow_statement"
+            sequence="3"
+        />
+
+    </data>
+
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<odoo>
+    <record id="view_freight_house_shipment_doc_tree_inherited" model="ir.ui.view">
+        <field name="name">freight.house.shipment.document</field>
+        <field name="model">freight.house.shipment.document</field>
+        <field name="inherit_id" ref="freight_management.view_freight_house_shipment_doc_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='document_file']" position="after">
+                <field name="is_publish" widget="boolean_toggle" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

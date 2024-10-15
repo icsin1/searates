@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="l10n_om_chart_template_standard" model="account.chart.template">
+        <field name="property_account_receivable_id" ref="om_121000"/>
+        <field name="property_account_payable_id" ref="om_211000"/>
+        <field name="property_account_expense_categ_id" ref="om_511000"/>
+        <field name="property_account_income_categ_id" ref="om_411100"/>
+        <field name="property_stock_account_input_categ_id" ref="om_201210"/>
+        <field name="property_stock_account_output_categ_id" ref="om_511200"/>
+        <field name="property_stock_valuation_account_id" ref="om_113300"/>
+        <field name="expense_currency_exchange_account_id" ref="om_616300"/>
+        <field name="income_currency_exchange_account_id" ref="om_616300"/>
+        <field name="default_pos_receivable_account_id" ref="om_112200" />
+    </record>
+</odoo>

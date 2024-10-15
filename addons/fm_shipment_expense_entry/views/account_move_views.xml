@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_journal_entry_expense_entry_view_form" model="ir.ui.view">
+        <field name="name">account.move.view.expense.entry.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="freight_management_charges.account_move_inherited_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='charge_house_shipment_ids']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('charge_house_shipment_ids', '=', False), ('move_type', 'not in', ['in_invoice', 'out_invoice', 'entry']), ('add_charges_from', '!=', 'house')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='house_shipments']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('charge_house_shipment_ids', '=', False), ('move_type', 'not in', ['in_invoice', 'out_invoice', 'entry']), ('add_charges_from', '!=', 'house')]}</attribute>
+            </xpath>
+
+            <xpath expr="//label[@for='charge_master_shipment_ids']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('charge_master_shipment_ids', '=', False), ('move_type', 'not in', ['in_invoice', 'out_invoice', 'entry']), ('add_charges_from', '!=', 'master')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='master_shipments']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('charge_master_shipment_ids', '=', False), ('move_type', 'not in', ['in_invoice', 'out_invoice', 'entry']), ('add_charges_from', '!=', 'master')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

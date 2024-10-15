@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_payment_receipt_tree" model="ir.ui.view">
+        <field name="name">account.payment.tree</field>
+        <field name="model">account.payment</field>
+        <field name="priority" eval="55"/>
+        <field name="arch" type="xml">
+            <tree edit="false" decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+                <header>
+                    <button name="action_print_receipt" string="Print &amp; Download" invisible="not context.get('select', 0)" type="object" class="oe_highlight ml-2" />
+                </header>
+                <field name="company_currency_id" invisible="1"/>
+                <field name="date"/>
+                <field name="name"/>
+                <field name="journal_id"/>
+                <field name="payment_method_line_id"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="amount_signed" string="Amount in Currency" groups="base.group_multi_currency" optional="hide"/>
+                <field name="currency_id" string="Payment Currency" groups="base.group_multi_currency" optional="hide"/>
+                <field name="amount_company_currency_signed" widget="monetary" string="Amount" sum="Total"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_account_payments_print_receipts" model="ir.actions.act_window">
+        <field name="name">Print Receipts</field>
+        <field name="res_model">account.payment</field>
+        <field name="view_mode">tree</field>
+        <field name="context">{}</field>
+        <field name="view_id" ref="view_account_payment_receipt_tree"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+              No Payment Receipt Generated
+            </p>
+        </field>
+    </record>
+
+</odoo>

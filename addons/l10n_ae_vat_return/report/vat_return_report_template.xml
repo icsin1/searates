@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_vat_return_report_document">
+        <t t-call="web.external_layout">
+            <t t-set="doc" t-value="doc.with_context()"/>
+            <div class="page">
+                <div class="oe_structure"/>
+                <div class="text-center">
+                    <h4 class="mt16">
+                        <span>VAT 201 Return Report</span>
+                    </h4>
+                    <h5 class="mt16">
+                        <span>Basis: Accrual</span>
+                    </h5>
+                    <h5 class="mt16">
+                        <t t-if="doc.from_date and doc.to_date">
+                            From
+                            <strong>
+                                <t t-esc="doc.from_date"/>
+                            </strong>
+                            To
+                            <strong>
+                                <t t-esc="doc.to_date"/>
+                            </strong>
+                        </t>
+                    </h5>
+                </div>
+                <div class="text-left">
+                    <h5>
+                        <strong>VAT on Sales and all other Outputs</strong>
+                    </h5>
+                </div>
+                <table class="table table-sm o_main_table">
+                    <thead style="'bg-200 font-weight-bold'" class="thead-light">
+                        <tr>
+                            <th name="th_description" class="text-left">Box#</th>
+                            <th name="th_description" class="text-left">Description</th>
+                            <th name="th_quantity" class="text-right">Amount</th>
+                            <th name="th_priceunit" class="text-right">VAT Amount</th>
+                            <th name="th_taxes" class="text-right">Adjustment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="current_subtotal" t-value="0"/>
+                        <t t-foreach="doc.vat_return_sale_ids" t-as="line">
+                            <tr>
+                                <td name="td_name">
+                                    <span t-field="line.box_no"/>
+                                </td>
+                                <td name="td_name">
+                                    <span t-field="line.description"/>
+                                </td>
+                                <td name="td_quantity" class="text-right">
+                                    <span t-field="line.actual_base_amount"/>
+                                </td>
+                                <td name="td_priceunit" class="text-right">
+                                    <span t-field="line.actual_tax_amount"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="line.adjustment_amount"/>
+                                </td>
+                            </tr>
+                            <t t-if="line.box_no == '7'">
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            <span>8</span>
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            <span>Total</span>
+                                        </strong>
+                                    </td>
+                                    <td class="text-right">
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>
+                                            <span t-field="doc.sale_tax_vat_amount_total"/>
+                                        </strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>
+                                            <span t-field="doc.total_of_adjustment"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </tbody>
+                </table>
+
+                <div class="text-left">
+                    <h5>
+                        <strong>VAT on Expenses and all other Inputs</strong>
+                    </h5>
+                </div>
+                <table class="table table-sm o_main_table">
+                    <thead style="'bg-200 font-weight-bold o_line_section'" class="thead-light">
+                        <tr>
+                            <th name="th_description" class="text-left">Box#</th>
+                            <th name="th_description" class="text-left">Description</th>
+                            <th name="th_quantity" class="text-right">Amount</th>
+                            <th name="th_priceunit" class="text-right">Recoverable VAT Amount</th>
+                            <th name="th_taxes" class="text-right">Adjustment</th>
+                        </tr>
+                    </thead>
+                    <tbody class="sale_tbody">
+                        <t t-set="current_subtotal" t-value="0"/>
+
+                        <t t-foreach="doc.vat_return_purchase_ids" t-as="line">
+                            <tr>
+                                <td name="td_name">
+                                    <span t-field="line.box_no"/>
+                                </td>
+                                <td name="td_name">
+                                    <span t-field="line.description"/>
+                                </td>
+                                <td name="td_quantity" class="text-right">
+                                    <span t-field="line.actual_base_amount"/>
+                                </td>
+                                <td name="td_priceunit" class="text-right">
+                                    <span t-field="line.actual_tax_amount"/>
+                                </td>
+                                <td class="text-right">
+                                    <span t-field="line.adjustment_amount"/>
+                                </td>
+                            </tr>
+                            <t t-if="line.box_no == '10'">
+                                <tr>
+                                    <td>
+                                        <strong>
+                                            <span>11</span>
+                                        </strong>
+                                    </td>
+                                    <td>
+                                        <strong>
+                                            <span>Total</span>
+                                        </strong>
+                                    </td>
+                                    <td class="text-right">
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>
+                                            <span t-field="doc.total_recoverable_vat_amount"/>
+                                        </strong>
+                                    </td>
+                                    <td class="text-right">
+                                        <strong>
+                                            <span t-field="doc.total_of_purchase_adjustment"/>
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </t>
+                        </t>
+                    </tbody>
+                </table>
+
+                <div class="text-left">
+                    <h5>
+                        <strong>Net VAT due</strong>
+                    </h5>
+                </div>
+                <table class="table table-sm o_main_table">
+                    <thead style="'bg-200 font-weight-bold o_line_section'" class="thead-light">
+                        <tr>
+                            <th name="th_description" class="text-left">Box#</th>
+                            <th name="th_description" class="text-left">Description</th>
+                            <th name="th_quantity" class="text-right">VAT Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody class="sale_tbody">
+                        <tr>
+                            <td name="td_name">
+                                <span>12</span>
+                            </td>
+                            <td name="td_name">
+                                <span>Total value of due tax for the period</span>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="doc.total_value_of_due_tax"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td name="td_name">
+                                <span>13</span>
+                            </td>
+                            <td name="td_name">
+                                <span>Total value of recoverable tax for the period</span>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="doc.total_of_recoverable_tax"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td name="td_name">
+                                <span>14</span>
+                            </td>
+                            <td name="td_name">
+                                <strong>
+                                    <span>Net VAT payable (or reclaimable) for the period</span>
+                                </strong>
+                            </td>
+                            <td class="text-right">
+                                <span t-field="doc.net_payable_amount"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td name="td_name">
+                                <span>15</span>
+                            </td>
+                            <td name="td_name">
+                                <span>Do you wish to request a refund for the above amount of reclaimable VAT?</span>
+                            </td>
+                            <td class="text-right">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                 <div style="margin-top:20px" class="text-left">
+                        **Amount is displayed in your base currency <strong> <span t-field="doc.currency_id.name"/></strong>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="vat_return_report">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="l10n_ae_vat_return.report_vat_return_report_document"/>
+            </t>
+        </t>
+    </template>
+</odoo>

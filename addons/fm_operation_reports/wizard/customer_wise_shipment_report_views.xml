@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="customer_wise_shipment_report_form_view" model="ir.ui.view">
+        <field name="name">customer.wise.shipment.report.form.view</field>
+        <field name="model">customer.wise.shipment.report</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <group>
+                        <field name="from_date" required="1"/>
+                        <field name="customer_ids" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}" widget="many2many_tags"/>
+                    </group>
+                    <group>
+                        <field name="to_date" required="1"/>
+                        <field name="company_id" options="{'no_create': True, 'no_create_edit': True, 'no_open': True}" readonly="1" force_save="True"/>
+                    </group>
+                </group>
+                <footer>
+                    <button type="object" string="XLSX" name="print_xlsx_report" class="btn btn-primary"/>
+                    <button type="special" special="cancel" string="Cancel" class="btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_customer_wise_shipment_report" model="ir.actions.act_window">
+        <field name="name">Customer Wise Report</field>
+        <field name="res_model">customer.wise.shipment.report</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem
+        id="menu_customer_wise_shipment_report"
+        parent="menu_freight_operation_reporting"
+        groups="freight_base.group_operation_manager,base.group_system"
+        action="action_customer_wise_shipment_report"
+        sequence="100"
+    />
+
+</odoo>

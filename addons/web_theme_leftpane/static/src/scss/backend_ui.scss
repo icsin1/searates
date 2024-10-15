@@ -1,0 +1,30 @@
+div.wtl-container {
+    @extend .d-flex;
+    @extend .flex-fill;
+    height: 100%;
+
+    .wtl-left-menu {
+        @extend .shadow-sm;
+        background-color: $o-brand-navbar-color;
+        border-right: 1px solid #ebebeb;
+        min-width: 200px;
+        max-width: 200px;
+        width: 200px;
+    }
+
+    .wtl-main-body {
+        @extend .d-flex;
+        @extend .flex-fill;
+        overflow: auto;
+        flex-direction: column;
+        
+        .o_action_manager {
+            @extend .flex-fill;
+            height: 100%;
+            .o_content {
+                @extend .flex-fill;
+                height: 100%;
+            }
+        }
+    }
+}

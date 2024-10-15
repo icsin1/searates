@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+         <record id="account.action_report_payment_receipt" model="ir.actions.report">
+            <field name="visibility">False</field>
+        </record>
+    </data>
+</odoo>

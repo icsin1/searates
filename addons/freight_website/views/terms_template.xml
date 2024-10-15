@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <template id="freight_website.login" inherit_id="web.login" name="Login - Terms &amp; Conditions">
+        <xpath expr="//button[@type='submit']/.." position="inside">
+            <div class="justify-content-between mt-2 d-flex small">
+                <a t-attf-href="/tos">Terms Of Serivce</a>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="terms_and_condition" name="Terms Of Service">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -1,0 +1,44 @@
+.o_required_modifier.o_input,
+.o_required_modifier .o_input {
+    background-color: #e9ecef !important;
+}
+
+.o_form_view {
+    .oe_button_box > .oe_stat_button > .o_button_icon {
+        color: theme-color("primary");
+    }
+}
+
+.flex-even {
+    flex: 1;
+}
+
+.o_searchview .o_searchview_facet .o_searchview_facet_label {
+    background-color: $primary;
+}
+.o_searchview .o_searchview_autocomplete li.o_selection_focus {
+    background-color: $primary;
+}
+
+.o_form_view {
+
+    .o_horizontal_separator {
+        font-size: 18px;
+        margin-top: 0px;
+        font-weight: bold;
+        &:not(:empty) {
+            box-shadow: 0 1px 0 rgba($body-color, .2);
+        }
+    }
+
+    .o_group {
+        .o_horizontal_separator {
+            font-size: 18px;
+            margin-top: 0px;
+            font-weight: bold;
+            &:not(:empty) {
+                box-shadow: 0 1px 0 rgba($body-color, .2);
+            }
+        }
+    }
+}

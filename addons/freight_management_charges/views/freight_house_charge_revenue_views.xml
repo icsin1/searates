@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="house_shipment_charge_revenue_view_search" model="ir.ui.view">
+        <field name="name">house.shipment.charge.revenue.view.search</field>
+        <field name="model">house.shipment.charge.revenue</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id" />
+                <field name="partner_id" />
+                <field name="part_bl_id"/>
+                <filter name="filter_to_invoice" string="To Invoice" domain="[('status', '=', 'no')]"/>
+                <filter name="filter_partial_invoiced" string="Partial Invoiced" domain="[('status', '=', 'partial')]"/>
+                <filter name="filter_full_invoiced" string="Fully Invoiced" domain="[('status', '=', 'full_invoiced')]"/>
+                <filter name="group_by_house" string="House" context="{'group_by': 'house_shipment_id'}" />
+                <filter name="group_by_status" string="Status" context="{'group_by': 'status'}" />
+                <filter name="group_by_product" string="Charge" context="{'group_by': 'product_id'}" />
+                <filter name="group_by_creditor" string="Debtor" context="{'group_by': 'partner_id'}" />
+                <filter name="group_by_amount_currency_id" string="Currency" context="{'group_by': 'amount_currency_id'}" />
+            </search>
+        </field>
+    </record>
+    <record id="freight_house_charge_revenue_view_tree" model="ir.ui.view">
+        <field name="name">house.shipment.charge.revenue.view.tree</field>
+        <field name="model">house.shipment.charge.revenue</field>
+        <field name="arch" type="xml">
+            <!--Keep js_class in charges base module only-->
+            <tree multi_edit="1" export_xlsx="0" js_class="shipment_charge_additional_button" editable="bottom" decoration-info="master_shipment_revenue_charge_id != False" decoration-bf="master_shipment_revenue_charge_id != False">
+                <field name="master_shipment_revenue_charge_id" invisible="1"/>
+                <field name="allowed_partner_ids" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="transport_mode_id" invisible="1"/>
+                <field name="mode_type" invisible="1"/>
+                <field name="house_shipment_id" invisible="1"/>
+                <field name="domain_measurement_ids" invisible="1"/>
+                <field name="sequence" widget="handle"/>
+                <field name="product_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="charge_description" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="partner_id" class="text-info" options="{'no_create': 1, 'no_open': 1}" required="1" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="due_by" attrs="{'readonly': [('status', '!=', 'no')], 'invisible': [('mode_type', '!=', 'air')]}"/>
+                <field name="charge_type" attrs="{'readonly': [('status', '!=', 'no')], 'invisible': [('mode_type', '!=', 'air')]}"/>
+                <field name="part_bl_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}" domain="[('shipment_id', '=', house_shipment_id)]"/>
+                <field name="company_id" optional="hide" options="{'no_create': 1, 'no_open': 1}"/>
+                <field name="measurement_basis_id" options="{'no_create': 1, 'no_open': 1}" domain="[('id', 'in' , domain_measurement_ids), ('transport_mode_ids', 'in', transport_mode_id)]" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="is_container_type_basis" invisible="1"/>
+                <field name="parent_packaging_mode" invisible="1"/>
+                <field name="container_type_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('is_container_type_basis', '=', False)], 'required': [('is_container_type_basis', '=', True)]}"/>
+                <field name="quantity" class="font-weight-bold" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="amount_currency_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="amount_currency_mismatch" invisible="1"/>
+                <field name="amount_rate" class="font-weight-bold text-black" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="amount_conversion_rate" force_save="1" attrs="{'readonly': ['|', ('status', '!=', 'no'), ('amount_currency_mismatch', '=', False)]}"/>
+                <field name="total_currency_amount" class="text-info font-weight-bold" string="Amount" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="company_currency_amount" sum="Total Currency Amount"/>
+                <field name="amount_currency_residual" class="font-weight-bold text-warning"/>
+                <field name="total_amount" sum="Total" class="text-success font-weight-bold" optional="hide"/>
+                <field name="tax_ids" invisible="1"/>
+                <field name="property_account_id" invisible="1"/>
+                <field name="partner_address_id" invisible="1"/>
+                <field name="status" widget="badge" decoration-success="status == 'fully_invoiced'" decoration-warning="status == 'partial'"/>
+                <button name="action_option_from_view" string=" " type="object" class="btn fa fa-ellipsis-h"/>
+                <field name="amount_residual" groups="base.group_no_one"/>
+                <field name="amount_conversion_rate" groups="base.group_no_one"/>
+                <field name="invoice_currency_amount" groups="base.group_no_one"/>
+                <field name="actual_invoiced_amount" groups="base.group_no_one"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="freight_house_charge_revenue_view_form" model="ir.ui.view">
+        <field name="name">house.shipment.charge.revenue.view.form</field>
+        <field name="model">house.shipment.charge.revenue</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="status" widget="statusbar" statusbar_visible="no"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="move_line_ids" invisible="1"/>
+                        <field name="count_credit_note" invisible="1"/>
+                        <button name="action_open_moves" type="object" context="{'move_type': 'out_invoice'}" class="oe_stat_button" icon="fa-money" string="View Invoices" attrs="{'invisible': [('move_line_ids', '=', [])]}"/>
+                        <button name="action_open_moves" type="object" context="{'move_type': 'out_refund'}" class="oe_stat_button" icon="fa-money" string="Credit Note" attrs="{'invisible': [('count_credit_note', '=', 0)]}"/>
+                    </div>
+                    <field name="currency_id" invisible="1"/>
+                    <label for="product_id" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                    <div class="oe_title">
+                        <h1><field name="product_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/></h1>
+                    </div>
+                    <group string="Charge">
+                        <group>
+                            <field name="charge_description" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                        <group>
+                            <label for="quantity"/>
+                            <div class="o_row">
+                                <field name="transport_mode_id" invisible="1" />
+                                <field name="domain_measurement_ids" invisible="1"/>
+                                <field name="quantity" attrs="{'readonly': [('status', '!=', 'no')]}"/> <field name="measurement_basis_id" options="{'no_create': 1, 'no_open': 1}" domain="[('id', 'in' , domain_measurement_ids)]" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group string="Revenue">
+                        <group>
+                            <field name="allowed_partner_ids" invisible="1"/>
+                            <field name="partner_id" options="{'no_create': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            <field name="partner_address_id" context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': partner_id, 'default_type': 'invoice', 'form_view_ref': 'freight_base.res_partner_address_form'}" options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            <field name="company_id"  readonly="1" />
+                            <field name="house_shipment_id" invisible="1"/>
+                            <field name="tax_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                        <group>
+                            <field name="amount_currency_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            <field name="amount_currency_mismatch" invisible="1"/>
+                            <field name="amount_rate" string="Rate Per Unit" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            <label for="amount_conversion_rate" attrs="{'invisible': [('amount_currency_mismatch', '=', False)]}"/>
+                            <div class="o_row" attrs="{'invisible': [('amount_currency_mismatch', '=', False)]}">
+                                <field name="amount_conversion_rate" force_save="1" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                                <button title="Re-fetch Latest Rate" name="action_update_exchange_rate" type="object" class="btn btn-sm btn-icon fa fa-refresh oe_edit_only" attrs="{'invisible': [('status', '!=', 'no')]}"/>
+                            </div>
+                            <field name="property_account_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="remarks" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                        <group>
+                            <field name="house_shipment_id" invisible="1" required="0"/>
+                            <field name="cost_line_id" options="{'no_create': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                    </group>
+                    <group string="Charge Summary">
+                        <group>
+                            <field name="total_bill_amount" class="font-weight-bold text-info"/>
+                            <label for="total_credit_note_amount"/>
+                            <div class="o_row">
+                                <field name="total_credit_note_amount" class="font-weight-bold"/> <span attrs="{'invisible': [('total_credit_note_qty', '=', 0)]}">(QTY: <field name="total_credit_note_qty" readonly="1" nolabel="1"/>)</span>
+                            </div>
+                            <field name="total_currency_amount" attrs="{'readonly': [('status', '=', 'fully_invoiced')]}" class="font-weight-bold text-info"/>
+                        </group>
+                        <group>
+                            <field name="total_amount" class="font-weight-bold text-success"/>
+                            <field name="invoiced_amount" invisible="1"/>
+                            <field name="invoice_received_amount" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="freight_house_charge_revenue_view_tree_inherit_direct_create" model="ir.ui.view">
+        <field name="name">house.shipment.charge.revenue.view.tree.inherit.direct.create</field>
+        <field name="model">house.shipment.charge.revenue</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="freight_management_charges.freight_house_charge_revenue_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="house_shipment_id" string="House BL No"
+                       domain="[('id', 'in', allowed_house_shipment_ids)]"
+                       attrs="{'readonly': [('status', '!=', 'no')]}" />
+                <field name="allowed_house_shipment_ids" invisible="1" />
+                <field name="parent_id" invisible="1" />
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class"></attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="freight_house_charge_revenue_view_form_inherit_direct_create" model="ir.ui.view">
+        <field name="name">house.shipment.charge.revenue.view.form.inherit.direct.create</field>
+        <field name="model">house.shipment.charge.revenue</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="freight_management_charges.freight_house_charge_revenue_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='house_shipment_id']" position="replace" />
+            <xpath expr="//field[@name='house_shipment_id'][1]" position="replace" />
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <label for="house_shipment_id" string="House BL No" />
+                <div>
+                    <h3>
+                        <field name="house_shipment_id"
+                               domain="[('id', 'in', allowed_house_shipment_ids)]"
+                               options="{'no_create': 1, 'no_open': 1}"
+                               attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        <field name="allowed_house_shipment_ids" invisible="1" />
+                        <field name="parent_id" invisible="1" force_save="1"/>
+                    </h3>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_house_shipment_charge_revenue" model="ir.actions.server" >
+        <field name="name">Duplicate</field>
+        <field name="model_id" ref="freight_management_charges.model_house_shipment_charge_revenue"/>
+        <field name="binding_model_id" ref="freight_management_charges.model_house_shipment_charge_revenue" />
+        <field name="state">code</field>
+        <field name="binding_view_types">list</field>
+        <field name="code">[record.copy() for record in records]</field>
+    </record>
+</odoo>

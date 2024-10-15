@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_move_journal_entry_expense_entry_view_form" model="ir.ui.view">
+        <field name="name">account.move.view.expense.entry.form</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="fm_service_job_charges.account_move_inherited_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//label[@for='charge_service_job_ids']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('charge_service_job_ids', '=', False), ('move_type', 'not in', ['in_invoice', 'out_invoice', 'entry']), ('add_charges_from', '!=', 'job')]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='service_jobs']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('charge_service_job_ids', '=', False), ('move_type', 'not in', ['in_invoice', 'out_invoice', 'entry']), ('add_charges_from', '!=', 'job')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

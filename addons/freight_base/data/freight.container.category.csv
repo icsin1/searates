@@ -1,0 +1,9 @@
+id,name
+cntr_type_dry_storage_container,"Dry storage container"
+cntr_type_flat_rack_container,"Flat rack container"
+cntr_type_open_top_container,"Open top container"
+cntr_type_open_side_storage_container,"Open side storage container"
+cntr_type_refrigerated_iso_containers,"Refrigerated ISO containers"
+cntr_type_iso_tanks,"ISO Tanks"
+cntr_type_half_height_containers,"Half height containers"
+cntr_type_special_purpose_containers,"Special purpose containers"

@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="shipment_pre_alert_notify" model="mail.template">
+            <field name="name">Shipment Pre Alert Notification</field>
+            <field name="model_id" ref="freight_management.model_freight_house_shipment"/>
+            <field name="auto_delete" eval="False" />
+            <field name="email_from">{{(object.user_id.email or '')}}</field>
+            <field name="email_to">{{(object.user_id.email or '')}}</field>
+            <field name="subject">Shipment Pre Alert : {{ (object.booking_nomination_no)}} - {{ (object.hbl_number or '')}} </field>
+            <field name="body_html" type="html">
+            <table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+                <tbody>
+                    <tr>
+                        <td align="left" style="min-width: 590px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 2px 0px 2px; border-collapse:collapse;">
+                                <tr>
+                                    <td valign="middle" align="left">
+                                        <img t-attf-src="/logo.png?company={{ object.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 440px;"/>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <h2>Hello <span t-esc="object.user_id.name or ''"/><span>,</span></h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <t t-if="object.hbl_number and object.booking_nomination_no">
+                                        <td valign="middle">
+                                            <h4><strong>Job / HBL NO: </strong><span  t-esc="object.hbl_number + '/' + object.booking_nomination_no"/></h4>
+                                        </td>
+                                    </t>
+                                </tr>
+                                <tr>
+                                    <td style="vertical-align: top; min-width: 590px;">
+                                        <div style="overflow: auto;display: flex;">
+                                            <div style="min-width: 295px;border: 1px solid black;">
+                                                <t t-if="object.company_id">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>Company :</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="object.company_id.name"/>
+                                                    </div>
+                                                </t>
+                                                <t t-if="object.origin_port_un_location_id">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>POL :</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="'[' + object.origin_port_un_location_id.code + ']' + ' ' + object.origin_port_un_location_id.name"/>
+                                                    </div>
+                                                </t>
+                                                <t t-if="object.destination_port_un_location_id">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>POD :</strong>
+                                                        <span style="word-wrap: break-word;" t-esc=" '[' + object.destination_port_un_location_id.code + ']' + ' ' + object.destination_port_un_location_id.name"/>
+                                                    </div>
+                                                </t>
+                                                <t t-if="object.atd_time and object.ata_time">
+                                                    <div style="margin-left: 1rem;">
+                                                        <t t-set="atd_ata_time" t-value="object.atd_time - object.ata_time"/>
+                                                            <strong>Transit time :</strong>
+                                                            <span style="word-wrap: break-word;" t-out="atd_ata_time.days"/><span> days</span>
+                                                    </div>
+                                                </t>
+                                                <t t-elif="object.etd_time and object.eta_time">
+                                                    <div style="margin-left: 1rem;">
+                                                        <t t-set="etd_eta_time" t-value="object.etd_time - object.eta_time"/>
+                                                            <strong>Transit time :</strong>
+                                                            <span style="word-wrap: break-word;" t-out="etd_eta_time.days"/><span> days</span>
+                                                    </div>
+                                                </t>
+                                                <t t-if="object.shipment_date">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>Shipment Date :</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="object.shipment_date"/>
+                                                    </div>
+                                                </t>
+                                                <t t-if="object.transport_mode_id">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>Transport Mode :</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="'[' + object.transport_mode_id.code + ']'  + ' ' + object.transport_mode_id.name"/>
+                                                    </div>
+                                                </t>
+                                                <t t-if="object.shipment_type_id">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>Shipment Type :</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="'[' + object.shipment_type_id.code + ']'  + ' ' + object.shipment_type_key"/>
+                                                    </div>
+                                                </t>
+                                                <t t-if="object.cargo_type_id">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>Cargo type :</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="'[' +object.cargo_type_id.code + ']' + ' ' + object.cargo_type_id.name"/>
+                                                    </div>
+                                                </t>
+
+                                            </div>
+                                            <div style="min-width: 295px;border: 1px solid black; border-left: none;">
+                                                <t t-if="object.shipping_line_id">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>Liner/Airline :</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="object.shipping_line_id.name"/>
+                                                    </div>
+                                                </t>
+                                                <t t-if="object.transport_mode_id.code in 'SEA'">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>Vog No:</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="object.voyage_number"/>
+                                                    </div>
+                                                </t>
+                                                <t t-elif="object.transport_mode_id.code in 'AIR'">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>Flight No:</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="object.voyage_number"/>
+                                                    </div>
+                                                </t>
+                                                <t t-else="">
+                                                    <div>
+                                                        <span></span>
+                                                    </div>
+                                                </t>
+                                                <t t-if="object.vessel_id">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>Vessel :</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="'[' + object.vessel_id.code + ']'  + ' ' + object.vessel_id.name"/>
+                                                    </div>
+                                                </t>
+                                                <t t-if="object.etd_time">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>ETD :</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="object.etd_time" t-options="{'widget': 'date'}"/>
+                                                    </div>
+                                                </t>
+                                                <t t-if="object.eta_time">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>ETA :</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="object.eta_time" t-options="{'widget': 'date'}"/>
+                                                    </div>
+                                                </t>
+                                                <t t-if="object.atd_time">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>ATD :</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="object.atd_time" t-options="{'widget': 'date'}"/>
+                                                    </div>
+                                                </t>
+                                                <t t-if="object.ata_time">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>ATA :</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="object.ata_time" t-options="{'widget': 'date'}"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+
+                                        </div>
+                                        <div style="vertical-align: top; overflow: auto;display: flex;">
+                                            <div style="min-width: 295px;border: 1px solid black; border-top: none;border-right: none;">
+                                                <t t-if="object.gross_weight_unit">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>Weight:</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="object.gross_weight_unit"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                            <div style="min-width: 295px;border: 1px solid black; border-top: none;">
+                                                <t t-if="object.volume_unit">
+                                                    <div style="margin-left: 1rem;">
+                                                        <strong>Volume:</strong>
+                                                        <span style="word-wrap: break-word;" t-esc="object.volume_unit"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                        <t t-set="container" t-value="['[' +package.container_type_id.code + ']' + ' ' + package.container_type_id.name for package in object.container_ids if package.container_type_id]"/>
+                                            <div style="min-width: 590px; border: 1px solid black;border-top: none;">
+                                                <strong style="margin-left: 1rem;">Container type :</strong>
+                                                <span style="word-wrap: break-word;" t-esc="','.join(container)"/>
+                                            </div>
+                                        <t t-set="container_number" t-value="[package.container_number.name for package in object.container_ids if package.container_number]"/>
+                                            <div style="min-width: 590px; border: 1px solid black;border-top: none;">
+                                                <strong style="margin-left: 1rem;">Container Number:</strong>
+                                                <span style="word-wrap: break-word;" t-esc="','.join(container_number)"/>
+                                            </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            </td>
+            </tr>
+            </table>
+            </field>
+        </record>
+    </data>
+</odoo>

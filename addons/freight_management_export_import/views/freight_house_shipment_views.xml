@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_freight_house_shipment_view_form_custom" model="ir.ui.view">
+        <field name="name">freight.house.shipment.inherit.view.form</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="inherit_id" ref="freight_management.freight_house_shipment_view_form"/>
+        <field name="groups_id" eval="[(4, ref('freight_management_export_import.access_export_to_import'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <field name="enable_import_button" invisible="1"/>
+                <label for="import_company_id" attrs="{'invisible': [('enable_import_button', '=', False)]}"/>
+                <div class="o_row">
+                    <field name="import_company_id" string="Import Company" options="{'no_create': 1, 'no_open': 1}"
+                        attrs="{'invisible': [('enable_import_button', '=', False)], 'readonly': [('export_shipment_id', '!=', False)]}"/>
+                    <button string="Import Shipment"
+                        name="action_create_import_shipment"
+                        type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|', '|', ('enable_import_button', '=', False), ('import_company_id', '=', False), ('export_shipment_id', '!=', False)]}"/>
+                </div>
+                <field name="export_shipment_id" string="Import Shipment"
+                    attrs="{'invisible': [('export_shipment_id', '=', False)]}"  readonly="1" force_save="1"/>
+                <field name="shipment_import_id" string="From Export"
+                    attrs="{'invisible': [('shipment_import_id', '=', False)]}" readonly="1" force_save="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

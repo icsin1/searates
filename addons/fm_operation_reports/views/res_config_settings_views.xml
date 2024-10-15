@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_house_shipment_config" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.shipment.config</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="18"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='freight_base']" position="inside">
+                <h2>Operation Report Allowed Container Size Configuration</h2>
+                <div class="row mt16 o_settings_container" name="container_config">
+                    <div class="o_setting_box">
+                        <div class="text-muted">
+                            <field name="container_size_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="container_type_ids" widget="many2many_tags"/>
+                                </tree>
+                            </field>
+                        </div>
+                    </div>
+                </div>
+                <h2>Customer &amp; Vendor Statement Reports</h2>
+                <div class="row mt16 o_settings_container" name="customer_vendor_statement">
+                    <div class="col-12 col-lg-6 o_setting_box" id="show_hbl_number_setting">
+                        <div class="o_setting_left_pane">
+                            <field name="show_hbl_number"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="show_hbl_number"/>
+                            <div class="content-group" attrs="{'invisible': [('show_hbl_number', '=', False)]}">
+                                <div class="row mt16">
+                                    <label class="col-lg-3 o_light_label" for="hbl_ir_field_id"/>
+                                    <field name="hbl_ir_field_id" attrs="{'required': [('show_hbl_number', '=', True)]}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="show_hbl_number_setting">
+                        <div class="o_setting_left_pane">
+                            <field name="show_mbl_number"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="show_mbl_number"/>
+                            <div class="content-group" attrs="{'invisible': [('show_mbl_number', '=', False)]}">
+                                <div class="row mt16">
+                                    <label class="col-lg-3 o_light_label" for="mbl_ir_field_id"/>
+                                    <field name="mbl_ir_field_id" attrs="{'required': [('show_mbl_number', '=', True)]}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2>Custom Duty Report</h2>
+                <div class="row mt16 o_settings_container" name="custom_duty_report_settings">
+                    <div class="col-12 col-lg-12 o_setting_box" id="custom_duty_report_settings">
+                        <div class="o_setting_left_pane"/>
+                        <div class="o_setting_right_pane">
+                            <label for="custom_duty_charge_ids" />
+                            <div class="text-muted">
+                                <field name="custom_duty_charge_ids" widget="many2many_tags"
+                                       options="{'no_create': True, 'no_create_edit': True}"
+                                       domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

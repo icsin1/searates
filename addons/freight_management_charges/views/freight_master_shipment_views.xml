@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="freight_master_shipment_view_revenue_charges_action" model="ir.actions.act_window">
+        <field name="name">Adjust Revenue Charges</field>
+        <field name="res_model">master.shipment.charge.revenue</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('master_shipment_id', '=', active_id)]</field>
+        <field name="context">{
+            'default_master_shipment_id': active_id,
+            'search_default_group_charge_type': True,
+            'side_panel_view': 'freight_management.freight_master_shipment_info_view_form',
+            'side_panel_res_id': active_id,
+            'side_panel_model': 'freight.master.shipment'
+        }</field>
+    </record>
+    <record id="freight_master_shipment_view_cost_charges_action" model="ir.actions.act_window">
+        <field name="name">Adjust Cost Charges</field>
+        <field name="res_model">master.shipment.charge.cost</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('master_shipment_id', '=', active_id)]</field>
+        <field name="context">{
+            'default_master_shipment_id': active_id,
+            'search_default_group_charge_type': True,
+            'side_panel_view': 'freight_management.freight_master_shipment_info_view_form',
+            'side_panel_res_id': active_id,
+            'side_panel_model': 'freight.master.shipment'
+        }</field>
+    </record>
+
+    <record id="freight_master_shipment_view_search_inherit" model="ir.ui.view">
+        <field name="name">freight.master.shipment.inherit.view.search</field>
+        <field name="model">freight.master.shipment</field>
+        <field name="inherit_id" ref="freight_management.freight_master_shipment_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="replace">
+                <field name="name" string="Search Shipment" filter_domain="['|', '|', '|', ('compute_move_ids.name', 'ilike', self), ('carrier_booking_reference_number', 'ilike', self), ('container_number_ids.container_number', 'ilike', self), ('tag_ids.name', 'ilike', self)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="freight_master_shipment_revenue_charges_view_form" model="ir.ui.view">
+        <field name="name">freight.master.shipment.charges.view.form</field>
+        <field name="model">freight.master.shipment</field>
+        <field name="inherit_id" ref="freight_management.freight_master_shipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_open_freight_house_shipment']" position="before">
+                <button class="oe_stat_button" name="action_open_moves" type="object" context="{'move_type': 'out_refund'}" icon="fa-edit"
+                    attrs="{'invisible': [('generate_invoice_from_master', '=', False)]}" groups="freight_base.group_manage_pricing,freight_base.group_operation_associate,base.group_system">
+                    <field name="house_shipment_credit_note_count" string="Credit Notes" widget="statinfo" icon="fa-usd"/>
+                </button>
+                <button class="oe_stat_button" name="action_open_moves" type="object" context="{'move_type': 'in_refund'}" icon="fa-edit"
+                    attrs="{'invisible': [('generate_invoice_from_master', '=', False)]}" groups="freight_base.group_manage_pricing,freight_base.group_operation_associate,base.group_system">
+                    <field name="house_shipment_debit_note_count" string="Debit Notes" widget="statinfo" icon="fa-usd"/>
+                </button>
+                <button class="oe_stat_button" name="action_open_moves" type="object" context="{'move_type': 'out_invoice'}" icon="fa-edit"
+                    attrs="{'invisible': [('generate_invoice_from_master', '=', False)]}" groups="freight_base.group_manage_pricing,freight_base.group_operation_associate,base.group_system">
+                    <field name="house_shipment_invoice_count" string="Invoices" widget="statinfo" icon="fa-usd"/>
+                </button>
+                <button class="oe_stat_button" name="action_open_moves" type="object" context="{'move_type': 'in_invoice'}" icon="fa-money"
+                    attrs="{'invisible': [('generate_invoice_from_master', '=', False)]}" groups="freight_base.group_manage_pricing,freight_base.group_operation_associate,base.group_system">
+                    <field name="house_shipment_vendor_bill_count" string="Vendor Bills" widget="statinfo" icon="fa-usd"/>
+                </button>
+                <button name="action_open_freight_house_revenue" type="object" class="oe_stat_button" icon="fa-money text-success"
+                    attrs="{'invisible':[('generate_invoice_from_master','=',False)]}" groups="freight_base.group_manage_pricing,freight_base.group_operation_associate,base.group_system">
+                    <field string="House Revenue Charges" name="house_shipment_revenue_charge_state_info" widget="statinfo"/>
+                </button>
+                <button name="action_open_freight_house_cost" type="object" class="oe_stat_button" icon="fa-money text-danger"
+                    attrs="{'invisible':[('generate_invoice_from_master','=',False)]}" groups="freight_base.group_manage_pricing,freight_base.group_operation_associate,base.group_system">
+                    <field string="House Cost Charges" name="house_shipment_cost_charge_state_info" widget="statinfo"/>
+                </button>
+                <button class="oe_stat_button" name="action_view_profitability" type="object" string="View Profitability" icon="fa-money" groups="freight_base.group_manage_pricing,freight_base.group_operation_associate,base.group_system"/>
+                <button name="action_open_freight_master_shipment_revenue_charges" type="object" class="oe_stat_button" icon="fa-money text-success" title="Adjust Revenue Charges"
+                    attrs="{'invisible': [('is_direct_shipment', '=', True)]}" groups="freight_base.group_manage_pricing,freight_base.group_operation_associate,base.group_system">
+                    <field string="Adjust Revenue Charges" name="revenue_charge_state_info" widget="statinfo" />
+                </button>
+                <button name="action_open_freight_master_shipment_cost_charges" type="object" class="oe_stat_button" icon="fa-money text-danger" title="Adjust Cost Charges"
+                    attrs="{'invisible': [('is_direct_shipment', '=', True)]}" groups="freight_base.group_manage_pricing,freight_base.group_operation_associate,base.group_system">
+                    <field string="Adjust Cost Charges" name="cost_charge_state_info" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//sheet" position="after">
+                <field name="move_line_ids" invisible="1"/>
+                <field name="compute_move_ids" invisible="1"/>
+                <field name="attached_house_shipment_ids" invisible="1" />
+                <div class="clearfix position-relative o_form_sheet" groups="freight_base.group_manage_pricing,freight_base.group_operation_associate,base.group_system">
+                    <group string="Shipment Revenue Summary">
+                        <group>
+                            <label for="estimated_margin_percentage"/>
+                            <div>
+                                <field name="estimated_margin_percentage" class="oe_inline"/>%
+                            </div>
+                        </group>
+                        <group>
+                            <label for="received_margin_percentage"/>
+                            <div>
+                                <field name="received_margin_percentage" class="oe_inline"/>%
+                            </div>
+                        </group>
+                    </group>
+                    <table class="table table-info">
+                        <tr>
+                            <td>#</td>
+                            <td class="table-info">Expected Amount</td>
+                        </tr>
+                        <tr>
+                            <td class="table-info">Customer Invoice (Receivable)</td>
+                            <td class="table-info"><field name="estimated_revenue"/></td>
+                        </tr>
+                        <tr>
+                            <td class="table-info">Vendor Bills (Payable)</td>
+                            <td class="table-info"><field name="estimated_cost"/></td>
+                        </tr>
+                    </table>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='shipment_date']" position="after">
+                <field name="generate_invoice_from_master" widget="boolean_toggle" attrs="{'invisible': [('is_direct_shipment', '=', True)]}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="freight_master_shipment_charges_inheirt_view_kanban" model="ir.ui.view">
+        <field name="name">freight.master.shipment.charge.inherit.view.kanban</field>
+        <field name="model">freight.master.shipment</field>
+        <field name="inherit_id" ref="freight_management.freight_master_shipment_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_kanban_card')]" position="inside">
+                <table class="table table-sm my-0 mt-0" name="profitability_detail">
+                    <tr>
+                        <th rowspan="2"><i class="fa fa-2x fa-money" aria-label="money"/></th>
+                        <th class="table-success">Estimated Revenue</th>
+                        <th class="table-info">Estimated Cost</th>
+                    </tr>
+                    <tr class="small">
+                        <td class="table-success"><field name="estimated_revenue"/></td>
+                        <td class="table-info"><field name="estimated_cost"/></td>
+                    </tr>
+                </table>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="freight_master_shipment_charges_profitability_view_pivot" model="ir.ui.view">
+        <field name="name">house.cost.revenue.report.profitability.view.pivot</field>
+        <field name="model">house.cost.revenue.report</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="house_shipment_id" type="col"/>
+                <field name="product_id" type="row"/>
+                <field name="estimated_margin" type="measure"/>
+                <field name="actual_margin" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="view_freight_master_shipment_charges_profitability_tree" model="ir.ui.view">
+        <field name="name">house.cost.revenue.report.profitability.tree</field>
+        <field name="model">house.cost.revenue.report</field>
+        <field name="type">tree</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree string="Shipment Charges" default_order="product_id">
+                <field name="house_shipment_id" invisible="1"/>
+                <field name="product_id" />
+                <field name="revenue_total_amount" string="Estimated Revenue"/>
+                <field name="cost_total_amount" string="Estimated Cost"/>
+                <field name="estimated_margin_percentage" string="Estimated Margin (%)"/>
+                <field name="estimated_margin" string="Estimatee Margin (Amt)"/>
+                <field name="revenue_actual_total_amount" string="Actual Revenue"/>
+                <field name="cost_actual_total_amount" string="Actual Cost"/>
+                <field name="actual_margin_percentage" string="Actual Margin (%)"/>
+                <field name="actual_margin" string="Actual Margin (Amt)" />
+                <field name="currency_id" invisible="1" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="freight_master_shipment_inherit_view_tree" model="ir.ui.view">
+        <field name="name">freight.master.shipment.inheirt.view.tree</field>
+        <field name="model">freight.master.shipment</field>
+        <field name="inherit_id" ref="freight_management.freight_master_shipment_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='currency_id']" position="after">
+                <field name="estimated_revenue" optional="hide"/>
+                <field name="estimated_cost" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

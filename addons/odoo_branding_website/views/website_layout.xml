@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_record_sidebar" name="portal_record_sidebar" inherit_id="portal.portal_record_sidebar">
+        <xpath expr="//div[hasclass('card-footer')]" position="replace">
+        </xpath>
+    </template>
+
+    <template id="login_layout" inherit_id="website.login_layout" name="Website Custom Login Layout">
+        <xpath expr="t" position="replace">
+            <t t-call="website.layout">
+                <div class="oe_website_login_container bg-100 odoo_website_bg_image">
+                    <div class="d-flex flex-row-reverse pt-5 pb-5 pr-lg-5">
+                        <div t-attf-class="login_card mt-3 mb-3 card border-0 bg-200 {{login_card_classes}} o_database_list shadow">
+                            <div class="card-body">
+                                <div t-attf-class="text-center pb-3 border-bottom {{'mb-3' if form_small else 'mb-4'}}">
+                                    <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" alt="Logo" style="max-height:120px; max-width: 100%; width:auto"/>
+                                </div>
+                                <t t-out="0"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_wizard_house_shipment_status_form" model="ir.ui.view">
+        <field name="name">wizard.house.shipment.status.form</field>
+        <field name="model">wizard.house.shipment.status</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="allow_status_change" invisible="1"/>
+                    <field name="shipment_id" invisible="1"/>
+                    <field name="state" invisible="1"/>
+                    <field name="shipment_type_key" invisible="1" />
+                    <field name="shipment_mode_type" invisible="1"/>
+                    <field name="air_export_state" string="State" attrs="{'invisible': ['|', ('shipment_mode_type', '!=', 'air'), ('shipment_type_key', '!=', 'export')], 'required': [('shipment_mode_type', '=', 'air'), ('shipment_type_key', '=', 'export')]}"/>
+                    <field name="export_state" string="State" attrs="{'invisible': ['|', ('shipment_mode_type', 'in', ['air', 'land']), ('shipment_type_key', '!=', 'export')], 'required': [('shipment_mode_type', 'not in', ['air', 'land']), ('shipment_type_key', '=', 'export')]}"/>
+                    <field name="reexport_state" string="State" attrs="{'invisible': [('shipment_type_key', '!=', 're_export')], 'required': [('shipment_type_key', '=', 're_export')]}"/>
+                    <field name="domestic_export_state" string="State" attrs="{'invisible': [('shipment_type_key', '!=', 'domestic_export')],
+                        'required': [('shipment_type_key', '=', 'domestic_export')]}"/>
+                    <field name="import_state" string="State" attrs="{'invisible': [('shipment_type_key', '!=', 'import')], 'required': [('shipment_type_key', '=', 'import')]}"/>
+                    <field name="cross_state" string="State" attrs="{'invisible': [('shipment_type_key', '!=', 'cross')], 'required': [('shipment_type_key', '=', 'cross')]}"/>
+                    <field name="change_reason_id" attrs="{'invisible' : [('state', 'not in', ['cancelled'])], 'required': [('state', 'in', ['cancelled'])]}" options="{'no_create': True, 'no_open': True}"/>
+                    <field name="remark" attrs="{'invisible' : [('state', 'not in', ['cancelled'])], 'required': [('change_reason_id', '==', %(freight_management.shipment_state_change_reason_other)d)]}"/>
+                    <field name="detach_master" invisible="1" readonly="1" force_save="1"/>
+                    <field name="is_direct_shipment" invisible="1"/>
+                    <field name="reason" attrs="{'invisible': ['|', ('allow_status_change', '=', False), ('state', 'not in', ['completed'])], 'required': [('allow_status_change', '=', True), ('state', '=', 'completed')]}"/>
+                </group>
+                <h3 class="text-danger" attrs="{'invisible': [('detach_master', '=', False)]}">Note: Attached Master Shipment will be detached on Confirm!</h3>
+                <h3 class="text-danger" attrs="{'invisible': ['|', ('is_direct_shipment', '=', False), ('state', '!=', 'cancelled')]}">Note: Attached Master Shipment will be cancelled on Confirm!</h3>
+                <footer>
+                    <button type="object" string="Confirm" name="action_change_status" class="btn btn-primary"/>
+                    <button type="special" special="cancel" string="Cancel" class="btn btn-default"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="wizard_house_shipment_status_wizard_action">
+        <field name="name">House Shipment Change Status</field>
+        <field name="res_model">wizard.house.shipment.status</field>
+        <field name="view_mode">form</field>
+        <field name="context">{}</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

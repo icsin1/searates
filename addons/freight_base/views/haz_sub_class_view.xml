@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="haz_sub_class_form_view" model="ir.ui.view">
+		<field name="name">haz.sub.class.form.view</field>
+		<field name="model">haz.sub.class</field>
+		<field name="arch" type="xml">
+			<form>
+				<sheet>
+					<group>
+						<group>
+							<field name="name"/>
+						</group>
+						<group>
+							<field name="haz_class_id"/>
+						</group>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	
+	<record id="haz_sub_class_tree_view" model="ir.ui.view">
+		<field name="name">haz.sub.class.tree.view</field>
+		<field name="model">haz.sub.class</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="name"/>
+				<field name="haz_class_id"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record id="haz_sub_class_action" model="ir.actions.act_window">
+		<field name="name">HAZ Sub Class</field>
+		<field name="res_model">haz.sub.class</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+
+	<menuitem 
+		id="haz_sub_class_menu"
+		name="HAZ Sub Class"
+		action="haz_sub_class_action"
+		groups="base.group_system"
+		parent="freight_base.haz_class_main_menu"/>
+</odoo>

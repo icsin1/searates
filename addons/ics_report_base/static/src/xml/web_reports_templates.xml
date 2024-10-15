@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="ics_report_base.buttons">
+        <button class="btn btn-primary btn-icon fa fa-refresh ics_btn_refresh"/>
+        <t t-foreach="report_buttons" t-as="button">
+            <div class="btn-group" role="group">
+                <button t-if="button.action" t-att-title="button.help or ''" type="button" t-attf-class="btn {{button.primary ? 'btn-primary' : 'btn-secondary'}} ics_report_button" t-att-mode="button.mode ? button.mode : 'default'" t-att-action="button.action" t-att-context="JSON.stringify(button.context or {})"><t t-esc="button.name"/></button>
+                <t t-if="button.more and button.more.length">
+                    <button t-attf-class="btn {{button.primary ? 'btn-primary': 'btn-secondary'}} dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><t t-if="!button.action" t-esc="button.name"/></button>
+                    <ul class="dropdown-menu" style="" role="menu">
+                        <li t-foreach="button.more" t-as="more_button">
+                            <a type="button" t-att-title="more_button.help or ''" class="dropdown-item ics_report_button" t-att-action="more_button.action" t-att-mode="more_button.mode ? more_button.mode : 'default'" t-att-context="JSON.stringify(more_button.context or {})"><t t-esc="more_button.name"/></a>
+                        </li>
+                    </ul>
+                </t>
+            </div>
+        </t>
+    </t>
+    <t t-name="ics_report_base.main_view">
+        <div class="o_action o_view_controller main_component bg-100 ics_web_report">
+            <div class="ics_report_base"/>
+        </div>
+    </t>
+
+    <!-- Date Range or Single Date modes -->
+    <t t-name="ics_report_base.search_view__date_mode">
+        <div class="dropdown ics_account_reports_filter_date">
+            <button type="button" class="o-no-caret btn btn-secondary dropdown-toggle bg-300" data-toggle="dropdown">
+                <span class="fa fa-calendar" title="Dates" role="img" aria-label="Dates"></span> <span class="ml-1 font-weight-bold" t-esc="options.filter_date_options.string"/>
+            </button>
+            <div class="dropdown-menu o_filter_menu" role="menu">
+                <t t-if="options.filter_date_options.mode == 'single'">
+                    <a role="menuitem" class="dropdown-item ics_ar_date_filter" title="Today" data-filter="today">Today</a>
+                    <a role="menuitem" class="dropdown-item ics_ar_date_filter" title="End of Last Month" data-filter="last_month">End of Last Month</a>
+                    <a role="menuitem" class="dropdown-item ics_ar_date_filter" title="End of Last Quarter" data-filter="last_quarter">End of Last Quarter</a>
+                    <a role="menuitem" class="dropdown-item ics_ar_date_filter" title="End of Last Financial Year" data-filter="last_year">End of Last Financial Year</a>
+                </t>
+                <t t-if="options.filter_date_options.mode == 'range'">
+                    <a role="menuitem" class="dropdown-item ics_ar_date_filter" title="This Month" data-filter="this_month">This Month</a>
+                    <a role="menuitem" class="dropdown-item ics_ar_date_filter" title="This Quarter" data-filter="this_quarter">This Quarter</a>
+                    <a role="menuitem" class="dropdown-item ics_ar_date_filter" title="This Financial Year" data-filter="this_year">This Financial Year</a>
+                    <div role="separator" class="dropdown-divider"></div>
+                    <a role="menuitem" class="dropdown-item ics_ar_date_filter" title="Last Month" data-filter="last_month">Last Month</a>
+                    <a role="menuitem" class="dropdown-item ics_ar_date_filter" title="Last Quarter" data-filter="last_quarter">Last Quarter</a>
+                    <a role="menuitem" class="dropdown-item ics_ar_date_filter" title="Last Financial Year" data-filter="last_year">Last Financial Year</a>
+                </t>
+                <div role="separator" class="dropdown-divider"></div>
+                <a role="menuitem" class="dropdown-item ics_foldable_container ics_closed_container" data-filter='custom_filter_date'>Custom</a>
+                <div class="ics_foldable_item ics_closed_container ics_account_report_search" data-filter='custom_filter_date'>
+                    <t t-if="options.filter_date_options.mode == 'range'">
+                        <label class="custom-date" for="date_from">Start Date :</label>
+                        <div class="form-group custom-date">
+                            <div class='o_datepicker js_account_reports_datetimepicker' t-att-data-default-value="options.filter_date_options.date_from">
+                                <input type='text' class="o_datepicker_input" name="date_from" />
+                                <span class="o_datepicker_button"/>
+                            </div>
+                        </div>
+                    </t>
+                    <label class="custom-date" for="date_to" t-if="options.filter_date_options.mode == 'single'">End Date :</label>
+                    <label class="custom-date" for="date_to" t-if="options.filter_date_options.mode == 'range'">Date :</label>
+                    <div class="form-group custom-date">
+                        <div class='o_datepicker js_account_reports_datetimepicker' t-att-data-default-value="options.filter_date_options.date_to">
+                            <input type='text' class="o_datepicker_input" name="date_to" />
+                            <span class="o_datepicker_button"/>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary ics_ar_date_filter" data-filter="custom">Apply</button>
+                </div>
+            </div>
+        </div>
+    </t>
+    <!-- Comparison -->
+    <t t-name="ics_report_base.search_view__comparison">
+        <div class="dropdown ics_account_reports_filter_comparison">
+            <button type="button" class="o-no-caret btn btn-secondary dropdown-toggle bg-300" data-toggle="dropdown">
+                <span class="fa fa-bar-chart"></span> Comparison: <span class="ml-1 font-weight-bold" t-esc="options.filter_comparison_options.string"/>
+            </button>
+            <div class="dropdown-menu o_filter_menu" role="menu">
+                <a role="menuitem" title="No Comparison" data-filter="no_comparison" class="dropdown-item js_account_report_date_cmp_filter">No Comparison</a>
+                <div role="separator" class="dropdown-divider"></div>
+                <a role="menuitem" class="dropdown-item ics_foldable_container ics_closed_container" data-filter="previous_period_filter">Previous Period</a>
+                <div class="ics_foldable_item ics_closed_container ics_report_comp_search_box" data-filter="previous_period_filter">
+                    <label for="periods_number" class="mb-1">Number of periods :</label>
+                    <input type="number" name="periods_number" value="1" class="mb-2"/>
+                    <button type="button" class="btn btn-primary js_account_report_date_cmp_filter" data-filter="previous_period">Apply</button>
+                </div>
+
+                <div role="separator" class="dropdown-divider"></div>
+
+                <a role="menuitem" class="dropdown-item ics_foldable_container ics_closed_container" data-filter="same_last_year_filter">Same Period Last Year</a>
+                <li class="ics_foldable_item ics_closed_container ics_report_comp_search_box" data-filter="same_last_year_filter">
+                    <label for="periods_number" class="mb-2">Number of periods :</label>
+                    <input type="number" name="periods_number" value="1" class="mb-2"/>
+                    <button type="button" class="btn btn-primary js_account_report_date_cmp_filter" data-filter="same_last_year">Apply</button>
+                </li>
+            </div>
+        </div>
+    </t>
+
+    <!-- Tax Reports -->
+    <t t-name="ics_report_base.search_view__tax_reports">
+        <div class="dropdown ics_account_reports_filter_tax_reports">
+            <button type="button" class="o-no-caret btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                <span class="fa fa-bar-chart"></span> Tax Report: <span class="ml-1 font-weight-bold" t-esc="options.active_tax_report.name"/>
+            </button>
+            <div class="dropdown-menu o_filter_menu" role="menu">
+                <t t-foreach="options.tax_reports" t-as="tax_report_id">
+                    <a role="menuitem" class="dropdown-item ics_ar_tax_report_filter" t-att-title="options.tax_reports[tax_report_id].name" t-att-data-filter="options.tax_reports[tax_report_id].id"><t t-esc="options.tax_reports[tax_report_id].name"/> </a>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="ics_report_base.search_template_field">
+        <t t-foreach="options.filter_dynamic_filters" t-as="filter">
+            <div t-attf-class="dropdown ics_account_reports_filter_field_reports filter_type_{{filter.res_field}}" t-att-data-filter_key="filter.filter_key">
+                <button type="button" class="o-no-caret btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                    <span t-attf-class="fa {{filter.icon or 'fa-filter'}}"/> <span class="ml-1 font-weight-bold" t-esc="filter.string"/>
+                </button>
+                <ul class="dropdown-menu o_filter_menu" role="menu">
+                    <li t-attf-class="ics_filter_list ics_filter_key_{{filter.filter_key}}"/>
+                </ul>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="ics_report_base.filter_type_input">
+        <div class="d-flex">
+            <input class="flex-fill" type="text" t-attf-id="input_{{filter.filter_key}}" t-att-value="filter.default_value or ''"/>
+            <div class="p-2"><t t-esc="filter.name"/></div>
+        </div>
+    </t>
+
+    <t t-name="ics_report_base.filter_type_choice">
+        <t t-foreach="filter.choices" t-as="choice">
+            <t t-if="mode == 'single'">
+                <t t-set="choice_is_active" t-value="choice.choice_key == active_value ? 'active' : ''"/>
+            </t>
+            <t t-else="">
+                <t t-set="choice_is_active" t-value="active_values.includes(choice.choice_key) ? 'active' : ''"/>
+            </t>
+            <a role="menuitem" t-attf-class="dropdown-item ics_choice_filter {{choice_is_active}}" t-att-title="choice.label" t-att-data-choice-key="choice.choice_key"><t t-esc="choice.label"/></a>
+        </t>
+    </t>
+
+    <t t-name='ics_report_base.widgetM2MList'>
+        <div class="o_form_view">
+            <table class="o_group o_inner_group">
+                <td class="o_td_label"><label class="o_form_label" t-esc="field.label"/></td>
+                <td t-att-id="field.fieldName + '_field'" style="min-width:200px;"/>
+            </table>
+        </div>
+    </t>
+
+    <!-- Main Search View -->
+    <t t-name="ics_report_base.searchview_buttons">
+        <t t-if="options.filter_date" t-call="ics_report_base.search_view__date_mode"/>
+        <t t-if="options.filter_comparison" t-call="ics_report_base.search_view__comparison"/>
+        <t t-if="options.filter_dynamic_filters" t-call="ics_report_base.search_template_field"/>
+        <div t-if="options.filter_configuration" class="dropdown o-dropdown--no-caret">
+            <button class="ics_account_reports_filter_configuration dropdown-toggle btn btn-secondary bg-300"><i class="fa fa-cog"></i></button>
+        </div>
+    </t>
+</templates>

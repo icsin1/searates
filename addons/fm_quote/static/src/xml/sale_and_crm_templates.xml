@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-inherit="fm_sale_crm.dashboard.fm_sale_crm" t-inherit-mode="extension" owl="1">
+        <xpath expr="//GraphView" position="attributes">
+            <attribute name="filterOptions">
+                {'weight': 'Weight',
+                'volume': 'Volume',
+                'gross_revenue': 'Gross Revenue',
+                'gross_margin': 'Gross Margin',
+                'teu': 'TEUs',
+                'quotation': 'Quotation'
+                }
+            </attribute>
+        </xpath>
+    </t>
+
+</templates>

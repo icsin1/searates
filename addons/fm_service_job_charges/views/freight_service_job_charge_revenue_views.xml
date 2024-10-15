@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="service_job_charge_revenue_view_search" model="ir.ui.view">
+        <field name="name">service.job.charge.revenue.view.search</field>
+        <field name="model">service.job.charge.revenue</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id" />
+                <field name="partner_id" />
+                <filter name="filter_to_invoice" string="To Invoice" domain="[('status', '=', 'no')]"/>
+                <filter name="filter_partial_invoiced" string="Partial Invoiced" domain="[('status', '=', 'partial')]"/>
+                <filter name="filter_full_invoiced" string="Fully Invoiced" domain="[('status', '=', 'full_invoiced')]"/>
+                <filter name="group_by_service_job" string="Service Job" context="{'group_by': 'service_job_id'}" />
+                <filter name="group_by_status" string="Status" context="{'group_by': 'status'}" />
+                <filter name="group_by_product" string="Charge" context="{'group_by': 'product_id'}" />
+                <filter name="group_by_creditor" string="Debtor" context="{'group_by': 'partner_id'}" />
+                <filter name="group_by_amount_currency_id" string="Currency" context="{'group_by': 'amount_currency_id'}" />
+            </search>
+        </field>
+    </record>
+    <record id="freight_service_job_charge_revenue_view_tree" model="ir.ui.view">
+        <field name="name">service.job.charge.revenue.view.tree</field>
+        <field name="model">service.job.charge.revenue</field>
+        <field name="arch" type="xml">
+            <!--Keep js_class in charges base module only-->
+            <tree multi_edit="1" export_xlsx="0" js_class="service_job_charge_additional_button" editable="bottom">
+                <field name="allowed_partner_ids" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="service_job_id" invisible="1"/>
+                <field name="sequence" widget="handle"/>
+                <field name="product_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="charge_description" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="partner_id" class="text-info" options="{'no_create': 1, 'no_open': 1}" required="1" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="company_id" optional="hide" options="{'no_create': 1, 'no_open': 1}"/>
+                <field name="measurement_basis_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="is_container_type_basis" invisible="1"/>
+                <field name="container_type_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('is_container_type_basis', '=', False)], 'required': [('is_container_type_basis', '=', True)]}" invisible="1"/>
+                <field name="quantity" class="font-weight-bold" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="amount_currency_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="amount_currency_mismatch" invisible="1"/>
+                <field name="amount_rate" class="font-weight-bold text-black" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="amount_conversion_rate" force_save="1" attrs="{'readonly': ['|', ('status', '!=', 'no'), ('amount_currency_mismatch', '=', False)]}"/>
+                <field name="total_currency_amount" class="text-info font-weight-bold" string="Amount" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                <field name="company_currency_amount" sum="Total Currency Amount"/>
+                <field name="amount_currency_residual" class="font-weight-bold text-warning"/>
+                <field name="total_amount" sum="Total" class="text-success font-weight-bold" optional="hide"/>
+                <field name="tax_ids" invisible="1"/>
+                <field name="property_account_id" invisible="1"/>
+                <field name="partner_address_id" invisible="1"/>
+                <field name="status" widget="badge" decoration-success="status == 'fully_invoiced'" decoration-warning="status == 'partial'"/>
+                <button name="action_option_from_view" string=" " type="object" class="btn fa fa-ellipsis-h"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="freight_service_job_charge_revenue_view_form" model="ir.ui.view">
+        <field name="name">service.job.charge.revenue.view.form</field>
+        <field name="model">service.job.charge.revenue</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="status" widget="statusbar" statusbar_visible="no"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="move_line_ids" invisible="1"/>
+                        <field name="count_credit_note" invisible="1"/>
+                        <button name="action_open_moves" type="object" context="{'move_type': 'out_invoice'}" class="oe_stat_button" icon="fa-money" string="View Invoices" attrs="{'invisible': [('move_line_ids', '=', [])]}"/>
+                        <button name="action_open_moves" type="object" context="{'move_type': 'out_refund'}" class="oe_stat_button" icon="fa-money" string="Credit Note" attrs="{'invisible': [('count_credit_note', '=', 0)]}"/>
+                    </div>
+                    <field name="currency_id" invisible="1"/>
+                    <label for="product_id" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                    <div class="oe_title">
+                        <h1><field name="product_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/></h1>
+                    </div>
+                    <group string="Charge">
+                        <group>
+                            <field name="charge_description" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                        <group>
+                            <label for="quantity"/>
+                            <div class="o_row">
+                                <field name="quantity" attrs="{'readonly': [('status', '!=', 'no')]}"/> <field name="measurement_basis_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group string="Revenue">
+                        <group>
+                            <field name="allowed_partner_ids" invisible="1"/>
+                            <field name="partner_id" options="{'no_create': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            <field name="partner_address_id" context="{'partner_category_display': 'short', 'show_address': 1, 'default_parent_id': partner_id, 'default_type': 'invoice', 'form_view_ref': 'freight_base.res_partner_address_form'}" options="{&quot;always_reload&quot;: True, &quot;highlight_first_line&quot;: True}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            <field name="company_id" invisible="1" />
+                            <field name="service_job_id" invisible="1"/>
+                            <field name="tax_ids" widget="many2many_tags" options="{'no_create': True, 'no_open': True}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                        <group>
+                            <field name="amount_currency_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            <field name="amount_currency_mismatch" invisible="1"/>
+                            <field name="amount_rate" string="Rate Per Unit" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                            <label for="amount_conversion_rate" attrs="{'invisible': [('amount_currency_mismatch', '=', False)]}"/>
+                            <div class="o_row" attrs="{'invisible': [('amount_currency_mismatch', '=', False)]}">
+                                <field name="amount_conversion_rate" force_save="1" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                                <button title="Re-fetch Latest Rate" name="action_update_exchange_rate" type="object" class="btn btn-sm btn-icon fa fa-refresh oe_edit_only" attrs="{'invisible': [('status', '!=', 'no')]}"/>
+                            </div>
+                            <field name="property_account_id" options="{'no_create': 1, 'no_open': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="remarks" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                        <group>
+                            <field name="service_job_id" invisible="1" required="0"/>
+                            <field name="cost_line_id" options="{'no_create': 1}" attrs="{'readonly': [('status', '!=', 'no')]}"/>
+                        </group>
+                    </group>
+                    <group string="Charge Summary">
+                        <group>
+                            <field name="total_bill_amount" class="font-weight-bold text-info"/>
+                            <label for="total_credit_note_amount"/>
+                            <div class="o_row">
+                                <field name="total_credit_note_amount" class="font-weight-bold"/> <span attrs="{'invisible': [('total_credit_note_qty', '=', 0)]}">(QTY: <field name="total_credit_note_qty" readonly="1" nolabel="1"/>)</span>
+                            </div>
+                            <field name="total_currency_amount" attrs="{'readonly': [('status', '!=', 'no')]}" class="font-weight-bold text-info"/>
+                        </group>
+                        <group>
+                            <field name="total_amount" class="font-weight-bold text-success"/>
+                            <field name="invoiced_amount" invisible="1"/>
+                            <field name="invoice_received_amount" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_service_job_charge_revenue" model="ir.actions.server" >
+        <field name="name">Duplicate</field>
+        <field name="model_id" ref="fm_service_job_charges.model_service_job_charge_revenue"/>
+        <field name="binding_model_id" ref="fm_service_job_charges.model_service_job_charge_revenue" />
+        <field name="state">code</field>
+        <field name="binding_view_types">list</field>
+        <field name="code">[record.copy() for record in records]</field>
+    </record>
+</odoo>

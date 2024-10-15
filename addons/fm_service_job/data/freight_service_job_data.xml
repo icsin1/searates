@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="sequence_freight_service_job" model="ir.sequence">
+            <field name="name">Freight Service Job Sequence</field>
+            <field name="code">freight.service.job.sequence</field>
+            <field name="prefix"></field>
+            <field name="padding">3</field>
+            <field eval="1" name="number_next"/>
+            <field eval="1" name="number_increment"/>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <record id="service_job_freight_auto_sequence" model="freight.sequence">
+            <field name="name">Service Job</field>
+            <field name="ir_model_id" ref="fm_service_job.model_freight_service_job"/>
+            <field name="ir_field_id" ref="fm_service_job.field_freight_service_job__booking_nomination_no"/>
+            <field name="date_field_id" ref="fm_service_job.field_freight_service_job__date"/>
+            <field name="ir_sequence_id" ref="fm_service_job.sequence_freight_service_job"/>
+            <field name="sequence_format">SJ-</field>
+            <field name="number_increment">1</field>
+            <field name="padding">5</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+    </data>
+
+</odoo>

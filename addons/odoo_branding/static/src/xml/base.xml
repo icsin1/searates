@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <templates xml:space="preserve"> -->
+    <!-- <t t-name="UserMenu.Actions" t-extend="UserMenu.Actions">
+        <t t-jquery="a[data-menu='documentation']" t-operation="replace"></t>
+        <t t-jquery="a[data-menu='support']" t-operation="replace"></t>
+        <t t-jquery="a[data-menu='account']" t-operation="replace"></t>
+    </t> -->
+
+<templates>
+    <t t-name="odoo_branding.SessionExpiredDialogBody" t-inherit="web.SessionExpiredDialogBody" t-inherit-mode="extension" owl="1">
+        <xpath expr="//p" position="replace">
+          <p style="white-space: pre-wrap;">
+            Your Session Expired. The current page is about to be refreshed.
+          </p>
+        </xpath>
+    </t>
+</templates>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.odoo_web</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='appstore']" position="attributes">
+                <attribute name="class" add="d-none" separator=" "/>
+            </xpath>
+        </field>
+    </record>
+    <record id="res_config_settings_view_form_hide_ent_module_tag" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.ent.tag</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="99"/>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='inter_company']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@id='contacts_settings']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[@data-key='general_settings']//div[@id='about']" position="before">
+                <h2>Audit Log &amp; and Tracking</h2>
+                <div class="row mt16 o_settings_container" name="auditing">
+                    <div class="col-12 col-lg-6 o_setting_box" id="module_ics_ir_audit_log">
+                         <div class="o_setting_left_pane">
+                            <field name="module_ics_ir_audit_log" />
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <div class="row">
+                                <div class="col">
+                                    <h3>Audit Log</h3>
+                                    <p>Enable the auditing tool. Auditing may impact performance while being active.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

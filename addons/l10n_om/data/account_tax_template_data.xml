@@ -1,0 +1,236 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+
+    <record id="om_tax_sale_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_om_chart_template_standard"/>
+        <field name="name">VAT 5%</field>
+        <field name="sequence">1</field>
+        <field name="description">5%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="price_include">FALSE</field>
+        <field name="tax_group_id" ref="om_tax_group_vat"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('om_vat_return_report_base_supplies_sultanate_1a')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('om_213100'),
+                'plus_report_line_ids': [ref('om_vat_return_report_vat_supplies_sultanate_1a')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('om_vat_return_report_base_supplies_sultanate_1a')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('om_213100'),
+                'minus_report_line_ids': [ref('om_vat_return_report_vat_supplies_sultanate_1a')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="om_tax_sale_0" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_om_chart_template_standard"/>
+        <field name="name">VAT 0%</field>
+        <field name="sequence">2</field>
+        <field name="description">0%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="price_include">FALSE</field>
+        <field name="tax_group_id" ref="om_tax_group_vat"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('om_vat_return_report_base_supplies_sultanate_1b')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('om_213100'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('om_vat_return_report_base_supplies_sultanate_1b')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('om_213100'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="om_tax_sale_exempt" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_om_chart_template_standard"/>
+        <field name="name">VAT Exempt</field>
+        <field name="sequence">3</field>
+        <field name="description"/>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="price_include">FALSE</field>
+        <field name="tax_group_id" ref="om_tax_group_vat"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('om_vat_return_report_base_supplies_sultanate_1c')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('om_213100'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('om_vat_return_report_base_supplies_sultanate_1c')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('om_213100'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="om_tax_purchase_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_om_chart_template_standard"/>
+        <field name="name">VAT 5%</field>
+        <field name="sequence">4</field>
+        <field name="description">5%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">5</field>
+        <field name="price_include">FALSE</field>
+        <field name="tax_group_id" ref="om_tax_group_vat"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('om_vat_return_report_base_supplies_sultanate_1a')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('om_213300'),
+                'minus_report_line_ids': [ref('om_vat_return_report_vat_supplies_sultanate_1a')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('om_vat_return_report_base_supplies_sultanate_1a')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('om_213300'),
+                'plus_report_line_ids': [ref('om_vat_return_report_vat_supplies_sultanate_1a')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="om_tax_purchase_0" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_om_chart_template_standard"/>
+        <field name="name">VAT 0%</field>
+        <field name="sequence">5</field>
+        <field name="description">0%</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="price_include">FALSE</field>
+        <field name="tax_group_id" ref="om_tax_group_vat"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('om_vat_return_report_base_supplies_sultanate_1b')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('om_213300'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('om_vat_return_report_base_supplies_sultanate_1b')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('om_213300'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="om_tax_purchase_exempt" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_om_chart_template_standard"/>
+        <field name="name">VAT Exempt</field>
+        <field name="sequence">6</field>
+        <field name="description"/>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="price_include">FALSE</field>
+        <field name="tax_group_id" ref="om_tax_group_vat"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('om_vat_return_report_base_supplies_sultanate_1c')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('om_213300'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('om_vat_return_report_base_supplies_sultanate_1c')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('om_213300'),
+            }),
+        ]"/>
+    </record>
+
+</odoo>

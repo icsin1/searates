@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template xml:space="preserve">
+
+    <t t-extend="ServiceJobCharges.buttons" t-name="ServiceJobCharges.buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <div class="btn-group dropdown fetch_tariff_data">
+                <button type="button" class="o-no-caret btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    Fetch Tariff
+                </button>
+                <div class="dropdown-menu o_filter_menu" role="menu">
+                    <a role="menuitem" data-action="action_tariff_services_wizard" data-pycontext="{'tariff_type': 'buy_tariff'}" class="ics_charge_button dropdown-item from_buy_tariff" t-if="widget.modelName == 'service.job.charge.cost'" title="Fetch Buy Tariff">Fetch Buy Tariff</a>
+                    <a role="menuitem" data-action="action_tariff_services_wizard" data-pycontext="{'tariff_type': 'sell_tariff'}" class="ics_charge_button dropdown-item from_sell_tariff" t-if="widget.modelName == 'service.job.charge.revenue'" title="Fetch Sell Tariff">Fetch Sell Tariff</a>
+                    <a role="menuitem" data-action="action_tariff_services_wizard" data-pycontext="{'tariff_type': 'charge_master'}" class="ics_charge_button dropdown-item from_charges_master" title="Fetch from Charges">Fetch from Charge-Master</a>
+                </div>
+            </div>
+        </t>
+    </t>
+
+</template>

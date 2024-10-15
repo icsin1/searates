@@ -1,0 +1,26 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_shipment_quote_form_shipping_line" model="ir.ui.view">
+        <field name="name">shipment.quote.form.shipping.line</field>
+        <field name="model">shipment.quote</field>
+        <field name="inherit_id" ref="fm_quote.view_shipment_quote_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='mode_type']" position="after">
+                <field name="enable_shipping_line_free_time" invisible="1" force_save="1"/>
+            </xpath>
+            <xpath expr="//page[@name='customer_signature']" position="after">
+                <page name="free_time" string="Free Time" attrs="{'invisible': ['|', ('quote_for', '=', 'job'), ('enable_shipping_line_free_time', '=', False)]}">
+                    <group name="free_time" attrs="{'invisible': [('enable_shipping_line_free_time', '=', False), ('quote_for', '=', 'job')]}">
+                        <field name="shipping_line_free_time_ids" nolabel="1">
+                            <tree editable="bottom" create="false" delete="false">
+                                <field name="free_time" readonly="1" force_save="1"/>
+                                <field name="origin"/>
+                                <field name="destination"/>
+                            </tree>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

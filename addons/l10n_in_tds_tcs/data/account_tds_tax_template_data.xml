@@ -1,0 +1,2349 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+
+    <record id="tax_tds_192a_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 192A</field>
+        <field name="description">TDS @10% u/s 192A</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_192a')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_192a')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_192a_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 192A</field>
+        <field name="description">TDS @20% u/s 192A</field>
+        <field name="type_tax_use">none</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_192a')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_192a')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_193_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 193</field>
+        <field name="description">TDS @10% u/s 193</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_193')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_193')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_193_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 193</field>
+        <field name="description">TDS @20% u/s 193</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_193')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_193')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 194</field>
+        <field name="description">TDS @10% u/s 194</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194</field>
+        <field name="description">TDS @20% u/s 194</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194a_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 194A</field>
+        <field name="description">TDS @10% u/s 194A</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194a')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194a')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194a_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194A</field>
+        <field name="description">TDS @20% u/s 194A</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194a')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194a')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194b_30" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @30% u/s 194B</field>
+        <field name="description">TDS @30% u/s 194B</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-30</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194b')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194b')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194bb_30" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @30% u/s 194BB</field>
+        <field name="description">TDS @30% u/s 194BB</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-30</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194bb')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194bb')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194c_1" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @1% u/s 194C</field>
+        <field name="description">TDS @1% u/s 194C</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-1</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194c')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194c')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194c_2" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @2% u/s 194C</field>
+        <field name="description">TDS @2% u/s 194C</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-2</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194c')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194c')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194c_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194C</field>
+        <field name="description">TDS @20% u/s 194C</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194c')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194c')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194d_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @5% u/s 194D</field>
+        <field name="description">TDS @5% u/s 194D</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-5</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194d')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194d')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194d_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 194D</field>
+        <field name="description">TDS @10% u/s 194D</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194d')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194d')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194d_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194D</field>
+        <field name="description">TDS @20% u/s 194D</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194d')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194d')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194da_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @5% u/s 194DA</field>
+        <field name="description">TDS @5% u/s 194DA</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-5</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194da')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194da')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194da_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194DA</field>
+        <field name="description">TDS @20% u/s 194DA</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194da')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194da')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194e_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194E</field>
+        <field name="description">TDS @20% u/s 194E</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194e')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194e')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194ee_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 194EE</field>
+        <field name="description">TDS @10% u/s 194EE</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194ee')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194ee')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194ee_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194EE</field>
+        <field name="description">TDS @20% u/s 194EE</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194ee')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194ee')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194f_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194F</field>
+        <field name="description">TDS @20% u/s 194F</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194f')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194f')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194g_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @ 5% u/s 194G</field>
+        <field name="description">TDS @ 5% u/s 194G</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-5</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194g')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194g')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194g_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @ 20% u/s 194G</field>
+        <field name="description">TDS @ 20% u/s 194G</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194g')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194g')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194h_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @ 5% u/s 194H</field>
+        <field name="description">TDS @ 5% u/s 194H</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-5</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194h')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194h')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194h_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @ 20% u/s 194H</field>
+        <field name="description">TDS @ 20% u/s 194H</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194h')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194h')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194i_2" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @2% u/s 194I</field>
+        <field name="description">TDS @2% u/s 194I</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-2</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194i')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194i')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194i_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 194I</field>
+        <field name="description">TDS @10% u/s 194I</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194i')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194i')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194i_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194I</field>
+        <field name="description">TDS @20% u/s 194I</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194i')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194i')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194ia_1" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @1% u/s 194IA</field>
+        <field name="description">TDS @1% u/s 194IA</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-1</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194ia')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194ia')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194ia_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194IA</field>
+        <field name="description">TDS @20% u/s 194IA</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194ia')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194ia')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194ib_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @5% u/s 194IB</field>
+        <field name="description">TDS @5% u/s 194IB</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-5</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194ib')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194ib')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194ib_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194IB</field>
+        <field name="description">TDS @20% u/s 194IB</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194ib')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194ib')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194ic_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 194IC</field>
+        <field name="description">TDS @10% u/s 194IC</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194ic')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194ic')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194ic_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194IC</field>
+        <field name="description">TDS @20% u/s 194IC</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194ic')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194ic')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194j_2" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @2% u/s 194J</field>
+        <field name="description">TDS @2% u/s 194J</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-2</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194j')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194j')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194j_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 194J</field>
+        <field name="description">TDS @10% u/s 194J</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194j')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194j')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194j_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194J</field>
+        <field name="description">TDS @20% u/s 194J</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194j')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194j')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194k_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 194K</field>
+        <field name="description">TDS @10% u/s 194K</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194k')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194k')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194k_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194K</field>
+        <field name="description">TDS @20% u/s 194K</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194k')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194k')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194k_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 194K</field>
+        <field name="description">TDS @10% u/s 194K</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194k')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194k')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194k_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194K</field>
+        <field name="description">TDS @20% u/s 194K</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194k')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194k')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194la_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 194LA</field>
+        <field name="description">TDS @10% u/s 194LA</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194la')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194la')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194la_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194LA</field>
+        <field name="description">TDS @20% u/s 194LA</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194la')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194la')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194lba1_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 194LBA(1)</field>
+        <field name="description">TDS @10% u/s 194LBA(1)</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194lba_1')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194lba_1')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194lba1_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194LBA(1)</field>
+        <field name="description">TDS @20% u/s 194LBA(1)</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194lba_1')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194lba_1')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194lb_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @ 5% u/s 194LB</field>
+        <field name="description">TDS @ 5% u/s 194LB</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-5</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194lb')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194lb')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194lb_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194LB</field>
+        <field name="description">TDS @20% u/s 194LB</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194lb')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194lb')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194lbb_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 194LBB</field>
+        <field name="description">TDS @10% u/s 194LBB</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194lbb')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194lbb')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194lbb_30" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @30% u/s 194LBB</field>
+        <field name="description">TDS @30% u/s 194LBB</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-30</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194lbb')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194lbb')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194lbc_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10% u/s 194LBC</field>
+        <field name="description">TDS @10% u/s 194LBC</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194lbc')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194lbc')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194lbc_25" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @25% u/s 194LBC</field>
+        <field name="description">TDS @25% u/s 194LBC</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-25</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194lbc')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194lbc')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194lbc_30" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @30% u/s 194LBC</field>
+        <field name="description">TDS @30% u/s 194LBC</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-30</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194lbc')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194lbc')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194lbc_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194LBC</field>
+        <field name="description">TDS @20% u/s 194LBC</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194lbc')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194lbc')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194m_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @5% u/s 194M</field>
+        <field name="description">TDS @5% u/s 194M</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-5</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194m')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194m')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194m_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194M</field>
+        <field name="description">TDS @20% u/s 194M</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194m')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194m')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194n_2" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @2% u/s 194N</field>
+        <field name="description">TDS @2% u/s 194N</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-2</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194n')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                    'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194n')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194n_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @5% u/s 194N</field>
+        <field name="description">TDS @5% u/s 194N</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-5</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194n')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194n')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194n_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194N</field>
+        <field name="description">TDS @20% u/s 194N</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194n')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194n')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194o_1" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @1% u/s 194O</field>
+        <field name="description">TDS @1% u/s 194O</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-1</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194o')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194o')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194o_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20% u/s 194O</field>
+        <field name="description">TDS @20% u/s 194O</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194o')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194o')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194q_1" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @0.1% u/s 194Q</field>
+        <field name="description">TDS @0.1% u/s 194Q</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-0.1</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">consu</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194q')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194q')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_194q_5" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @5% u/s 194Q</field>
+        <field name="description">TDS @5% u/s 194Q</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-5</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_194q')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_194q')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_195_10" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @10.4% u/s 195</field>
+        <field name="description">TDS @10.4% u/s 195</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-10.4</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_195')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_195')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_195_15" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @15.6% u/s 195</field>
+        <field name="description">TDS @15.6% u/s 195</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-15.6</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_195')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_195')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_195_20" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @20.8% u/s 195</field>
+        <field name="description">TDS @20.8% u/s 195</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-20.8</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_195')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_195')],
+            }),
+        ]"/>
+    </record>
+
+    <record id="tax_tds_195_31" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_in.indian_chart_template_standard"/>
+        <field name="name">TDS @31.2% u/s 195</field>
+        <field name="description">TDS @31.2% u/s 195</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">-31.2</field>
+        <field name="tax_group_id" ref="l10n_in_tds_tcs.tds_group"/>
+        <field name="tax_scope">service</field>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'minus_report_line_ids': [ref('tds_report_line_tax_line_195')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('account_tds_deducted'),
+                'plus_report_line_ids': [ref('tds_report_line_tax_line_195')],
+            }),
+        ]"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,8 @@
+docxtpl==0.16.6
+python-stdnum==1.18
+phonenumbers==8.13.11
+# pyreportjasper @ git+https://github.com/acesseonline/pyreportjasper@master#egg=pyreportjasper
+python-docx==0.8.11
+XlsxWriter==3.1.9
+zxcvbn==4.4.28
+python-slugify==8.0.4

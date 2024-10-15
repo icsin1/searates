@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tax_report_line_ics_account_report_view_form" model="ir.ui.view">
+        <field name="name">account_tax_report_line.view.inherit.ics_account_report.form</field>
+        <field name="model">account.tax.report.line</field>
+        <field name="inherit_id" ref="account.account_tax_report_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="before">
+                <group string="Addtional Data Domain">
+                    <field name="include_additional_data_domain" widget="boolean_toggle"/>
+                    <field name="additional_data_domain" widget="domain" options="{'model': 'account.move.line', 'in_dialog': True}" attrs="{'invisible': [('include_additional_data_domain', '=', False)]}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="fm_road_operation_freight_truck_number_view_form" model="ir.ui.view">
+        <field name="name">fm_road_operation.freight.truck.number.view.form</field>
+        <field name="model">freight.truck.number</field>
+        <field name="inherit_id" ref="fm_road.freight_truck_number_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='truck_owned_by']" position="after">
+                <field name="status" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

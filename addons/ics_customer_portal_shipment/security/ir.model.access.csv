@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_freight_house_shipment,access_freight_house_shipment,model_freight_house_shipment,base.group_portal,1,0,0,0
+access_freight_house_shipment_document,access_freight_house_shipment_document,model_freight_house_shipment_document,base.group_portal,1,0,0,0

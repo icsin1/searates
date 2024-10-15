@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_shipment_quote_form" model="ir.ui.view">
+        <field name="name">shipment.quote.form</field>
+        <field name="model">shipment.quote</field>
+        <field name="inherit_id" ref="fm_quote.view_shipment_quote_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='client_address_id']" position="after">
+                <field name="allow_approval" invisible="1"/>
+                <field name="approving_user_id" required="1" options="{'no_create': True, 'no_edit': True, 'no_open': True}"/>
+                <field name="approver_reject_reason" attrs="{'invisible': [('state', '!=', 'reject')]}"/>
+            </xpath>
+            <xpath expr="//button[@name='action_change_status']" position="after">
+                <button name="action_send_quote_internal_approval" string="Send for Approval" type="object" class="btn-primary" attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('allow_approval', '=', False)]}"/>
+                <button name="approve_quote_internal_team" string="Approve" type="object" class="btn-primary" states="to_approve" groups="freight_base.group_user_freight_approver_team"/>
+                <button name="reject_quote_internal_team" string="Reject" type="object" class="btn-primary" states="to_approve" groups="freight_base.group_user_freight_approver_team"/>
+            </xpath>
+            <xpath expr="//button[@name='action_option_publish_confirm_wizard']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('state', 'not in', ['draft', 'approved']), '&amp;', ('state', '=', 'draft'), ('allow_approval', '=', True)]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<record id="wizard_customer_due_report_form_view" model="ir.ui.view">
+		<field name="name">wizard.customer.due.report.form.view</field>
+		<field name="model">wizard.customer.due.report</field>
+		<field name="arch" type="xml">
+			<form>
+				<group>
+					<group>
+						<field name="to_date" required="1"/>
+						<field name="due_status" widget="radio" options="{'horizontal': True}"/>
+					</group>
+					<group>
+						<field name="invoice_date_for" widget="radio" options="{'horizontal': True}"/>
+						<field name="company_id" required="1" groups="base.group_multi_company" options="{'no_create': True, 'no_create_edit': True}"/>
+					</group>
+				</group>
+				<group>
+					<field name="customer_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}"/>
+				</group>
+				<group>
+					<field name="user_ids" widget="many2many_tags" options="{'no_create': True, 'no_create_edit': True}"/>
+				</group>
+				<footer>
+					<button type="object" string="XLSX" name="print_xlsx_report" class="btn btn-primary"/>
+					<button type="special" special="cancel" string="Cancel" class="btn-default"/>
+				</footer>
+			</form>
+		</field>
+	</record>
+
+	<record id="action_wizard_customer_due_report" model="ir.actions.act_window">
+		<field name="name">Customer Due Report</field>
+		<field name="res_model">wizard.customer.due.report</field>
+		<field name="view_mode">form</field>
+		<field name="target">new</field>
+	</record>
+
+	<menuitem
+		id="menu_wizard_customer_due_report"
+		parent="menu_root_account_reports"
+		action="action_wizard_customer_due_report"
+        sequence="3"
+	/>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <data>
+        <record id="paperformat_web_report" model="report.paperformat">
+            <field name="name">Web Report Paper Format</field>
+            <field name="default" eval="False"/>
+            <field name="disable_shrinking" eval="False"/>
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">33</field>
+            <field name="margin_bottom">15</field>
+            <field name="margin_left">5</field>
+            <field name="margin_right">5</field>
+            <field name="header_spacing">25</field>
+            <field name="dpi">90</field>
+        </record>
+    
+        <record id="action_generic_web_report_pdf" model="ir.actions.report">
+            <field name="name">Web PDF Report</field>
+            <field name="model">web.report</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">ics_report_base.web_report_pdf_template</field>
+            <field name="report_file">ics_report_base.web_report_pdf_template</field>
+            <field name="print_report_name">'%s' % (object.name or '-')</field>
+            <field name="paperformat_id" ref="paperformat_web_report"/>
+        </record>
+    </data>
+
+</odoo>

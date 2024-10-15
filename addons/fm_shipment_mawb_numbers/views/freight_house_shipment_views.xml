@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mawb_stock_freight_house_shipment_view_form" model="ir.ui.view">
+        <field name="name">mawb.stock.freight.house.shipment.view.form</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="inherit_id" ref="freight_management.freight_house_shipment_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='package_ids']/tree/field[@name='container_number']" position="before">
+                <field name="mawb_stock_line_id" attrs="{'column_invisible': [('parent.mode_type', '!=', 'air')]}" />
+            </xpath>
+            <xpath expr="//field[@name='container_ids']/tree/field[@name='container_number']" position="before">
+                <field name="mawb_stock_line_id" attrs="{'column_invisible': [('parent.mode_type', '!=', 'air')]}" />
+            </xpath>
+        </field>
+    </record>
+</odoo>

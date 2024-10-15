@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="dashboard.quote" owl="1">
+        <div class="o_content">
+            <div class="container-fluid">
+                <div class="row my-4">
+                    <div class="col-2">
+                        <RecordView
+                            title="'Total Quotes'"
+                            domain="[['state', '!=', 'cancel']]"/>
+                    </div>
+                    <div class="col-4">
+                        <GraphView
+                            title="'Number of Quotes Per User'"
+                            domain="[['state', '!=', 'cancel']]"
+                            groupBy="'user_id'"
+                            labelField="'Username'"
+                            dataField="'Count'"
+                            type="['table', 'bar']"
+                            download="true"
+                        />
+                    </div>
+                    <div class="col-6">
+                        <GraphView
+                            title="'Top 5 Trade-lane'"
+                            method="'get_tradelane_data'"
+                            domain="[['state', '!=', 'cancel']]"
+                            limit="5"
+                            filename="'Trade-lane'"
+                            labelField="'Tradelane'"
+                            dataField="'Count'"
+                            type="['table', 'pie']"
+                            download="true"
+                        />
+                    </div>
+                </div>
+                <div class="row gx-5 mb-4">
+                    <div class="col-6">
+                        <GraphView
+                            title="'Number of Quotes by Status'"
+                            domain="[['state', '!=', 'cancel'], ['revised_in_quote_ids', '=', false]]"
+                            groupBy="'state'"
+                            labelField="'Status'"
+                            dataField="'Count'"
+                            type="['table', 'doughnut']"
+                            download="true"
+                            sort="['Draft', 'To Approve', 'Approved', 'Sent', 'Accepted', 'Rejected']"
+                        />
+                    </div>
+                    <div class="col-6">
+                        <GraphView
+                            title="'Quote Conversion Status'"
+                            domain=" [['state', '!=', 'cancel'], ['revised_in_quote_ids', '=', false]]"
+                            method="'get_quote_by_status_data'"
+                            labelField="'Status'"
+                            dataField="'Count'"
+                            type="['table', 'bar']"
+                            download="true"
+                        />
+                    </div>
+                </div>
+                <div class="row gx-5 mb-4">
+                    <div class="col-6">
+                        <GraphView
+                            title="'Quotes Per Carrier'"
+                            domain="[['state', '!=', 'cancel'], ['carrier_id', '!=', false]]"
+                            groupBy="'carrier_id'"
+                            labelField="'Carrier'"
+                            dataField="'Count'"
+                            type="['table', 'horizontalBar']"
+                            download="true"
+                        />
+                    </div>
+                    <div class="col-6">
+                        <GraphView
+                            title="'Quotes Per Country'"
+                            domain="[['state', '!=', 'cancel']]"
+                            groupBy="'country_id'"
+                            labelField="'Country'"
+                            dataField="'Count'"
+                            type="['table', 'horizontalBar']"
+                            download="true"
+                        />
+                    </div>
+                </div>
+                <div class="row gx-5 mb-4">
+                    <div class="col-6">
+                        <GraphView
+                            title="'Quotes Per Transport Mode'"
+                            domain="[['state', '!=', 'cancel']]"
+                            groupBy="'transport_mode_id'"
+                            labelField="'Transport'"
+                            dataField="'Count'"
+                            type="['table', 'doughnut']"
+                            download="true"
+                        />
+                    </div>
+                    <div class="col-6">
+                        <GraphView
+                            title="'Quotes Per Origin'"
+                            domain="[['state', '!=', 'cancel']]"
+                            groupBy="'port_of_loading_id'"
+                            labelField="'Origin'"
+                            dataField="'Count'"
+                            download="true"
+                            />
+                    </div>
+                </div>
+                <div class="row gx-5 pb-4">
+                    <div class="col-12">
+                        <GraphView
+                            title="self => `Top ${self.state.limit} Customers`"
+                            method="'get_customer_data'"
+                            limit="5"
+                            filename="'Top Customers'"
+                            download="true"
+                            limitOptions="[5, 10, 15, 20]"
+                            />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

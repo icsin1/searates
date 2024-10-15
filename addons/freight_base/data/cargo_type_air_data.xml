@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Air -->
+        <record id="cargo_type_air_loose" model="cargo.type">
+            <field name="code">LSE</field>
+            <field name="name">Loose</field>
+            <field name="transport_mode_id" ref="freight_base.transport_mode_air"/>
+            <field name="is_package_group" eval="True"/>
+            <field name="calculated_dimension_lwh" eval="True"/>
+            <field name="sequence">1</field>
+        </record>
+        <record id="cargo_type_air_courier" model="cargo.type">
+            <field name="code">CR</field>
+            <field name="name">Courier</field>
+            <field name="transport_mode_id" ref="freight_base.transport_mode_air"/>
+            <field name="is_package_group" eval="True"/>
+            <field name="calculated_dimension_lwh" eval="True"/>
+            <field name="sequence">2</field>
+            <field name="is_courier_shipment" eval="True"/>
+        </record>
+    </data>
+      <function name="write" model="ir.model.data">
+    <function name="search" model="ir.model.data">
+        <value eval="[('module', '=', 'freight_base'), ('name', 'in', ['cargo_type_air_loose','cargo_type_air_courier'])]"/>
+    </function>
+        <value eval="{'noupdate': False}" />
+    </function>
+
+    <record id="freight_base.cargo_type_air_loose" model="cargo.type">
+        <field name="calculated_dimension_lwh" eval="True"/>
+    </record>
+    <record id="freight_base.cargo_type_air_courier" model="cargo.type">
+        <field name="calculated_dimension_lwh" eval="True"/>
+    </record>
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'freight_base'), ('name', 'in', ['cargo_type_air_loose','cargo_type_air_courier'])]"/>
+        </function>
+        <value eval="{'noupdate': True}" />
+    </function>
+</odoo>

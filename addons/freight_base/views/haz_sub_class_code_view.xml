@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<record id="haz_sub_class_code_form_view" model="ir.ui.view">
+		<field name="name">haz.sub.class.code.form.view</field>
+		<field name="model">haz.sub.class.code</field>
+		<field name="arch" type="xml">
+			<form>
+				<sheet>
+					<group>
+						<group>
+							<field name="name"/>
+						</group>
+						<group>
+							<field name="description"/>
+						</group>
+					</group>
+				</sheet>
+			</form>
+		</field>
+	</record>
+	
+	<record id="haz_sub_class_code_tree_view" model="ir.ui.view">
+		<field name="name">haz.sub.class.code.tree.view</field>
+		<field name="model">haz.sub.class.code</field>
+		<field name="arch" type="xml">
+			<tree>
+				<field name="name"/>
+				<field name="description"/>
+			</tree>
+		</field>
+	</record>
+	
+	<record id="haz_sub_class_code_action" model="ir.actions.act_window">
+		<field name="name">HAZ Class</field>
+		<field name="res_model">haz.sub.class.code</field>
+		<field name="view_mode">tree,form</field>
+	</record>
+	
+	<menuitem 
+		id="haz_class_main_menu"
+		name="HAZ"
+		sequence="101"
+		groups="base.group_system"
+		parent="freight_base.root_freight_master_configuration"/>
+	
+	<menuitem 
+		id="haz_sub_class_code_menu"
+		name="HAZ Class"
+		action="haz_sub_class_code_action"
+		groups="base.group_system,odoo_base.group_freight_technical_support_team"
+		parent="freight_base.haz_class_main_menu"/>
+</odoo>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="shipment_tracking_link_template" inherit_id="freight_management.shipment_tracking_link_template">
+        <xpath expr="//t[@t-foreach='shipment_id']" position="replace">
+            <t t-foreach="shipment_id" t-as="shipment">
+                <a t-if="shipment.shipment_quote_id.access_token" t-att-href="'/my/shipment_quote/%s?access_token=%s' % (shipment.shipment_quote_id.id, shipment.shipment_quote_id.access_token) if not request.env.user._is_public() else '#'">
+                    <span class="text-primary font-weight-bold">
+                        <t t-out="shipment.name" />
+                    </span>
+                </a>
+                <span t-else="" class="text-primary font-weight-bold">
+                    <t t-out="shipment.name" />
+                </span>
+            </t>
+        </xpath>
+    </template>
+</odoo>

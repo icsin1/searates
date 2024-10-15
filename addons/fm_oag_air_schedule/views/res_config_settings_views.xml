@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="15"/>
+        <field name="inherit_id" ref="fm_air_schedule.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='oag_api_credentials']" position="replace">
+                <div class="col-12 col-lg-12 o_setting_box" id="oag_api_credentials">
+                    <div class="o_setting_left_pane">
+                        <field name="module_fm_oag_air_schedule" />
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <div class="row">
+                            <div class="col">
+                                <h3>OAG Air Schedule</h3>
+                                <p>Fetching realtime Air Schedule</p>
+                            </div>
+                            <div class="col text-right">
+                                <img src="/fm_oag_air_schedule/static/description/icon.png" alt="OAG"/>
+                            </div>
+                        </div>
+                        <group>
+                            <field name="oag_environment" widget="radio" options="{'horizontal': True}"/>
+                            <field name="oag_api_key" />
+                        </group>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

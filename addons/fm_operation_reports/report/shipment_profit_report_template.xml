@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+	<template id="report_shipment_profit">
+		<t t-call="web.html_container">
+			<t t-call="web.external_layout">
+				<t t-foreach="docs" t-as="o">
+					<div class="page" style="font-size:15px;">
+						<div class="bg-200 p-2">
+							<h2 class="text-center">Shipment Profit Report (<span t-esc="data['shipment_data'].get('from_date')"/> to <span t-esc="data['shipment_data'].get('to_date')"/>)</h2>
+							<strong class="h6 py-2">Company: <span t-esc="data['shipment_data'].get('company_name')"/></strong><br/>
+							<strong class="h6 py-2">Period: <span t-esc="data['shipment_data'].get('from_date')"/> to <span t-esc="data['shipment_data'].get('to_date')"/></strong><br/>
+						</div>
+						<table width="100%" class="table table-bg-white table-sm table-bordered" style="border: 2px solid black;">
+							<thead style="display: table-row-group;color:black !important;">
+								<tr>
+									<th style="text-align:left;">Salesman</th>
+									<th style="text-align:left;">Customer</th>
+									<th style="text-align:left;">Origin</th>
+									<th style="text-align:left;">Origin Port</th>
+									<th style="text-align:left;">Destination</th>
+									<th style="text-align:left;">Destination Port</th>
+									<th style="text-align:left;">Shipment Number</th>
+									<th style="text-align:left;">PPCC</th>
+									<th style="text-align:left;">Volume</th>
+									<th style="text-align:left;">Weight</th>
+									<th style="text-align:right;">TEU</th>
+									<th style="text-align:right;">Revenue</th>
+									<th style="text-align:right;">Cost</th>
+									<th style="text-align:right;">Profit</th>
+								</tr>
+							</thead>
+							<tbody>
+								<t t-foreach="data['shipments']" t-as="shipment">
+									<tr>
+										<td style="text-align:left;"><span t-esc="shipment.get('salesman')"/></td>
+										<td style="text-align:left;"><span t-esc="shipment.get('customer')"/></td>
+										<td style="text-align:left;"><span t-esc="shipment.get('origin')"/></td>
+										<td style="text-align:left;"><span t-esc="shipment.get('origin_port')"/></td>
+										<td style="text-align:left;"><span t-esc="shipment.get('destination')"/></td>
+										<td style="text-align:left;"><span t-esc="shipment.get('destination_port')"/></td>
+										<td style="text-align:left;"><span t-esc="shipment.get('shipment_number')"/></td>
+										<td style="text-align:left;"><span t-esc="shipment.get('payment_terms')"/></td>
+										<td style="text-align:left;"><span t-esc="'%.2f'% shipment.get('volume')"/> <span t-esc="shipment.get('volume_unit_uom_id')"/></td>
+										<td style="text-align:left;"><span t-esc="'%.2f'% shipment.get('weight')"/> <span t-esc="shipment.get('chargeable_uom_id')"/></td>
+										<td style="text-align:right;"><span t-esc="shipment.get('teu')"/></td>
+										<td style="text-align:right;"><span t-esc="shipment.get('revenue')" t-options="{'widget': 'monetary', 'display_currency': shipment.get('currency')}"/></td>
+										<td style="text-align:right;"><span t-esc="shipment.get('cost')" t-options="{'widget': 'monetary', 'display_currency': shipment.get('currency')}"/></td>
+										<td style="text-align:right;"><span t-esc="shipment.get('profit')" t-options="{'widget': 'monetary', 'display_currency': shipment.get('currency')}"/></td>
+									</tr>
+								</t>
+								<tr style="border-top:4px; solid black;">
+									<td style="border-top:2px solid black;"><b>Total Volume:</b></td>
+									<td style="border-top:2px solid black;"><b><span t-esc="'%.2f'% data['totals'].get('total_volume')"/> <span t-esc="data['totals'].get('total_volume_uom')"/></b></td>
+									<td style="border-top:2px solid black;"><b>Total Weight:</b></td>
+									<td style="border-top:2px solid black;"><b><span t-esc="'%.2f'% data['totals'].get('total_weight')"/> <span t-esc="data['totals'].get('total_weight_uom')"/></b></td>
+									<td style="border-top:2px solid black;"><b>Total TEU:</b></td>
+									<td style="border-top:2px solid black;"><b><span t-esc="data['totals'].get('total_teu')"/></b></td>
+									<td style="border-top:2px solid black;"><b>Total Revenue:</b></td>
+									<td style="border-top:2px solid black;"><b><span t-esc="data['totals'].get('total_revenue')" t-options="{'widget': 'monetary', 'display_currency': data['totals'].get('currency')}"/></b></td>
+									<td style="border-top:2px solid black;"><b>Total Cost:</b></td>
+									<td style="border-top:2px solid black;"><b><span t-esc="data['totals'].get('total_cost')" t-options="{'widget': 'monetary', 'display_currency': data['totals'].get('currency')}"/></b></td>
+									<td style="border-top:2px solid black;"><b>Total Profit:</b></td>
+									<td style="border-top:2px solid black;"><b><span t-esc="data['totals'].get('total_profit')" t-options="{'widget': 'monetary', 'display_currency': data['totals'].get('currency')}"/></b></td>
+									<td style="border-top:2px solid black;"></td>
+									<td style="border-top:2px solid black;"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</t>
+			</t>
+		</t>
+	</template>
+</odoo>

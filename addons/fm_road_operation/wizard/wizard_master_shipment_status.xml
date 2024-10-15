@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="wizard_master_shipment_status_form_view_status" model="ir.ui.view">
+        <field name="name">wizard.master.shipment.status.form</field>
+        <field name="model">wizard.master.shipment.status</field>
+        <field name="inherit_id" ref="freight_management.wizard_master_shipment_status_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='change_reason_id']" position="before">
+                <field name="mode_type" invisible="1" />
+                <field name="road_state" attrs="{'invisible': [('mode_type', '!=', 'land')], 'required': [('mode_type', '=', 'land')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

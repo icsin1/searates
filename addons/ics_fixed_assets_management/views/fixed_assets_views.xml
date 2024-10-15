@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="fixed_asset_view_tree" model="ir.ui.view">
+        <field name="name">fixed.asset.view.tree</field>
+        <field name="model">account.asset</field>
+        <field name="arch" type="xml">
+            <tree string="Asset">
+                <field name="name" string="Asset Name"/>
+                <field name="recognition_interval" invisible="1"/>
+                <field name="interval_period" invisible="1"/>
+                <field name="acquisition_date"/>
+                <field name="original_value"/>
+                <field name="method"/>
+                <field name="first_recognition_date"/>
+                <field name="book_value"/>
+                <field name="residual_amount"/>
+                <field name="state"/>
+                <field name="account_depreciation_id" string="Expense Account" invisible="1"/>
+                <field name="account_depreciation_expense_id" string="Deferred Expense Account" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="account_asset_view_form_inherited_fixed_asset" model="ir.ui.view">
+        <field name="name">account.asset.view.form.inherit.fixed.asset</field>
+        <field name="model">account.asset</field>
+        <field name="inherit_id" ref="ics_account_deferred_revenue_expense.account_asset_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <div class="oe_title fixed_asset">
+                    <label for="name" name="name_label" attrs="{'invisible': ['|', ('asset_type', '!=', 'sale'), ('state', '=', 'model')]}" string="Deferred Revenue Name"/>
+                    <label for="name" name="name_label" attrs="{'invisible': ['|', ('asset_type', '!=', 'expense'),('state', '=', 'model')]}" string="Deferred Expense Name"/>
+                    <label for="name" name="name_label" attrs="{'invisible': ['|', ('asset_type', '!=', 'asset'),('state', '=', 'model')]}" string="Asset Name"/>
+                    <h1>
+                        <field name="name" attrs="{'readonly': [('state', 'not in', ['draft', 'model'])]}"/>
+                    </h1>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='residual_amount']" position="before">
+                <field name="non_depreciable_value" attrs="{'invisible': [('asset_type', '!=', 'asset')], 'readonly': [('state', '!=', 'draft')]}"/>
+                <field name="book_value" attrs="{'invisible': [('asset_type', '!=', 'asset')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='depreciation_move_ids']//field[@name='date']" position="attributes">
+                <attribute name="string">Depreciation Date</attribute>
+            </xpath>
+            <xpath expr="//field[@name='depreciation_move_ids']//field[@name='amount_total']" position="attributes">
+                <attribute name="string">Depreciation</attribute>
+            </xpath>
+            <xpath expr="//field[@name='depreciation_move_ids']//field[@name='asset_deprecated_value']" position="attributes">
+                <attribute name="string">Cumulative Depreciation</attribute>
+            </xpath>
+            <xpath expr="//field[@name='depreciation_move_ids']//field[@name='asset_remaining_value']" position="attributes">
+                <attribute name="string">Depreciable Value</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="fixed_asset_action" model="ir.actions.act_window">
+        <field name="name">Assets</field>
+        <field name="res_model">account.asset</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="fixed_asset_view_tree"/>
+        <field name="domain">[('asset_type', '=', 'asset'), ('state', '!=', 'model')]</field>
+        <field name="context">{'default_asset_type': 'asset'}</field>
+    </record>
+
+    <menuitem
+            id="fixed_asset_menu"
+            name="Assets"
+            action="fixed_asset_action"
+            parent="account.menu_finance_entries_management"/>
+
+</odoo>

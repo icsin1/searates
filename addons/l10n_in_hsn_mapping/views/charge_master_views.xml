@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="inherit_product_template_only_form_view_hsn_mapping" model="ir.ui.view">
+        <field name="name">product.template.hsn.mapping.inherited</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='invoicing']" position='after'>
+                <field name="country_id" invisible="1"/>
+                <page string="HSN Mapping" name="hsn_mapping" attrs="{'invisible': [('country_id', '!=', %(base.in)d)]}">
+                    <field name="hsn_charge_ids">
+                        <tree string="HSN Mapping" editable="bottom">
+                            <field name="hsn_id" options="{'no_create':1}" required="1"/>
+                            <field name="transport_mode_id" options="{'no_create':1}" required="1"/>
+                            <field name="shipment_type_id" options="{'no_create':1}" required="1"/>
+                            <field name="cargo_type_domain" invisible="1"/>
+                            <field name="cargo_type_id" domain="cargo_type_domain" required="1" options="{'no_create':1}"/>
+                            <field name="hsn_name"/>
+                            <field name="vendor_tax_id"/>
+                            <field name="customer_tax_id"/>
+                            <field name="effective_date" required="1"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

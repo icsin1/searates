@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_mawb_stock_form" model="ir.ui.view">
+        <field name="name">mawb.stock.form</field>
+        <field name="model">mawb.stock</field>
+        <field name="inherit_id" ref="fm_mawb_numbers.view_mawb_stock_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="after">
+                <footer invisible="not context.get('wizard_save', 0)">
+                    <button name="action_save_mawb_stock" string="Save" type="object" class="oe_highlight mr-2" />
+                    <button type="special" special="cancel" string="Cancel" class="btn btn-default"/>
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_mawb_stock_line_tree_inherit" model="ir.ui.view">
+        <field name="name">mawb.stock.line.tree.inherit</field>
+        <field name="model">mawb.stock.line</field>
+        <field name="inherit_id" ref="fm_mawb_numbers.view_mawb_stock_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='status']" position="after">
+                <field name="master_shipment_id" invisible="1"/>
+                <field name="master_shipment_ids" widget="many2many_tags"/>
+                <field name="house_shipment_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_mawb_stock_line_tree_selection" model="ir.ui.view">
+        <field name="name">mawb.stock.line.tree.selection</field>
+        <field name="model">mawb.stock.line</field>
+        <field name="inherit_id" ref="fm_mawb_numbers.view_mawb_stock_line_tree" />
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="inside">
+                <header>
+                    <button name="action_select_mawb_stock_line" string="Select" invisible="not context.get('select', 0)" type="object" class="oe_highlight mr-2" />
+                    <button type="special" special="cancel" string="Cancel" class="btn btn-default" invisible="not context.get('select', 0)"/>
+                </header>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="js_class">mawb_extend_selection</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

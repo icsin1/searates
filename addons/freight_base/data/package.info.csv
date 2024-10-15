@@ -1,0 +1,55 @@
+id,name,kind,type,material_code,material,category
+package_info_1,1A1,1,Drums,A,Steel,non-removable head
+package_info_2,1A2,1,Drums,A,Steel,removable head
+package_info_3,1B1,1,Drums,B,Aluminium,non-removable head
+package_info_4,1B2,1,Drums,B,Aluminium,removable head
+package_info_5,1D,1,Drums,D,Plywood,
+package_info_6,1G,1,Drums,G,Fibre,
+package_info_7,1H1,1,Drums,H,Plastics,non-removable head
+package_info_8,1H2,1,Drums,H,Plastics,removable head
+package_info_9,2C1,2,Barrels,C,Wooden,bung type
+package_info_10,2C2,2,Barrels,C,Wooden,removable head
+package_info_11,3A1,3,Jerricans,A,Steel,non-removable head
+package_info_12,3A2,3,Jerricans,A,Steel,removable head
+package_info_13,3H1,3,Jerricans,H,Plastics,non-removable head
+package_info_14,3H2,3,Jerricans,H,Plastics,removable head
+package_info_15,4A,4,Boxes,A,Steel,
+package_info_16,4B,4,Boxes,B,Aluminium,
+package_info_17,4C1,4,Boxes,C,Natural wood,ordinary
+package_info_18,4C2,4,Boxes,C,Natural wood,with sift-proof walls
+package_info_19,4D,4,Boxes,D,Plywood,
+package_info_20,4F,4,Boxes,F,Reconstituted wood,
+package_info_21,4G,4,Boxes,G,Fibreboard,
+package_info_22,4H1,4,Boxes,H,Plastics,expanded
+package_info_23,4H2,4,Boxes,H,Plastics,solid
+package_info_24,5H1,5,Bags,H,Woven plastics,without inner lining or coating
+package_info_25,5H2,5,Bags,H,Woven plastics,silt-proof
+package_info_26,5H3,5,Bags,H,Woven plastics,water resistant
+package_info_27,5H4,5,Bags,H,Plastics film,
+package_info_28,5L1,5,Bags,L,Textile,without inner lining or coating
+package_info_29,5L2,5,Bags,L,Textile,sift-proof
+package_info_30,5L3,5,Bags,L,Textile,water resistant
+package_info_31,5M1,5,Bags,M,Paper,multiwall
+package_info_32,5M2,5,Bags,M,Paper,"multiwall, water resistant"
+package_info_33,6HA1,6,Composite Packaging,H,Plastics receptacle,in steel drum
+package_info_34,6HA2,6,Composite Packaging,H,Plastics receptacle,in steel crate or box
+package_info_35,6HB,6,Composite Packaging,H,Plastics receptacle,in aluminium drum
+package_info_36,6HB2,6,Composite Packaging,H,Plastics receptacle,in aluminium crate or box
+package_info_37,6HC,6,Composite Packaging,H,Plastics receptacle,wooden box
+package_info_38,6HD1,6,Composite Packaging,H,Plastics receptacle,in plywood drum
+package_info_39,6HD2,6,Composite Packaging,H,Plastics receptacle,in plywood box
+package_info_40,6HG1,6,Composite Packaging,H,Plastics receptacle,in fibre drum
+package_info_41,6HG2,6,Composite Packaging,H,Plastics receptacle,in fibreboard box
+package_info_42,6HH1,6,Composite Packaging,H,Plastics receptacle,in plastics drum
+package_info_43,6HH2,6,Composite Packaging,H,Plastics receptacle,in solid plastics box
+package_info_44,6PA1,6,Composite Packaging,P,"Glass, porcelain or stoneware receptacle",in steel drum
+package_info_45,6PA2,6,Composite Packaging,P,"Glass, porcelain or stoneware receptacle",in steel crate or box
+package_info_46,6PB1,6,Composite Packaging,P,"Glass, porcelain or stoneware receptacle",in aluminium drum
+package_info_47,6PB2,6,Composite Packaging,P,"Glass, porcelain or stoneware receptacle",in aluminium crate or box
+package_info_48,6PC,6,Composite Packaging,P,"Glass, porcelain or stoneware receptacle",wooden box
+package_info_49,6PD1,6,Composite Packaging,P,"Glass, porcelain or stoneware receptacle",in plywood drum
+package_info_50,6PD2,6,Composite Packaging,P,"Glass, porcelain or stoneware receptacle",in wickerwork hamper
+package_info_51,6PG1,6,Composite Packaging,P,"Glass, porcelain or stoneware receptacle",in fibre drum
+package_info_52,6PG2,6,Composite Packaging,P,"Glass, porcelain or stoneware receptacle",in fibreboard box
+package_info_53,6PH1,6,Composite Packaging,P,"Glass, porcelain or stoneware receptacle",in expanded plastics packagings
+package_info_54,6PH2,6,Composite Packaging,P,"Glass, porcelain or stoneware receptacle",in solid plastics packaging

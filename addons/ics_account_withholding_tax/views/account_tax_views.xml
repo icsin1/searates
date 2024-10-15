@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_view_account_tax_form" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="is_base_affected" position="after">
+                <field name="tax_on_payment" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('type_tax_use', '!=', 'purchase')]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

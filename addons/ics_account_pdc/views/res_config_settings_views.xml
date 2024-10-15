@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">ics_account_pdc.res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="ics_account.res_config_settings_view_form_reference_number" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='pdc_payment_settings']//div[hasclass('o_setting_right_pane')]" position="inside">
+                <div class="content-group" attrs="{'invisible': [('module_ics_account_pdc', '=', False)]}">
+                    <div class="row mt8">
+                        <label for="pdc_receivable_account_id" class="col-lg-5 o_light_label"/>
+                        <field name="pdc_receivable_account_id" attrs="{'required': [('module_ics_account_pdc', '=', True), ('has_chart_of_accounts', '=', True)]}"/>
+                    </div>
+                    <div class="row mt8">
+                        <label for="pdc_payable_account_id" class="col-lg-5 o_light_label"/>
+                        <field name="pdc_payable_account_id" attrs="{'required': [('module_ics_account_pdc', '=', True), ('has_chart_of_accounts', '=', True)]}"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

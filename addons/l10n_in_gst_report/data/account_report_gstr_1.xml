@@ -1,0 +1,748 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="l10n_in_report_gstr_1" model="web.report">
+            <field name="name">GSTR-1 Sales Report</field>
+            <field name="is_tax_report" eval="True"/>
+            <field name="country_id" ref="base.in"/>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="data_match_domain" eval="[('move_id.state', '=', 'posted')]"/>
+            <field name="filter_multi_company">disabled</field>
+            <field name="filter_date_type">date_range</field>
+            <field name="default_opening_date">last_month</field>
+            <field name="date_field" ref="account.field_account_move_line__date"/>
+        </record>
+
+        <!-- Sections / Lines -->
+        <record id="l10n_in_report_gstr1_line_b2b" model="web.report.line">
+            <field name="web_report_id" ref="l10n_in_report_gstr_1"/>
+            <field name="name">B2B Invoice - 4A, 4B, 4C, 6B, 6C</field>
+            <field name="code">B2B</field>
+            <field name="sequence">1</field>
+            <field name="hierarchy_level">1</field>
+            <field name="group_total" eval="False"/>
+            <field name="default_action_domain" eval="[
+                ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                ('parent_state', '=', 'posted'),
+                ('tax_ids', '!=', False),
+                ('move_id.l10n_in_gst_treatment', 'in', ['regular', 'special_economic_zone', 'deemed_export', 'composition']),
+                ('tax_tag_ids', 'in', [ref('l10n_in_base.sgst_base_tag_tax'), ref('l10n_in_base.cgst_base_tag_tax'), ref('l10n_in_base.igst_base_tag_tax')])
+            ]"/>
+        </record>
+
+            <!-- B2B - Tax Base -->
+            <record id="l10n_in_report_gstr1_line_b2b_expr_tax_base" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2b"/>
+                <field name="name">tax_base</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['regular', 'special_economic_zone', 'deemed_export', 'composition']),
+                    ('tax_tag_ids', 'in', [ref('l10n_in_base.sgst_base_tag_tax'), ref('l10n_in_base.cgst_base_tag_tax'), ref('l10n_in_base.igst_base_tag_tax'), ref('l10n_in_base.cess_base_tag_tax')])
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+
+            <!-- B2B - Tax SGST -->
+            <record id="l10n_in_report_gstr1_line_b2b_expr_tax_sgst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2b"/>
+                <field name="name">tax_sgst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['regular', 'special_economic_zone', 'deemed_export', 'composition']),
+                    ('tax_tag_ids.name', '=', '+SGST'),
+                    ('tax_tag_ids.applicability', '=', 'taxes')
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- B2B - Tax CGST -->
+            <record id="l10n_in_report_gstr1_line_b2b_expr_tax_cgst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2b"/>
+                <field name="name">tax_cgst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['regular', 'special_economic_zone', 'deemed_export', 'composition']),
+                    ('tax_tag_ids.name', '=', '+CGST'),
+                    ('tax_tag_ids.applicability', '=', 'taxes')
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- B2B - Tax IGST -->
+            <record id="l10n_in_report_gstr1_line_b2b_expr_tax_igst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2b"/>
+                <field name="name">tax_igst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['regular', 'special_economic_zone', 'deemed_export', 'composition']),
+                    ('tax_tag_ids.name', '=', '+IGST'),
+                    ('tax_tag_ids.applicability', '=', 'taxes')
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- B2B - Tax CESS -->
+            <record id="l10n_in_report_gstr1_line_b2b_expr_tax_cess" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2b"/>
+                <field name="name">tax_cess</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['regular', 'special_economic_zone', 'deemed_export', 'composition']),
+                    ('tax_tag_ids.name', '=', '+CESS'),
+                    ('tax_tag_ids.applicability', '=', 'taxes')
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+
+        <record id="l10n_in_report_gstr1_line_b2cl" model="web.report.line">
+            <field name="web_report_id" ref="l10n_in_report_gstr_1"/>
+            <field name="name">B2C(Large) Invoice - 5A, 5B</field>
+            <field name="code">B2CL</field>
+            <field name="sequence">2</field>
+            <field name="hierarchy_level">1</field>
+            <field name="group_total" eval="False"/>
+            <field name="default_action_domain" eval="[
+                ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                ('parent_state', '=', 'posted'),
+                ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+                ('move_id.amount_total', '&gt;', 250000),
+                ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                ('tax_ids', '!=', False),
+                ('tax_tag_ids', 'in', [ref('l10n_in_base.sgst_base_tag_tax'), ref('l10n_in_base.cgst_base_tag_tax'), ref('l10n_in_base.igst_base_tag_tax')])
+            ]"/>
+        </record>
+
+            <!-- B2CL - Tax Base -->
+            <record id="l10n_in_report_gstr1_line_b2cl_expr_tax_base" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2cl"/>
+                <field name="name">tax_base</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+                    ('move_id.amount_total', '&gt;', 250000),
+                    ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                    ('tax_tag_ids', 'in', [ref('l10n_in_base.sgst_base_tag_tax'), ref('l10n_in_base.cgst_base_tag_tax'), ref('l10n_in_base.igst_base_tag_tax'), ref('l10n_in_base.cess_base_tag_tax')])
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+
+            <!-- B2CL - Tax SGST -->
+            <record id="l10n_in_report_gstr1_line_b2cl_expr_tax_sgst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2cl"/>
+                <field name="name">tax_sgst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+                    ('move_id.amount_total', '&gt;', 250000),
+                    ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                    ('tax_tag_ids.name', '=', '+SGST'),
+                    ('tax_tag_ids.applicability', '=', 'taxes')
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- B2CL - Tax CGST -->
+            <record id="l10n_in_report_gstr1_line_b2cl_expr_tax_cgst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2cl"/>
+                <field name="name">tax_cgst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+                    ('move_id.amount_total', '&gt;', 250000),
+                    ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                    ('tax_tag_ids.name', '=', '+CGST'),
+                    ('tax_tag_ids.applicability', '=', 'taxes')
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- B2CL - Tax IGST -->
+            <record id="l10n_in_report_gstr1_line_b2cl_expr_tax_igst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2cl"/>
+                <field name="name">tax_igst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+                    ('move_id.amount_total', '&gt;', 250000),
+                    ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                    ('tax_tag_ids.name', '=', '+IGST'),
+                    ('tax_tag_ids.applicability', '=', 'taxes')
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- B2CL - Tax CESS -->
+            <record id="l10n_in_report_gstr1_line_b2cl_expr_tax_cess" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2cl"/>
+                <field name="name">tax_cess</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+                    ('move_id.amount_total', '&gt;', 250000),
+                    ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                    ('tax_tag_ids.name', '=', '+CESS'),
+                    ('tax_tag_ids.applicability', '=', 'taxes')
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+
+        <record id="l10n_in_report_gstr1_line_b2cs" model="web.report.line">
+            <field name="web_report_id" ref="l10n_in_report_gstr_1"/>
+            <field name="name">B2C(Small) Details - 7</field>
+            <field name="code">B2CS</field>
+            <field name="sequence">3</field>
+            <field name="hierarchy_level">1</field>
+            <field name="group_total" eval="False"/>
+            <field name="default_action_domain" eval="[
+                ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+                ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+                ('tax_tag_ids', '!=', False),
+                ('tax_tag_ids', 'in', [ref('l10n_in_base.sgst_base_tag_tax'), ref('l10n_in_base.cgst_base_tag_tax'), ref('l10n_in_base.igst_base_tag_tax')]),
+                '|',
+                    ('move_id.l10n_in_transaction_mode', '=', 'intra_state'),
+                    '&amp;',
+                        ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                        ('move_id.amount_total', '&lt;=', 250000)
+            ]"/>
+        </record>
+            <!-- B2CS - Tax Base -->
+            <record id="l10n_in_report_gstr1_line_b2cs_expr_tax_base" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2cs"/>
+                <field name="name">tax_base</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_refund', 'out_receipt']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+                    ('tax_tag_ids', 'in', [ref('l10n_in_base.sgst_base_tag_tax'), ref('l10n_in_base.cgst_base_tag_tax'), ref('l10n_in_base.igst_base_tag_tax'), ref('l10n_in_base.cess_base_tag_tax')]),
+                    '|',
+                        ('move_id.l10n_in_transaction_mode', '=', 'intra_state'),
+                        '&amp;',
+                            ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                            ('move_id.amount_total', '&lt;=', 250000)
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+
+            <!-- B2CS - Tax SGST -->
+            <record id="l10n_in_report_gstr1_line_b2cs_expr_tax_sgst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2cs"/>
+                <field name="name">tax_sgst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+                    ('tax_tag_ids.name', 'in', ['+SGST', '-SGST']),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                    '|',
+                        ('move_id.l10n_in_transaction_mode', '=', 'intra_state'),
+                        '&amp;',
+                            ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                            ('move_id.amount_total', '&lt;=', 250000)
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- B2CS - Tax CGST -->
+            <record id="l10n_in_report_gstr1_line_b2cs_expr_tax_cgst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2cs"/>
+                <field name="name">tax_cgst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+                    ('tax_tag_ids.name', 'in', ['+CGST', '-CGST']),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                    '|',
+                        ('move_id.l10n_in_transaction_mode', '=', 'intra_state'),
+                        '&amp;',
+                            ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                            ('move_id.amount_total', '&lt;=', 250000)
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- B2CS - Tax IGST -->
+            <record id="l10n_in_report_gstr1_line_b2cs_expr_tax_igst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2cs"/>
+                <field name="name">tax_igst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+                    ('tax_tag_ids.name', 'in', ['+IGST', '-IGST']),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                    '|',
+                        ('move_id.l10n_in_transaction_mode', '=', 'intra_state'),
+                        '&amp;',
+                            ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                            ('move_id.amount_total', '&lt;=', 250000)
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- B2CS - Tax CESS -->
+            <record id="l10n_in_report_gstr1_line_b2cs_expr_tax_cess" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_b2cs"/>
+                <field name="name">tax_cess</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+                    ('tax_tag_ids.name', 'in', ['+CESS', '-CESS']),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                    '|',
+                        ('move_id.l10n_in_transaction_mode', '=', 'intra_state'),
+                        '&amp;',
+                            ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                            ('move_id.amount_total', '&lt;=', 250000)
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+
+        <record id="l10n_in_report_gstr1_line_cdnr" model="web.report.line">
+            <field name="web_report_id" ref="l10n_in_report_gstr_1"/>
+            <field name="name">Credit/Debit Notes (Registered)(9B)</field>
+            <field name="code">CDNR</field>
+            <field name="sequence">4</field>
+            <field name="hierarchy_level">1</field>
+            <field name="group_total" eval="False"/>
+            <field name="default_action_domain" eval="[
+                ('move_id.move_type', '=', 'out_refund'),
+                ('parent_state', '=', 'posted'),
+                ('move_id.l10n_in_gst_treatment', 'in', ['regular', 'special_economic_zone', 'deemed_export', 'composition']),
+                ('tax_ids', '!=', False),
+                ('tax_tag_ids', 'in', [ref('l10n_in_base.sgst_base_tag_tax'), ref('l10n_in_base.cgst_base_tag_tax'), ref('l10n_in_base.igst_base_tag_tax')])
+            ]"/>
+        </record>
+            <!-- CDNR - Tax Base -->
+            <record id="l10n_in_report_gstr1_line_b2cs_cdnr_tax_base" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_cdnr"/>
+                <field name="name">tax_base</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', '=', 'out_refund'),
+                    ('parent_state', '=', 'posted'),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['regular', 'special_economic_zone', 'deemed_export', 'composition']),
+                    ('tax_tag_ids', 'in', [ref('l10n_in_base.sgst_base_tag_tax'), ref('l10n_in_base.cgst_base_tag_tax'), ref('l10n_in_base.igst_base_tag_tax'), ref('l10n_in_base.cess_base_tag_tax')])
+                ]"/>
+                <field name="subformula_expression">sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+
+            <!-- CDNR - Tax SGST -->
+            <record id="l10n_in_report_gstr1_line_b2cs_cdnr_tax_sgst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_cdnr"/>
+                <field name="name">tax_sgst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', '=', 'out_refund'),
+                    ('parent_state', '=', 'posted'),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['regular', 'special_economic_zone', 'deemed_export', 'composition']),
+                    ('tax_tag_ids.name', '=', '-SGST'),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                ]"/>
+                <field name="subformula_expression">sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- CDNR - Tax CGST -->
+            <record id="l10n_in_report_gstr1_line_b2cs_cdnr_tax_cgst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_cdnr"/>
+                <field name="name">tax_cgst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', '=', 'out_refund'),
+                    ('parent_state', '=', 'posted'),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['regular', 'special_economic_zone', 'deemed_export', 'composition']),
+                    ('tax_tag_ids.name', '=', '-CGST'),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                ]"/>
+                <field name="subformula_expression">sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- CDNR - Tax IGST -->
+            <record id="l10n_in_report_gstr1_line_b2cs_cdnr_tax_igst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_cdnr"/>
+                <field name="name">tax_igst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', '=', 'out_refund'),
+                    ('parent_state', '=', 'posted'),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['regular', 'special_economic_zone', 'deemed_export', 'composition']),
+                    ('tax_tag_ids.name', '=', '-IGST'),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                ]"/>
+                <field name="subformula_expression">sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- CDNR - Tax CESS -->
+            <record id="l10n_in_report_gstr1_line_b2cs_cdnr_tax_cess" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_cdnr"/>
+                <field name="name">tax_cess</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', '=', 'out_refund'),
+                    ('parent_state', '=', 'posted'),
+                    ('move_id.l10n_in_gst_treatment', 'in', ['regular', 'special_economic_zone', 'deemed_export', 'composition']),
+                    ('tax_tag_ids.name', '=', '-CESS'),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                ]"/>
+                <field name="subformula_expression">sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+
+        <record id="l10n_in_report_gstr1_line_cdnur" model="web.report.line">
+            <field name="web_report_id" ref="l10n_in_report_gstr_1"/>
+            <field name="name">Credit Debit Note (unregistered)(9B)</field>
+            <field name="code">CDNUR</field>
+            <field name="sequence">5</field>
+            <field name="hierarchy_level">1</field>
+            <field name="group_total" eval="False"/>
+            <field name="default_action_domain" eval="[
+                ('parent_state', '=', 'posted'),
+                ('tax_ids', '!=', False),
+                ('tax_tag_ids', 'in', [ref('l10n_in_base.sgst_base_tag_tax'), ref('l10n_in_base.cgst_base_tag_tax'), ref('l10n_in_base.igst_base_tag_tax')]),
+                '|',
+                '&amp;',
+                    ('move_id.move_type', '=', 'out_refund'),
+                    ('move_id.l10n_in_gst_treatment', '=', 'overseas'),
+                '&amp;',
+                    '&amp;',
+                        ('move_id.move_type', '=', 'out_refund'),
+                        ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                    '&amp;',
+                        ('move_id.amount_total', '&gt;', 250000),
+                        ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer'])
+            ]"/>
+        </record>
+            <!-- CDNUR - Tax Base -->
+            <record id="l10n_in_report_gstr1_line_cdnur_tax_base" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_cdnur"/>
+                <field name="name">tax_base</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('parent_state', '=', 'posted'),
+                    ('move_id.move_type', '=', 'out_refund'),
+                        '|',
+                            '&amp;',
+                                ('move_id.l10n_in_gst_treatment', '=', 'overseas'),
+                                ('tax_tag_ids', 'in', [ref('l10n_in_base.igst_base_tag_tax'), ref('l10n_in_base.cess_base_tag_tax')]),
+                                '&amp;',
+                                    '&amp;',
+                                        '&amp;',
+                                            ('tax_tag_ids', 'in', [ref('l10n_in_base.igst_base_tag_tax'), ref('l10n_in_base.cess_base_tag_tax')]),
+                                            ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+                                            ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                                            ('move_id.amount_total', '>', 250000)
+                ]"/>
+                <field name="subformula_expression">sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- CDNUR - Tax IGST -->
+            <record id="l10n_in_report_gstr1_line_cdnur_tax_igst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_cdnur"/>
+                <field name="name">tax_igst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('parent_state', '=', 'posted'),
+                    ('tax_tag_ids.name', 'in', ['-IGST']),
+                    '|',
+                    '&amp;',
+                        ('move_id.move_type', '=', 'out_refund'),
+                        ('move_id.l10n_in_gst_treatment', '=', 'overseas'),
+                    '&amp;',
+                        '&amp;',
+                            ('move_id.move_type', '=', 'out_refund'),
+                            ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                        '&amp;',
+                            ('move_id.amount_total', '&gt;', 250000),
+                            ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer'])
+                ]"/>
+                <field name="subformula_expression">sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- CDNUR - Tax CESS -->
+            <record id="l10n_in_report_gstr1_line_cdnur_tax_cess" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_cdnur"/>
+                <field name="name">tax_cess</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('parent_state', '=', 'posted'),
+                    ('move_id.move_type', '=', 'out_refund'),
+                    ('tax_tag_ids.name', 'in', ['-CESS']),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                    '|',
+                        ('move_id.l10n_in_gst_treatment', '=', 'overseas'),
+                        '&amp;',
+                            ('move_id.l10n_in_gst_treatment', 'in', ['unregistered', 'consumer']),
+                            '&amp;',
+                                ('move_id.l10n_in_transaction_mode', '=', 'inter_state'),
+                                ('move_id.amount_total', '>', 250000)
+                ]"/>
+                <field name="subformula_expression">sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+
+        <record id="l10n_in_report_gstr1_line_expin" model="web.report.line">
+            <field name="web_report_id" ref="l10n_in_report_gstr_1"/>
+            <field name="name">Export Invoices(6A)</field>
+            <field name="code">EXPIN</field>
+            <field name="sequence">6</field>
+            <field name="hierarchy_level">1</field>
+            <field name="group_total" eval="False"/>
+            <field name="default_action_domain" eval="[
+                ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                ('move_id.l10n_in_gst_treatment', '=', 'overseas'),
+                ('parent_state', '=', 'posted'),
+                ('tax_ids', '!=', False),
+                '|',
+                    ('tax_tag_ids', 'in', [ref('l10n_in_base.sgst_base_tag_tax'), ref('l10n_in_base.cgst_base_tag_tax'), ref('l10n_in_base.igst_base_tag_tax')]),
+                    ('tax_tag_ids.name', 'in', ['+Nil Rated', '+Exempt', '+Non GST Supplies', '+Zero Rated'])
+            ]"/>
+        </record>
+            <!-- EXPIN - Tax Base -->
+            <record id="l10n_in_report_gstr1_line_expin_tax_base" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_expin"/>
+                <field name="name">tax_base</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                    ('move_id.l10n_in_gst_treatment', '=', 'overseas'),
+                    ('parent_state', '=', 'posted'),
+                    '|',
+                        ('tax_tag_ids', 'in', [ref('l10n_in_base.sgst_base_tag_tax'), ref('l10n_in_base.cgst_base_tag_tax'), ref('l10n_in_base.igst_base_tag_tax'),
+                            ref('l10n_in_base.cess_base_tag_tax')]),
+                        ('tax_tag_ids.name', 'in', ['+Nil Rated', '+Exempt', '+Non GST Supplies', '+Zero Rated']),
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- EXPIN - Tax IGST -->
+            <record id="l10n_in_report_gstr1_line_expin_tax_igst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_expin"/>
+                <field name="name">tax_igst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                    ('move_id.l10n_in_gst_treatment', '=', 'overseas'),
+                    ('parent_state', '=', 'posted'),
+                    ('tax_tag_ids.name', 'in', ['+IGST']),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- EXPIN - Tax CESS -->
+            <record id="l10n_in_report_gstr1_line_expin_tax_cess" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_expin"/>
+                <field name="name">tax_cess</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_receipt']),
+                    ('move_id.l10n_in_gst_treatment', '=', 'overseas'),
+                    ('parent_state', '=', 'posted'),
+                    ('tax_tag_ids.name', 'in', ['+CESS']),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+
+        <record id="l10n_in_report_gstr1_line_nil" model="web.report.line">
+            <field name="web_report_id" ref="l10n_in_report_gstr_1"/>
+            <field name="name">Nil Rated Supplies(8A, 8B, 8C, 8D)</field>
+            <field name="code">NIL</field>
+            <field name="sequence">7</field>
+            <field name="hierarchy_level">1</field>
+            <field name="group_total" eval="False"/>
+            <field name="default_action_domain" eval="[
+                ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+                ('move_id.l10n_in_gst_treatment', '!=', 'overseas'),
+                ('parent_state', '=', 'posted'),
+                ('tax_ids', '!=', False),
+                ('tax_tag_ids.name', 'in', ['+Exempt', '+Nil Rated', '+Non GST Supplies', '-Exempt', '-Nil Rated', '-Non GST Supplies'])
+            ]"/>
+        </record>
+            <!-- EXPIN - Tax Base -->
+            <record id="l10n_in_report_gstr1_line_nil_tax_base" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_nil"/>
+                <field name="name">tax_base</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
+                    ('move_id.l10n_in_gst_treatment', '!=', 'overseas'),
+                    ('parent_state', '=', 'posted'),
+                    ('tax_tag_ids.name', 'in', ['+Exempt', '+Nil Rated', '+Non GST Supplies'])
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+
+        <record id="l10n_in_report_gstr1_line_hsn" model="web.report.line">
+            <field name="web_report_id" ref="l10n_in_report_gstr_1"/>
+            <field name="name">HSN summary of outward supplies(12)</field>
+            <field name="code">HSN</field>
+            <field name="sequence">8</field>
+            <field name="hierarchy_level">1</field>
+            <field name="group_total" eval="False"/>
+            <field name="default_action_domain" eval="[
+                ('move_id.move_type', 'in', ['entry', 'out_invoice', 'out_refund']),
+                ('tax_tag_ids.applicability', '=', 'taxes')
+            ]"/>
+        </record>
+    
+            <!-- HSN - Tax Base -->
+            <record id="l10n_in_report_gstr1_line_hsn_tax_base" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_hsn"/>
+                <field name="name">tax_base</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['entry', 'out_invoice', 'out_refund']),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                    '|',
+                        ('tax_tag_ids', 'in', [ref('l10n_in_base.sgst_base_tag_tax'), ref('l10n_in_base.cgst_base_tag_tax'), ref('l10n_in_base.igst_base_tag_tax'), ref('l10n_in_base.cess_base_tag_tax')]),
+                        ('tax_tag_ids.name', 'in', ['+Exempt', '-Exempt', '+Nil Rated', '-Nil Rated', '+Non GST Supplies', '-Non GST Supplies', '+Zero Rated', '-Zero Rated'])
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+
+            <!-- HSN - Tax SGST -->
+            <record id="l10n_in_report_gstr1_line_hsn_tax_sgst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_hsn"/>
+                <field name="name">tax_sgst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['entry', 'out_invoice', 'out_refund']),
+                    ('tax_tag_ids.name', 'in', ['-SGST', '+SGST']),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- HSN - Tax CGST -->
+            <record id="l10n_in_report_gstr1_line_hsn_tax_cgst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_hsn"/>
+                <field name="name">tax_cgst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['entry', 'out_invoice', 'out_refund']),
+                    ('tax_tag_ids.name', 'in', ['-CGST', '+CGST']),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- HSN - Tax IGST -->
+            <record id="l10n_in_report_gstr1_line_hsn_tax_igst" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_hsn"/>
+                <field name="name">tax_igst</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['entry', 'out_invoice', 'out_refund']),
+                    ('tax_tag_ids.name', 'in', ['-IGST', '+IGST']),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <!-- HSN - Tax CESS -->
+            <record id="l10n_in_report_gstr1_line_hsn_tax_cess" model="web.report.expression">
+                <field name="web_report_line_id" ref="l10n_in_report_gstr1_line_hsn"/>
+                <field name="name">tax_cess</field>
+                <field name="computation_engine">domain</field>
+                <field name="group_by_field_id" ref="account.field_account_move_line__balance"/>
+                <field name="formula_expression" eval="[
+                    ('move_id.move_type', 'in', ['entry', 'out_invoice', 'out_refund']),
+                    ('tax_tag_ids.name', 'in', ['-CESS', '+CESS']),
+                    ('tax_tag_ids.applicability', '=', 'taxes'),
+                ]"/>
+                <field name="subformula_expression">-sum</field>
+                <field name="value_type">monetary</field>
+            </record>
+
+        <!-- Columns -->
+        <record id="l10n_in_report_gstr1_column_tax_base" model="web.report.column">
+            <field name="web_report_id" ref="l10n_in_report_gstr_1"/>
+            <field name="name">Base</field>
+            <field name="expression_label">tax_base</field>
+            <field name="sequence">1</field>
+            <field name="value_type">monetary</field>
+        </record>
+        <record id="l10n_in_report_gstr1_column_tax_cgst" model="web.report.column">
+            <field name="web_report_id" ref="l10n_in_report_gstr_1"/>
+            <field name="name">CGST</field>
+            <field name="expression_label">tax_cgst</field>
+            <field name="sequence">2</field>
+            <field name="value_type">monetary</field>
+        </record>
+        <record id="l10n_in_report_gstr1_column_tax_sgst" model="web.report.column">
+            <field name="web_report_id" ref="l10n_in_report_gstr_1"/>
+            <field name="name">SGST</field>
+            <field name="expression_label">tax_sgst</field>
+            <field name="sequence">3</field>
+            <field name="value_type">monetary</field>
+        </record>
+        <record id="l10n_in_report_gstr1_column_tax_igst" model="web.report.column">
+            <field name="web_report_id" ref="l10n_in_report_gstr_1"/>
+            <field name="name">IGST</field>
+            <field name="expression_label">tax_igst</field>
+            <field name="sequence">4</field>
+            <field name="value_type">monetary</field>
+        </record>
+        <record id="l10n_in_report_gstr1_column_tax_cess" model="web.report.column">
+            <field name="web_report_id" ref="l10n_in_report_gstr_1"/>
+            <field name="name">CESS</field>
+            <field name="expression_label">tax_cess</field>
+            <field name="sequence">5</field>
+            <field name="value_type">monetary</field>
+        </record>
+    </data>
+</odoo>

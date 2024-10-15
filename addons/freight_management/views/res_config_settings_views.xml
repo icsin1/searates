@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_shipment_tracking_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.shipment.tracking.option.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="50"/>
+        <field name="inherit_id" ref="freight_base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='freight_base']" position="inside">
+                <h2>Shipment / Container Tracking</h2>
+                <div class="row mt16 o_settings_container" name="ics_cargoesflow_settings">
+                    <div class="col-12 col-lg-12 o_setting_box" id="ics_cargoesflow_option">
+                        <div class="o_setting_left_pane">
+                            <field name="module_ics_cargoesflow" />
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <div class="row">
+                                <div class="col">
+                                    <h3>Shipment/Container Tracking</h3>
+                                    <p>Enable to track milestones for shipment / container</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <h2>Create House Shipment From Master</h2>
+                <div class="row mt16 o_settings_container" name="fm_house_shipment_from_master_settings">
+                    <div class="col-12 col-lg-12 o_setting_box" id="fm_house_shipment_from_master_option">
+                        <div class="o_setting_left_pane">
+                            <field name="module_fm_house_shipment_from_master" />
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <div class="row">
+                                <div class="col">
+                                    <h3>Create House Shipment From Master</h3>
+                                    <p>Enable to create  shipment from master</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@name='show_partner_prefix_settings']" position="after">
+                <h2>Container Validation</h2>
+                <div class="row mt16 o_settings_container" name="container_basic_validation_settings">
+                    <div class="col-12 col-lg-6 o_setting_box" id="container_basic_validation_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="container_basic_validation" class="oe_inline"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="container_basic_validation"/>
+                            <p class="text-muted">
+                                Container Length Validation ensures that the container number provided is valid based on its length. The container number must be equal to or greater than 10 characters in length.
+                                <br/>Allowed Examples:
+                                <ul class="ml-4">
+                                    <li>ABCD12345678 (12 characters)</li>
+                                    <li>WXYZ123456 (10 characters)</li>
+                                </ul>
+                                Not Allowed Examples:
+                                <ul class="ml-4">
+                                    <li>ABC123456 (9 characters)</li>
+                                    <li>XYZ123 (6 characters)</li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box" id="container_validation_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="module_fm_container_validation" class="oe_inline"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="module_fm_container_validation"/>
+                            <p class="text-muted">
+                                This Container Validation ensures that containers follow the ISO-6346 standard in defining Container Numbers, which includes a specific format for container numbers.
+                            </p>
+                            <p class="text-muted">
+                                You can Refer to ISO6346 Standard by <a href="https://www.iso.org/obp/ui/en/#iso:std:iso:6346:ed-4:v2:en" target="_new">Clicking Here</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <h2>Part BL</h2>
+                <div class="row mt16 o_settings_container" name="part_bl_settings">
+                    <div class="col-12 col-lg-6 o_setting_box" id="part_bl_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_disable_part_bl" class="oe_inline"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="enable_disable_part_bl"/>
+                        </div>
+                    </div>
+                </div>
+                <h2>Freight Management Export to Import</h2>
+                <div class="row mt16 o_settings_container" name="export_import_settings">
+                    <div class="col-12 col-lg-6 o_setting_box" id="export_import_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="module_freight_management_export_import" class="oe_inline"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="module_freight_management_export_import"/>
+                        </div>
+                    </div>
+                </div>
+                <h2>Enable SCAC Code as prefix in Master shipment</h2>
+                <div class="row mt16 o_settings_container" name="export_import_settings">
+                    <div class="col-12 col-lg-6 o_setting_box" id="export_import_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_disable_shipping_line" class="oe_inline"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="enable_disable_shipping_line"/>
+                        </div>
+                    </div>
+                </div>
+<!--                <field name="enable_disable_shipping_line" string="Enable SCAC Code as prefix in Master shipment"/>-->
+                <h2>Party Types for Master Shipment</h2>
+                <div class="row mt16 o_settings_container" name="show_party_type_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="show_party_type_setting">
+                        <div class="o_setting_left_pane">
+                            <field name="party_types"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="party_types"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+
+            <xpath expr="//div[@name='show_partner_prefix_settings']" position="after">
+                <h2>Re-Export Shipment</h2>
+                <div class="row mt16 o_settings_container" name="reexport_settings">
+                    <div class="col-12 col-lg-6 o_setting_box" id="reexport_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_disable_reexport_hs" class="oe_inline"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="enable_disable_reexport_hs"/>
+                             <div class="text-muted">
+                                    Enable to create Re Export Shipment from Import Jobs
+                             </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+            <xpath expr="//div[@data-key='freight_base']" position="inside">
+                <h2>Enable Charge Master Migration</h2>
+                <div class="row mt16 o_settings_container" name="show_charge_migration_setting">
+                    <div class="col-12 col-lg-6 o_setting_box" id="show_charge_migration_setting">
+                        <div class="o_setting_left_pane">
+                            <field name="charge_migration"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="charge_migration"/>
+                        </div>
+                    </div>
+                </div>
+                <h2>Cut-Off Dates</h2>
+                <div class="row mt16 o_settings_container" name="cutoff_dates">
+                    <div class="col-12 col-lg-6 o_setting_box" id="cutoff_dates_setting">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_cut_off_dates"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="enable_cut_off_dates"/>
+                        </div>
+                    </div>
+                </div>
+                <h2>Feeder Details</h2>
+                <div class="row mt16 o_settings_container" name="feeder_details">
+                    <div class="col-12 col-lg-6 o_setting_box" id="feeder_details_setting">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_feeder_details"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="enable_feeder_details"/>
+                        </div>
+                    </div>
+                </div>
+                <h2>Enable Non-Mandatory Fields in Opportunity,Quote,House &amp; Master</h2>
+                <div class="row mt16 o_settings_container" name="non_mandatory_field_settings">
+                    <div class="col-12 col-lg-6 o_setting_box" id="non_mandatory_field_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="enable_non_mandatory_fields" class="oe_inline"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="enable_non_mandatory_fields" string="Enable Non-Mandatory Fields in Opportunity,Quote,House &amp; Master"/>
+                             <div class="text-muted">
+                                 Origin,Origin Country,Destination,Destination Country are Non Mandatory<br/>
+                                 Origin, Destination Ports are Mandatory
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <h2>Enable Shipper and Consignee are Non Mandatory</h2>
+                <div class="row mt16 o_settings_container" name="shipper_consignee_field_settings">
+                    <div class="col-12 col-lg-6 o_setting_box" id="shipper_consignee_field_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="shipper_consignee_non_mandatory" class="oe_inline"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="shipper_consignee_non_mandatory"/>
+                             <div class="text-muted">
+                                 Shipper and Consignee are Non Mandatory
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                <h2>Shipment Status Change Without HBL Number</h2>
+                <div class="row mt16 o_settings_container" name="shipment_status_change_field_settings">
+                    <div class="col-12 col-lg-6 o_setting_box" id="shipment_status_change_field_settings">
+                        <div class="o_setting_left_pane">
+                            <field name="shipment_status_change" class="oe_inline"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="shipment_status_change"/>
+                             <div class="text-muted">
+                                 HBL Number Non-Mandatory
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                <h2>External Carrier Bookings</h2>
+                <div class="row mt16 o_settings_container" name="external_carrier_bookings">
+                    <div class="col-12 col-lg-6 o_setting_box" id="external_carrier_bookings_setting">
+                        <div class="o_setting_left_pane">
+                            <field name="allow_edit_external_carrier_bookings"/>
+                        </div>
+                        <div class="o_setting_right_pane">
+                            <label for="allow_edit_external_carrier_bookings"/>
+                            <p class="text-muted">
+                                Allow users to edit the External Carrier Bookings tab for shipments with FCL as the cargo type and sea transport mode.
+                                Additionally, disable the option to create a master shipment when direct shipment is enabled in-house shipments.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

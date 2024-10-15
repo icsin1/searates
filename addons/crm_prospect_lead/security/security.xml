@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="model_crm_prospect_lead_company_rule" model="ir.rule">
+            <field name="name">CRM Prospect Lead Multi-Company</field>
+            <field name="model_id" ref="crm_prospect_lead.model_crm_prospect_lead"/>
+            <field name="domain_force">['|',('company_id','=',False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="model_crm_prospect_opportunity_company_rule" model="ir.rule">
+            <field name="name">CRM Prospect Opportunity Multi-Company</field>
+            <field name="model_id" ref="crm_prospect_lead.model_crm_prospect_opportunity"/>
+            <field name="domain_force">['|',('company_id','=',False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <!--Record Rules-->
+        <record model="ir.rule" id="crm_prospect_lead_admin_rule">
+            <field name="name">crm_prospect_lead: Admin Access</field>
+            <field name="model_id" ref="crm_prospect_lead.model_crm_prospect_lead"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_system')), (4, ref('fm_sale_crm.group_sales_administrator'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="crm_prospect_lead_salesman_rule">
+            <field name="name">crm_prospect_lead: Salesman Access</field>
+            <field name="model_id" ref="crm_prospect_lead.model_crm_prospect_lead"/>
+            <field name="domain_force">	[('create_uid','=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('fm_sale_crm.group_salesman'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record model="ir.rule" id="crm_prospect_lead_sales_manager_rule">
+            <field name="name">crm_prospect_lead: Sales Manager Access</field>
+            <field name="model_id" ref="crm_prospect_lead.model_crm_prospect_lead"/>
+            <field name="domain_force">user.get_crm_prospect_lead()</field>
+            <field name="groups" eval="[(4, ref('fm_sale_crm.group_sales_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="crm_prospect_opportunity_admin_rule">
+            <field name="name">crm_prospect_opportunity: Admin Access</field>
+            <field name="model_id" ref="crm_prospect_lead.model_crm_prospect_opportunity"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_system')), (4, ref('fm_sale_crm.group_sales_administrator'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="False"/>
+        </record>
+
+        <record model="ir.rule" id="crm_prospect_opportunity_salesman_rule">
+            <field name="name">crm_prospect_opportunity: Salesman Access</field>
+            <field name="model_id" ref="crm_prospect_lead.model_crm_prospect_opportunity"/>
+            <field name="domain_force">	[('create_uid','=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('fm_sale_crm.group_salesman'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record model="ir.rule" id="crm_prospect_opportunity_sales_manager_rule">
+            <field name="name">crm_prospect_opportunity: Sales Manager Access</field>
+            <field name="model_id" ref="crm_prospect_lead.model_crm_prospect_opportunity"/>
+            <field name="domain_force">user.get_crm_prospect_opportunity()</field>
+            <field name="groups" eval="[(4, ref('fm_sale_crm.group_sales_manager'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="perm_write" eval="False"/>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="customer_visit_report_rule" model="ir.rule">
+            <field name="name">Customer visit Report : User Access</field>
+            <field name="model_id" ref="model_customer_visit_report"/>
+            <field name="domain_force">[(1,'=',1)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <function name="write" model="ir.model.data">
+            <function name="search" model="ir.model.data">
+                <value eval="[('module', '=', 'crm_prospect_lead'), ('name', 'in', ['crm_prospect_lead_salesman_rule', 'customer_visit_report_rule'])]"/>
+            </function>
+            <value eval="{'noupdate': False}" />
+        </function>
+
+    </data>
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="inherit_freight_house_shipment_view_form" model="ir.ui.view">
+        <field name="name">freight.house.shipment.inherit.view.form</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="inherit_id" ref="freight_management_charges.freight_house_shipment_revenue_charges_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']/button[@name='action_open_moves']" position="before">
+                <button class="oe_stat_button" name="action_open_pro_forma_invoice" type="object" icon="fa-edit"
+                    attrs="{'invisible':[('pro_forma_invoice_count','=',0)]}">
+                    <field name="pro_forma_invoice_count" string="Pro Forma Invoice" widget="statinfo" icon="fa-usd"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="inherit_freight_master_shipment_view_form" model="ir.ui.view">
+        <field name="name">freight.master.shipment.proforma.inehrit.view.form</field>
+        <field name="model">freight.master.shipment</field>
+        <field name="inherit_id" ref="freight_management_charges.freight_master_shipment_revenue_charges_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']/button[@name='action_open_moves']" position="before">
+                <button class="oe_stat_button" name="action_open_proforma_invoices" type="object" icon="fa-edit"
+                    attrs="{'invisible': ['|', ('house_shipment_proforma_count', '=', 0), ('generate_invoice_from_master', '=', False)]}">
+                    <field name="house_shipment_proforma_count" string="Pro-forma Invoices" widget="statinfo" icon="fa-usd"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

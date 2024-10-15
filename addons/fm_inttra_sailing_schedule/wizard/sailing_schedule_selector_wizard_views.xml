@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="view_schedule_selector_inttra_wizard_form" model="ir.ui.view">
+        <field name="name">sailing.schedule.selector.inttra.wizard.form</field>
+        <field name="model">sailing.schedule.selector.wizard</field>
+        <field name="inherit_id" ref="fm_sailing_schedule.view_schedule_selector_wizard_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@type='special']" position="before">
+                <button name="action_import_schedule" string="Import INTTRA Schedules" type="object" class="btn btn-info" title="Import Global Schedules from INTTRA API"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

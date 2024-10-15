@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="pro_forma_invoice_portal_layout" name="Pro Forma Invoice Portal Layout" inherit_id="portal.portal_breadcrumbs">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'pro_forma_invoice' or pro_forma_invoice" t-attf-class="breadcrumb-item active">
+                <a t-if="pro_forma_invoice" t-attf-href="/my/pro_forma_invoice?{{ keep_query() }}">Pro Forma Invoice</a>
+                <t t-else="">Pro Forma Invoice</t>
+            </li>
+            <li t-if="pro_forma_invoice" class="breadcrumb-item active">
+                <t t-esc="pro_forma_invoice.name"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_pro_forma_invoice" name="Show Pro Forma Invoice" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Pro-Forma Invoice</t>
+                <t t-set="url" t-value="'/my/pro_forma_invoice'"/>
+                <t t-set="placeholder_count" t-value="'pro_forma_invoice_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_pro_forma_invoice" name="My Pro Forma Invoice">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Pro Forma Invoice</t>
+            </t>
+            <t t-if="not pro_forma_invoice_ids">
+                <p>There are currently no pro forma invoice for your account.</p>
+            </t>
+            <t t-if="pro_forma_invoice_ids" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Pro Forma #</th>
+                        <th class="text-right">Total</th>
+                        <th class="text-right">State</th>
+                    </tr>
+                </thead>
+                <t t-foreach="pro_forma_invoice_ids" t-as="pro_forma_invoice">
+                    <tr>
+                        <td><a t-att-href="pro_forma_invoice.get_portal_url()"><t t-esc="pro_forma_invoice.name"/></a></td>
+                        <td class="text-right"><span t-field="pro_forma_invoice.amount_total"/></td>
+                        <td class="text-right"><span t-field="pro_forma_invoice.state" widget="badge"/></td>
+                    </tr>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="pro_forma_invoice_portal_template" name="Pro Forma Invoice Portal Template" inherit_id="portal.portal_sidebar" primary="True">
+        <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
+            <t t-set="o_portal_fullwidth_alert" groups="base.group_user">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/web#model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (pro_forma_invoice._name, pro_forma_invoice.id, action.id)"/>
+                </t>
+            </t>
+
+            <div class="row mt16 o_portal_pro_forma_sidebar">
+
+                <!-- Sidebar -->
+                <t t-call="portal.portal_record_sidebar">
+                    <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
+
+                    <t t-set="title">
+                        <h3 class="mb-0"><b t-field="pro_forma_invoice.amount_total" data-id="total_amount"/> </h3>
+                    </t>
+                    <t t-set="entries">
+                        <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                            <li class="list-group-item flex-grow-1">
+                                <t t-if="pro_forma_invoice.state == 'to_approve'">
+                                    <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                        <div class="btn-group flex-grow-1">
+                                            <a role="button" class="btn btn-primary btn-block mb8 mr8" data-toggle="modal" data-target="#modalaccept" href="#">
+                                                <i class="fa fa-check pr-2"/>Approve &amp; Sign
+                                            </a>
+                                        </div>
+                                        <div class="btn-group flex-grow-1">
+                                            <a role="button" class="btn btn-danger btn-block mb8 mb8" data-toggle="modal" data-target="#modaldecline" href="#">
+                                                <i class="fa fa-times pr-2"/>Reject
+                                            </a>
+                                        </div>
+                                    </div>
+                                </t>
+                                <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                                    <div class="btn-group flex-grow-1">
+                                        <a class="btn btn-secondary btn-block o_download_btn mb8"
+                                           t-att-href="pro_forma_invoice.get_portal_url(report_type='docx', download=True)"
+                                           title="Download"><i class="fa fa-download pr-2"/>Download</a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </t>
+                </t>
+
+
+                <!-- Page content -->
+                <div id="pro_forma_invoice_content" class="col-12 col-lg justify-content-end">
+                    <div t-if="message == 'sign_ok'" class="alert alert-success alert-dismissable d-print-none" role="status">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
+                        <strong>Thank You!</strong><br/>
+                        <t t-if="message == 'sign_ok' and pro_forma_invoice.state == 'approved'">Your Pro-Forma Invoice has been signed and approved.</t>
+                    </div>
+
+                    <div t-if="message == 'cant_reject'" class="alert alert-danger alert-dismissable d-print-none" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
+                        This Pro-Forma Invoice is not in a state to be rejected.
+                    </div>
+
+                    <div t-if="pro_forma_invoice.state == 'cancel'" class="alert alert-danger alert-dismissable d-print-none" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">×</button>
+                        <strong>This Pro-Forma Invoice has been rejected.</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new Pro-Forma Invoice.</a>
+                    </div>
+
+                    <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}" id="portal_pro_forma_invoice_content">
+                        <div t-call="fm_proforma.pro_forma_invoice_portal_content"/>
+                    </div>
+
+                    <div class="row justify-content-center text-center d-print-none pt-1 pb-4">
+                        <t>
+                            <div class="col-sm-auto mt8" t-if="pro_forma_invoice.state == 'to_approve'">
+                                <a role="button" class="btn btn-primary" data-toggle="modal" data-target="#modalaccept" href="#">
+                                    <i class="fa fa-check"/>Approve &amp; Sign
+                                </a>
+                            </div>
+                            <div class="col-sm-auto mt8">
+                                <a role="button" class="btn btn-secondary" href="#discussion">
+                                    <i class="fa fa-comment"/> Feedback
+                                </a>
+                            </div>
+                            <div class="col-sm-auto mt8" t-if="pro_forma_invoice.state == 'to_approve'">
+                                <a role="button" class="btn btn-danger" data-toggle="modal" data-target="#modaldecline" href="#">
+                                    <i class="fa fa-times"/> Reject
+                                </a>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- chatter -->
+                    <div id="pro_forma_invoice_communication" class="mt-4">
+                        <h2>History</h2>
+                        <t t-call="portal.message_thread">
+                            <t t-set="object" t-value="pro_forma_invoice"/>
+                        </t>
+                    </div>
+                </div>
+
+                <!-- Reject button dialog -->
+                <div role="dialog" class="modal fade" id="modaldecline">
+                    <div class="modal-dialog">
+                        <form id="decline" method="POST" t-attf-action="/my/pro_forma_invoice/#{pro_forma_invoice.id}/decline?access_token=#{pro_forma_invoice.access_token}" class="modal-content">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <header class="modal-header">
+                                <h4 class="modal-title">Reject Pro-Forma Invoice</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                            </header>
+                            <main class="modal-body">
+                                <p>
+                                    Tell us why you are refusing Pro-Forma invoice, this will help us improve our services.
+                                </p>
+                                <textarea name="decline_message" required="" class="form-control"/>
+                            </main>
+                            <footer class="modal-footer">
+                                <button type="submit" t-att-id="pro_forma_invoice.id" class="btn btn-danger"><i class="fa fa-times"></i> Reject</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">Cancel</button>
+                            </footer>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Approve &amp; Sign dialog -->
+                <div role="dialog" class="modal fade" id="modalaccept">
+                    <div class="modal-dialog">
+                        <form id="accept" method="POST" t-att-data-order-id="pro_forma_invoice.id" t-att-data-token="pro_forma_invoice.access_token" class="js_accept_json modal-content js_website_submit_form">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                            <header class="modal-header">
+                                <h4 class="modal-title">Validate Pro-Forma Invoice</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                            </header>
+                            <main class="modal-body" id="sign-dialog">
+                                <p>
+                                    <span>By signing this Pro-Forma Invoice, I agree to the following terms:</span>
+                                    <ul>
+                                        <li><span>Accepted on the behalf of:</span> <b t-field="pro_forma_invoice.partner_id.commercial_partner_id"/></li>
+                                    </ul>
+                                </p>
+                                <t t-call="portal.signature_form">
+                                    <t t-set="call_url" t-value="pro_forma_invoice.get_portal_url(suffix='/accept')"/>
+                                    <t t-set="default_name" t-value="pro_forma_invoice.partner_id.name"/>
+                                </t>
+                            </main>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </xpath>
+    </template>
+
+    <template id="pro_forma_invoice_portal_content" name="Pro Forma Portal Content">
+        <div id="introduction" t-attf-class="pb-2 pt-3 #{'card-header bg-white' if report_type == 'html' else ''}">
+          <h2 class="my-0">
+                Pro Forma Invoice #
+                <em t-esc="pro_forma_invoice.name"/>
+            </h2>
+        </div>
+        <div t-attf-class="#{'card-body' if report_type == 'html' else ''}">
+            <div id="informations">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <strong class="d-block mb-1">Debtors: </strong>
+                        <span t-field="pro_forma_invoice.partner_id" t-options='{"widget": "contact", "fields": ["name", "address"], "no_marker": True}'></span>
+                    </div>
+                </div>
+            </div>
+
+            <section id="detail_charges" style="page-break-inside: auto;" class="mt32">
+                <h3 id="details">Charges</h3>
+                <div class="table-responsive">
+                    <table t-att-data-order-id="pro_forma_invoice.id" t-att-data-token="pro_forma_invoice.access_token" class="table table-sm" id="pro_forma_invoice_charges_line">
+                        <thead class="bg-100">
+                            <tr>
+                                <th class="text-left">Charge Type</th>
+                                <th class="text-left">Quantity</th>
+                                <th class="text-left">Unit Price</th>
+                                <th class="text-left">Taxes</th>
+                                <th class="text-right">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody class="pro_forma_invoice_tbody">
+                            <t t-foreach="pro_forma_invoice.pro_forma_invoice_line_ids" t-as="line">
+                                <tr>
+                                    <td><span t-field="line.product_id"/></td>
+                                    <td><span t-field="line.quantity"/></td>
+                                    <td><span t-field="line.price_unit"/></td>
+                                    <td class="small"><span t-field="line.tax_ids"/></td>
+                                    <td class="text-right"><span t-field="line.price_subtotal"/></td>
+                                </tr>
+
+                                
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div id="total" class="row" name="total" style="page-break-inside: avoid;">
+                <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6'} ml-auto">
+                    <table class="table table-sm">
+                        <tr class="border-black o_total">
+                            <td><strong>Untaxed Amount</strong></td>
+                            <td class="text-right">
+                                <span t-field="pro_forma_invoice.amount_untaxed"/>
+                            </td>
+                        </tr>
+                        <tr class="border-black o_total">
+                            <td><strong>Taxes</strong></td>
+                            <td class="text-right">
+                                <span t-field="pro_forma_invoice.amount_tax"/>
+                            </td>
+                        </tr>
+                        <tr class="border-black o_total">
+                            <td><strong>Total</strong></td>
+                            <td class="text-right">
+                                <span t-field="pro_forma_invoice.amount_total"/>
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- <t t-call="sale.sale_order_portal_content_totals_table"/> -->
+                </div>
+            </div>
+
+        </div>
+    </template>
+</odoo>

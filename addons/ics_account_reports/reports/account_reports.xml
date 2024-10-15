@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_generic_report_account" model="ir.actions.report">
+        <field name="name">Generic Accounting Report</field>
+        <field name="model">account.finance.report.mixin</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ics_account_reports.report_finance_pdf_template</field>
+        <field name="report_file">ics_account_reports.report_finance_pdf_template</field>
+        <field name="print_report_name">'%s' % (object.get_title() or '-')</field>
+        <field name="binding_model_id" ref="ics_account_reports.model_account_finance_report_mixin"/>
+    </record>
+
+    <record id="paperformat_balance_confirmation_report" model="report.paperformat">
+        <field name="name">Balance Confirmation Letter</field>
+        <field name="default" eval="False"/>
+        <field name="disable_shrinking" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">33</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_spacing">25</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_balance_confirmation_report" model="ir.actions.report">
+        <field name="name">Balance Confirmation Letter</field>
+        <field name="model">wiz.balance.confirmation.report</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ics_account_reports.balance_confirmation_report_template</field>
+        <field name="report_file">ics_account_reports.balance_confirmation_report_template</field>
+        <field name="binding_model_id" ref="ics_account_reports.model_wiz_balance_confirmation_report"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_balance_confirmation_report"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="freight_service_job_terms_view_tree" model="ir.ui.view">
+        <field name="name">freight.service.job.terms.view.tree</field>
+        <field name="model">freight.service.job.terms</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="document_type_id" />
+                <field name="terms_and_conditions" />
+            </tree>
+        </field>
+    </record>
+    <record id="freight_service_job_terms_view_form" model="ir.ui.view">
+        <field name="name">freight.service.job.terms.view.form</field>
+        <field name="model">freight.service.job.terms</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <label for="document_type_id"/>
+                    <div class="oe_title">
+                        <h2><field name="document_type_id" options="{'no_create': 1, 'no_open': 1}"/></h2>
+                    </div>
+                    <field name="service_job_id" invisible="1"/>
+                    <group string="Terms &amp; Conditions">
+                        <field nolabel="1" placeholder="Write your terms and conditions here..." name="terms_and_conditions" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

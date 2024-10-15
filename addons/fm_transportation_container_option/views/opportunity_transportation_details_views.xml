@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="opportunity_transportation_details_view_tree" model="ir.ui.view">
+        <field name="name">opportunity.transportation.details.view.tree</field>
+        <field name="model">opportunity.transportation.details</field>
+        <field name="arch" type="xml">
+            <tree string="Opportunity Transportation Details">
+                <field name="truck_number_id" />
+                <field name="trailer_number_id" />
+                <field name="container_type_id" />
+                <field name="quantity" optional="hide" string="Count" />
+                <field name="pickup_location_type_id" optional="hide" />
+                <field name="road_origin_un_location_id" optional="hide"/>
+                <field name="delivery_location_type_id" optional="hide"/>
+                <field name="road_destination_un_location_id" optional="hide"/>
+                <field name="estimated_pickup" optional="hide"/>
+                <field name="expected_delivery" optional="hide"/>
+                <field name="transit_time" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="opportunity_transportation_details_view_form" model="ir.ui.view">
+        <field name="name">opportunity.transportation.details.view.form</field>
+        <field name="model">opportunity.transportation.details</field>
+        <field name="arch" type="xml">
+            <form string="Opprtunity Trasportation Details">
+                <sheet>
+                    <group string="Truck Details">
+                        <group name="truck_details">
+                            <field name="truck_number_id" options="{'no_create': True}"/>
+                            <field name="trailer_number_id" options="{'no_create': True}"/>
+                        </group>
+                        <group name="container_details" attrs="{'invisible': [('parent.is_package_group', '=', True)]}">
+                            <field name="container_type_id" options="{'no_create': True}" attrs="{'required': [('parent.is_package_group', '=', False)]}"
+                                domain="[('transport_mode_id', '=', transport_mode_id)]"/>
+                            <field name="quantity" string="Truck Quantity" required="0"/>
+                            <field name="is_refrigerated" invisible="1"/>
+                            <label for="container_temperature" attrs="{'invisible': [('is_refrigerated', '=', False)]}"/>
+                            <div class="o_row">
+                                <field name="container_temperature" attrs="{'invisible': [('is_refrigerated', '=', False)], 'required': [('is_refrigerated', '=', True)]}"/>
+                                <field name="container_temperature_uom_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('is_refrigerated', '=', False)], 'required': [('is_refrigerated', '=', True)]}"/>
+                            </div>
+                            <label for="max_temperature" attrs="{'invisible': [('is_refrigerated', '=', False)]}"/>
+                            <div class="o_row">
+                                <field name="max_temperature" attrs="{'invisible': [('is_refrigerated', '=', False)], 'required': [('is_refrigerated', '=', True)]}"/>
+                                <field name="max_temperature_uom_id" options="{'no_create': True, 'no_open': True}" attrs="{'invisible': [('is_refrigerated', '=', False)],
+                                    'required': [('is_refrigerated', '=', True)]}"/>
+                            </div>
+                        </group>
+                        <group name="package_details" attrs="{'invisible': [('parent.is_package_group', '=', False)]}">
+                            <field name="package_uom_id" options="{'no_create': True}" attrs="{'required': [('parent.is_package_group', '=', True)]}"/>
+                            <field name="quantity" string="Count"/>
+                            <label for="weight"/>
+                            <div class="o_row">
+                                <field name="weight" attrs="{'required': [('parent.is_package_group', '=', True)]}"/>
+                                <field name="weight_uom_id" options="{'no_create': True, 'no_open': True}" attrs="{'required': [('parent.is_package_group', '=', True)]}"/>
+                            </div>
+                            <label for="volume"/>
+                            <div class="o_row">
+                                <field name="volume" attrs="{'required': [('parent.is_package_group', '=', True)]}"/>
+                                <field name="volume_uom_id" options="{'no_create': True, 'no_open': True}" attrs="{'required': [('parent.is_package_group', '=', True)]}"/>
+                            </div>
+                            <label for="total_weight"/>
+                            <div class="o_row">
+                                <field name="total_weight" attrs="{'required': [('parent.is_package_group', '=', True)]}"/>
+                                <field name="total_weight_uom_id" options="{'no_create': True, 'no_open': True}" attrs="{'required': [('parent.is_package_group', '=', True)]}"/>
+                            </div>
+                            <label for="total_volume"/>
+                            <div class="o_row">
+                                <field name="total_volume" attrs="{'required': [('parent.is_package_group', '=', True)]}"/>
+                                <field name="total_volume_uom_id" options="{'no_create': True, 'no_open': True}" attrs="{'required': [('parent.is_package_group', '=', True)]}"/>
+                            </div>
+                             <field name="calculated_dimension_lwh" invisible="1"/>
+                             <field name="transport_mode_id" invisible="1"/>
+                            <label for="length" string="Dimensions (L-W-H)" attrs="{'invisible': [('calculated_dimension_lwh', '!=', True)]}"/>
+                            <div class="o_row" attrs="{'invisible': [('calculated_dimension_lwh', '!=', True)]}">
+                                <field name="length" />x
+                                <field name="width" />x
+                                <field name="height" />
+                                <field name="lwh_uom_id" options="{'no_create': True}"/>
+                            </div>
+                            <label for="divided_value" string="Divided Value" attrs="{'invisible': [('calculated_dimension_lwh', '!=', True)]}"/>
+                            <div class="o_row" attrs="{'invisible': [('calculated_dimension_lwh', '!=', True)]}">
+                                <field name="divided_value" force_save="1" readonly="1"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group name="transport_details" string="Transport Details">
+                        <group>
+                            <field name="pickup_location_type_id" />
+                            <field name="road_origin_un_location_id" />
+                            <field name="estimated_pickup" />
+                            <field name="transit_time" />
+                        </group>
+                        <group>
+                            <field name="delivery_location_type_id" />
+                            <field name="road_destination_un_location_id" />
+                            <field name="expected_delivery" />
+                            <field name="service_name" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="opportunity_transportation_details_action" model="ir.actions.act_window">
+        <field name="name">Opportunity Transportation Details</field>
+        <field name="res_model">opportunity.transportation.details</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="fm_operation_reports_vendor_statement" model="web.report">
+            <field name="name">Vendor Statement</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="data_match_domain" eval="[('move_id.state', '=', 'posted'), ('account_id.internal_type', '=', 'payable'), ('partner_id', '!=', False)]"/>
+            <field name="filter_multi_company">selector</field>
+            <field name="filter_date_type">date_range</field>
+            <field name="default_opening_date">this_month</field>
+            <field name="date_field" ref="account.field_account_move_line__date"/>
+            <field name="report_handler_model_id" ref="fm_operation_reports.model_partner_statement_report_handler"/>
+            <field name="is_account_report" eval="True"/>
+        </record>
+
+        <record id="fm_report_vendor_statement_line" model="web.report.line">
+            <field name="web_report_id" ref="fm_operation_reports_vendor_statement"/>
+            <field name="name">Vendors</field>
+            <field name="code">VNDR</field>
+            <field name="sequence">1</field>
+            <field name="hierarchy_level">1</field>
+            <field name="group_total" eval="True"/>
+            <field name="group_by_fields">partner_id,id</field>
+            <field name="compute_opening_and_closing_balance" eval="True"/>
+            <field name="action_id" ref="account.action_move_journal_line"/>
+            <field name="action_field_id" ref="account.field_account_move_line__move_id"/>
+            <field name="strict_on_date_range" eval="False"/>
+        </record>
+            <record id="fm_report_vendor_statement_expr_date" model="web.report.expression">
+                <field name="web_report_line_id" ref="fm_report_vendor_statement_line"/>
+                <field name="name">date</field>
+                <field name="computation_engine">field</field>
+                <field name="formula_expression">date</field>
+                <field name="value_type">date</field>
+            </record>
+            <record id="fm_report_vendor_statement_expr_name" model="web.report.expression">
+                <field name="web_report_line_id" ref="fm_report_vendor_statement_line"/>
+                <field name="name">name</field>
+                <field name="computation_engine">field</field>
+                <field name="formula_expression">name</field>
+                <field name="value_type">string</field>
+            </record>
+            <record id="fm_report_vendor_statement_expr_amount_currency" model="web.report.expression">
+                <field name="web_report_line_id" ref="fm_report_vendor_statement_line"/>
+                <field name="name">amount_currency</field>
+                <field name="computation_engine">field</field>
+                <field name="formula_expression">amount_currency</field>
+                <field name="value_type">monetary</field>
+                <field name="currency_field_name">currency_id</field>
+            </record>
+            <record id="fm_report_vendor_statement_expr_currency_id" model="web.report.expression">
+                <field name="web_report_line_id" ref="fm_report_vendor_statement_line"/>
+                <field name="name">currency_id</field>
+                <field name="computation_engine">field</field>
+                <field name="formula_expression">currency_id and currency_id[1]</field>
+                <field name="value_type">string</field>
+            </record>
+            <record id="fm_report_vendor_statement_expr_debit" model="web.report.expression">
+                <field name="web_report_line_id" ref="fm_report_vendor_statement_line"/>
+                <field name="name">debit</field>
+                <field name="computation_engine">field</field>
+                <field name="formula_expression">debit</field>
+                <field name="value_type">monetary</field>
+                <field name="allow_aggregate" eval="True"/>
+            </record>
+            <record id="fm_report_vendor_statement_expr_credit" model="web.report.expression">
+                <field name="web_report_line_id" ref="fm_report_vendor_statement_line"/>
+                <field name="name">credit</field>
+                <field name="computation_engine">field</field>
+                <field name="formula_expression">credit</field>
+                <field name="value_type">monetary</field>
+                <field name="allow_aggregate" eval="True"/>
+            </record>
+            <record id="fm_report_vendor_statement_expr_balance" model="web.report.expression">
+                <field name="web_report_line_id" ref="fm_report_vendor_statement_line"/>
+                <field name="name">balance</field>
+                <field name="computation_engine">field</field>
+                <field name="formula_expression">balance</field>
+                <field name="value_type">monetary</field>
+                <field name="allow_aggregate" eval="True"/>
+            </record>
+            <record id="fm_report_vendor_statement_expr_move_name" model="web.report.expression">
+                <field name="web_report_line_id" ref="fm_report_vendor_statement_line"/>
+                <field name="name">move_name</field>
+                <field name="computation_engine">field</field>
+                <field name="formula_expression">move_name</field>
+                <field name="value_type">string</field>
+            </record>
+            <record id="fm_report_vendor_statement_expr_label" model="web.report.expression">
+                <field name="web_report_line_id" ref="fm_report_vendor_statement_line"/>
+                <field name="name">title</field>
+                <field name="computation_engine">python_code</field>
+                <field name="formula_expression">move_name</field>
+                <field name="value_type">string</field>
+            </record>
+            <record id="fm_report_vendor_statement_expr_payment_status" model="web.report.expression">
+                <field name="web_report_line_id" ref="fm_report_vendor_statement_line"/>
+                <field name="name">payment_status</field>
+                <field name="computation_engine">python_code</field>
+                <field name="formula_expression">_report_handler_partner_statement</field>
+                <field name="subformula_expression">payment_status</field>
+                <field name="value_type">string</field>
+            </record>
+            <record id="fm_report_vendor_statement_expr_container_type" model="web.report.expression">
+                <field name="web_report_line_id" ref="fm_report_vendor_statement_line"/>
+                <field name="name">container_type</field>
+                <field name="computation_engine">python_code</field>
+                <field name="formula_expression">_report_handler_partner_statement</field>
+                <field name="subformula_expression">container_type</field>
+                <field name="value_type">string</field>
+            </record>
+            <record id="fm_report_vendor_statement_expr_container_count" model="web.report.expression">
+                <field name="web_report_line_id" ref="fm_report_vendor_statement_line"/>
+                <field name="name">container_count</field>
+                <field name="computation_engine">python_code</field>
+                <field name="formula_expression">_report_handler_partner_statement</field>
+                <field name="subformula_expression">container_count</field>
+                <field name="value_type">string</field>
+            </record>
+            <record id="fm_report_vendor_statement_expr_opening_balance" model="web.report.expression">
+                <field name="web_report_line_id" ref="fm_report_vendor_statement_line"/>
+                <field name="name">opening_balance</field>
+                <field name="computation_engine">python_code</field>
+                <field name="formula_expression">_report_handler_opening_closing_balance</field>
+                <field name="subformula_expression">opening_balance</field>
+                <field name="value_type">monetary</field>
+            </record>
+            <record id="fm_report_vendor_statement_expr_closing_balance" model="web.report.expression">
+                <field name="web_report_line_id" ref="fm_report_vendor_statement_line"/>
+                <field name="name">closing_balance</field>
+                <field name="computation_engine">python_code</field>
+                <field name="formula_expression">_report_handler_opening_closing_balance</field>
+                <field name="subformula_expression">closing_balance</field>
+                <field name="value_type">monetary</field>
+            </record>
+
+        <!-- Columns -->
+        <record id="fm_report_vendor_statement_column_date" model="web.report.column">
+            <field name="web_report_id" ref="fm_operation_reports_vendor_statement"/>
+            <field name="name">Date</field>
+            <field name="expression_label">date</field>
+            <field name="sequence">1</field>
+            <field name="value_type">date</field>
+        </record>
+        <record id="fm_report_vendor_statement_column_label" model="web.report.column">
+            <field name="web_report_id" ref="fm_operation_reports_vendor_statement"/>
+            <field name="name">Label</field>
+            <field name="expression_label">name</field>
+            <field name="sequence">2</field>
+            <field name="value_type">string</field>
+        </record>
+        <record id="fm_report_vendor_statement_column_container_type" model="web.report.column">
+            <field name="web_report_id" ref="fm_operation_reports_vendor_statement"/>
+            <field name="name">Container Type</field>
+            <field name="expression_label">container_type</field>
+            <field name="sequence">3</field>
+            <field name="value_type">string</field>
+        </record>
+        <record id="fm_report_vendor_statement_column_container_count" model="web.report.column">
+            <field name="web_report_id" ref="fm_operation_reports_vendor_statement"/>
+            <field name="name">Container Count</field>
+            <field name="expression_label">container_count</field>
+            <field name="sequence">4</field>
+            <field name="value_type">integer</field>
+        </record>
+        <record id="fm_report_vendor_statement_column_amount_currency" model="web.report.column">
+            <field name="web_report_id" ref="fm_operation_reports_vendor_statement"/>
+            <field name="name">Amount Currency</field>
+            <field name="expression_label">amount_currency</field>
+            <field name="sequence">5</field>
+            <field name="value_type">monetary</field>
+            <field name="hide_if_zero" eval="True"/>
+        </record>
+        <record id="fm_report_vendor_statement_column_currency_id" model="web.report.column">
+            <field name="web_report_id" ref="fm_operation_reports_vendor_statement"/>
+            <field name="name">Currency</field>
+            <field name="expression_label">currency_id</field>
+            <field name="sequence">6</field>
+            <field name="value_type">string</field>
+        </record>
+        <record id="fm_report_vendor_statement_column_payment_status" model="web.report.column">
+            <field name="web_report_id" ref="fm_operation_reports_vendor_statement"/>
+            <field name="name">Payment Status</field>
+            <field name="expression_label">payment_status</field>
+            <field name="sequence">7</field>
+            <field name="value_type">string</field>
+        </record>
+        <record id="fm_report_vendor_statement_column_opening_balance" model="web.report.column">
+            <field name="web_report_id" ref="fm_operation_reports_vendor_statement"/>
+            <field name="name">Opening Balance</field>
+            <field name="expression_label">opening_balance</field>
+            <field name="sequence">8</field>
+            <field name="value_type">monetary</field>
+            <field name="hide_if_zero" eval="True"/>
+        </record>
+        <record id="fm_report_vendor_statement_column_debit" model="web.report.column">
+            <field name="web_report_id" ref="fm_operation_reports_vendor_statement"/>
+            <field name="name">Amount Debit</field>
+            <field name="expression_label">debit</field>
+            <field name="sequence">9</field>
+            <field name="value_type">monetary</field>
+        </record>
+        <record id="fm_report_vendor_statement_column_credit" model="web.report.column">
+            <field name="web_report_id" ref="fm_operation_reports_vendor_statement"/>
+            <field name="name">Amount Credit</field>
+            <field name="expression_label">credit</field>
+            <field name="sequence">10</field>
+            <field name="value_type">monetary</field>
+        </record>
+        <record id="fm_report_vendor_statement_column_balance" model="web.report.column">
+            <field name="web_report_id" ref="fm_operation_reports_vendor_statement"/>
+            <field name="name">Amount Balance</field>
+            <field name="expression_label">closing_balance</field>
+            <field name="sequence">11</field>
+            <field name="value_type">monetary</field>
+        </record>
+
+        <record id="fm_report_vendor_statement_filter_vendor" model="web.report.filter">
+            <field name="web_report_id" ref="fm_operation_reports_vendor_statement"/>
+            <field name="name">Vendors</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="ir_model_field_id" ref="account.field_account_move_line__partner_id"/>
+            <field name="filter_key">filter_vendors</field>
+            <field name="filter_type">multi_relation</field>
+        </record>
+
+    </data>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'fm_operation_reports'), ('name', '=', 'fm_report_vendor_statement_expr_amount_currency')]"/>
+        </function>
+        <value eval="{'noupdate': False}" />
+    </function>
+
+    <record id="fm_operation_reports.fm_report_vendor_statement_expr_amount_currency" model="web.report.expression">
+        <field name="currency_field_name">currency_id</field>
+    </record>
+
+    <function name="write" model="ir.model.data">
+        <function name="search" model="ir.model.data">
+            <value eval="[('module', '=', 'fm_operation_reports'), ('name', '=', 'fm_report_vendor_statement_expr_amount_currency')]"/>
+        </function>
+        <value eval="{'noupdate': True}" />
+    </function>
+
+</odoo>

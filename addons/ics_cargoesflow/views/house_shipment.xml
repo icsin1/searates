@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="freight_house_shipment_cargosflow_integration_view_form" model="ir.ui.view">
+        <field name="name">freight.house.shipment.cargosflow.integration.view.form</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="inherit_id" ref="freight_management.freight_house_shipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='package_details']/field[@name='package_ids']/tree/field[@name='container_number']" position="after">
+                <button type="object"
+                        name="action_shipment_milestone_container"
+                        icon="fa-chain"
+                        class="btn btn-primary oe_read_only"
+                        attrs="{'column_invisible': [('parent.mode_type', '!=', 'sea')], 'invisible': [('container_number', '=', False)]}"
+                        string="Milestones"/>
+                <button type="object"
+                        name="action_track_shipment_milestone_container"
+                        icon="fa-long-arrow-right"
+                        class="btn btn-primary oe_read_only"
+                        attrs="{'column_invisible': [('parent.mode_type', '!=', 'sea')], 'invisible': [('container_number', '=', False)]}"
+                        string="Track"/>
+                <field name="tracking_url" widget="url" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//page[@name='package_details']/field[@name='container_ids']/tree/field[@name='container_number']" position="after">
+                <button type="object" name="action_shipment_milestone_container" icon="fa-chain" class="btn btn-primary oe_read_only" string="Milestones" attrs="{'invisible': [('container_number', '=', False)]}"/>
+                <button type="object" name="action_track_shipment_milestone_container" icon="fa-long-arrow-right" class="btn btn-primary oe_read_only" string="Track" attrs="{'invisible': [('container_number', '=', False)]}"/>
+                <field name="tracking_url" widget="url" invisible="1"/>
+            </xpath>
+            <xpath expr="//page[@name='milestones']/field[@name='event_ids']" position="before">
+                <button type="object" name="action_track_air_shipment"
+                        class="btn btn-primary"
+                        string="Track Shipment" attrs="{'invisible': [('mode_type', '!=', 'air')]}"/>
+            </xpath>
+            
+        </field>
+    </record>
+</odoo>

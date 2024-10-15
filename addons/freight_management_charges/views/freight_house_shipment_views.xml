@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="freight_house_shipment_view_revenue_charges_action" model="ir.actions.act_window">
+        <field name="name">Revenue Charges</field>
+        <field name="res_model">house.shipment.charge.revenue</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('house_shipment_id', '=', active_id)]</field>
+        <field name="context">{
+            'default_house_shipment_id': active_id,
+            'search_default_group_charge_type': True,
+            'side_panel_view': 'freight_management.freight_house_shipment_info_view_form',
+            'side_panel_res_id': active_id,
+            'side_panel_model': 'freight.house.shipment'
+        }</field>
+    </record>
+    <record id="freight_house_shipment_view_cost_charges_action" model="ir.actions.act_window">
+        <field name="name">Cost Charges</field>
+        <field name="res_model">house.shipment.charge.cost</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('house_shipment_id', '=', active_id)]</field>
+        <field name="context">{
+            'default_house_shipment_id': active_id,
+            'search_default_group_charge_type': True,
+            'side_panel_view': 'freight_management.freight_house_shipment_info_view_form',
+            'side_panel_res_id': active_id,
+            'side_panel_model': 'freight.house.shipment'
+        }</field>
+    </record>
+
+    <record id="freight_house_shipment_view_search_inherit" model="ir.ui.view">
+        <field name="name">freight.house.shipment.inherit.view.search</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="inherit_id" ref="freight_management.freight_house_shipment_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="replace">
+                <field name="name" string="Search Shipment" filter_domain="['|', '|', '|', '|', '|', ('booking_nomination_no', 'ilike', self), ('hbl_number', 'ilike', self), ('move_ids.name', 'ilike', self), ('package_ids.container_number', 'ilike', self), ('container_ids.container_number', 'ilike', self), ('tag_ids.name', 'ilike', self)]"/>
+            </xpath>
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="move_ids" string="Invoices" filter_domain="[('move_ids.name', 'ilike', self)]"/>
+            </xpath>
+            <xpath expr="//filter[@name='etd_time']" position="after">
+                <separator/>
+                <filter string="Charges Created but not Invoiced" name="filter_charges_created_not_invoiced" domain="[('revenue_charge_ids.status', '=', 'no'), ('revenue_charge_ids', '!=', [])]"/>
+                <filter string="Charges Created but not Billed" name="filter_charges_created_not_billed" domain="[('cost_charge_ids.status', '=', 'no'), ('cost_charge_ids', '!=', [])]"/>
+                <separator/>
+                <filter string="Shipments but not invoiced" name="not_invoiced" domain="[('invoice_count', '=', 0)]"/>
+                <filter string="Shipments but not Billed" name="not_billed" domain="[('vendor_bill_count', '=', 0)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="freight_house_shipment_revenue_charges_view_form" model="ir.ui.view">
+        <field name="name">freight.house.shipment.charges.view.form</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="inherit_id" ref="freight_management.freight_house_shipment_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_open_shipment_master']" position="before">
+                <button class="oe_stat_button" name="action_open_moves" type="object" context="{'move_type': 'out_refund'}" icon="fa-edit" groups="freight_base.group_operation_associate,base.group_system">
+                    <field name="credit_note_count" string="Credit Notes" widget="statinfo" icon="fa fa-credit-card"/>
+                </button>
+                <button class="oe_stat_button" name="action_open_moves" type="object" context="{'move_type': 'in_refund'}" icon="fa-money" groups="freight_base.group_operation_associate,base.group_system">
+                    <field name="debit_note_count" string="Debit Notes" widget="statinfo" icon="fa fa-credit-card"/>
+                </button>
+                <button class="oe_stat_button" name="action_open_moves" type="object" context="{'move_type': 'out_invoice'}" icon="fa-edit" groups="freight_base.group_operation_associate,base.group_system,freight_base.group_manage_pricing">
+                    <field name="invoice_count" string="Invoices" widget="statinfo" icon="fa-usd"/>
+                </button>
+                <button class="oe_stat_button" name="action_open_moves" type="object" context="{'move_type': 'in_invoice'}" icon="fa-money" groups="freight_base.group_operation_associate,base.group_system,freight_base.group_manage_pricing">
+                    <field name="vendor_bill_count" string="Vendor Bills" widget="statinfo" icon="fa-usd"/>
+                </button>
+                <button name="action_view_house_shipment_revenue_charges" type="object" class="oe_stat_button" icon="fa-money text-success" title="Revenue Charges" groups="freight_base.group_operation_associate,base.group_system,freight_base.group_manage_pricing">
+                    <field string="Revenue Charges" name="revenue_charge_state_info" widget="statinfo" />
+                </button>
+                <button name="action_view_house_shipment_cost_charges" type="object" class="oe_stat_button" icon="fa-money text-danger" title="Cost Charges" groups="freight_base.group_operation_associate,base.group_system,freight_base.group_manage_pricing">
+                    <field string="Cost Charges" name="cost_charge_state_info" widget="statinfo" />
+                </button>
+            </xpath>
+            <xpath expr="//sheet" position="after">
+                <field name="move_line_ids" invisible="1"/>
+                <field name="move_ids" invisible="1"/>
+                <div class="clearfix position-relative o_form_sheet" groups="freight_base.group_operation_associate,base.group_system,freight_base.group_manage_pricing">
+                    <group string="Shipment Revenue Summary">
+                        <group>
+                            <label for="estimated_margin_percentage"/>
+                            <div>
+                                <field name="estimated_margin_percentage" class="oe_inline"/>%
+                            </div>
+                        </group>
+                        <group>
+                            <label for="received_margin_percentage"/>
+                            <div>
+                                <field name="received_margin_percentage" class="oe_inline"/>%
+                            </div>
+                        </group>
+                    </group>
+                    <table class="table table-info">
+                        <tr>
+                            <td>#</td>
+                            <td class="table-info">Expected Amount</td>
+                            <td class="table-info">Invoiced/Billed Amount</td>
+                            <td class="table-info">Due Amount</td>
+                        </tr>
+                        <tr>
+                            <td class="table-info">Customer Invoice(Receivable)</td>
+                            <td class="table-info"><field name="estimated_revenue"/></td>
+                            <td class="table-success"><field name="received_revenue"/></td>
+                            <td class="table-danger"><field name="due_revenue"/></td>
+                        </tr>
+                        <tr>
+                            <td class="table-info">Vendor Bills(Payable)</td>
+                            <td class="table-info"><field name="estimated_cost"/></td>
+                            <td class="table-success"><field name="paid_cost"/></td>
+                            <td class="table-danger"><field name="due_cost"/></td>
+                        </tr>
+                        <tr>
+                            <td class="table-info">Margin</td>
+                            <td class="table-info"><field name="estimated_margin"/></td>
+                            <td class="table-info"><field name="received_margin"/></td>
+                            <td class="table-info">#</td>
+                        </tr>
+                    </table>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <record id="freight_house_shipment_charges_inheirt_view_kanban" model="ir.ui.view">
+        <field name="name">freight.house.shipment.charge.inherit.view.kanban</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="inherit_id" ref="freight_management.freight_house_shipment_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//table[@name='customer_details']" position="after">
+                <table class="table table-sm my-0" name='profitability_detail' groups="freight_base.group_manage_pricing,freight_base.group_operation_manager,base.group_system">
+                    <tr>
+                        <th><i class="fa fa-2x fa-money" aria-label="money"/></th>
+                        <th class="table-info">Estimated</th>
+                        <th class="table-success">Actual</th>
+                    </tr>
+                    <tr class="small">
+                        <td>Receivable</td>
+                        <td class="table-info"><field name="estimated_revenue"/></td>
+                        <td class="table-success"><field name="received_revenue"/></td>
+                    </tr>
+                    <tr class="small">
+                        <td>Payable</td>
+                        <td class="table-info"><field name="estimated_cost"/></td>
+                        <td class="table-success"><field name="paid_cost"/></td>
+                    </tr>
+                    <tr class="small">
+                        <td>Margin</td>
+                        <td class="table-info"><field name="estimated_margin"/></td>
+                        <td class="table-success"><field name="received_margin"/></td>
+                    </tr>
+                </table>
+            </xpath>
+        </field>
+    </record>
+    <record id="freight_house_shipment_inherit_view_tree" model="ir.ui.view">
+        <field name="name">freight.house.shipment.inheirt.view.tree</field>
+        <field name="model">freight.house.shipment</field>
+        <field name="inherit_id" ref="freight_management.freight_house_shipment_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='shipment_date']" position="after">
+                <field name="estimated_revenue" optional="hide" groups="freight_base.group_manage_pricing,freight_base.group_operation_manager,base.group_system"/>
+                <field name="estimated_cost" optional="hide" groups="freight_base.group_manage_pricing,freight_base.group_operation_manager,base.group_system"/>
+                <field name="received_revenue" optional="hide" groups="freight_base.group_manage_pricing,freight_base.group_operation_manager,base.group_system"/>
+                <field name="paid_cost" optional="hide" groups="freight_base.group_manage_pricing,freight_base.group_operation_manager,base.group_system"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

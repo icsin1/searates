@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-extend="ListView.buttons" t-name="FreightINTTRAControlPanel.ServiceButtons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+            <button class="btn btn-info o_button_fetch_inttra_schedule" title="Import Global Schedules">
+                <span class="fa fa-cloud-download mr-1"/>Import Schedules
+            </button>
+        </t>
+    </t>
+</templates>
