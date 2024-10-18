@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates xml:space="preserve">
-    <t t-inherit="web.Dialog" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('modal-dialog')]" position="attributes">
-            <attribute name="class">modal-dialog modal-dialog-centered ics_center_modal_dialog</attribute>
-        </xpath>
-    </t>
-</templates>

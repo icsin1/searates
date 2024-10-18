@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data>
-        <record id="base.action_currency_form" model="ir.actions.act_window">
-            <field name="context">{'active_test': False, 'show_company_currency_first': True}</field>
-        </record>
-    </data>
-</odoo>

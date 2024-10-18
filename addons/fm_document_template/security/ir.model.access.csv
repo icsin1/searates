@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_shipment_document_template_system_admin,access_shipment_document_template_system_admin,model_shipment_document_template,base.group_system,1,1,1,1

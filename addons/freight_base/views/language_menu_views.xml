@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <menuitem
-        id="language_menu"
-        name="Languages"
-        parent="freight_base.root_freight_admin_manage_menu"
-        action="base.res_lang_act_window"
-        sequence="9"/>
-</odoo>        

@@ -1,3 +1,0 @@
-"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-access_opportunity_transportation_details,access_opportunity_transportation_details,model_opportunity_transportation_details,base.group_user,1,1,1,1
-access_quote_transportation_package_details,access_quote_transportation_package_details,model_quote_transportation_package_details,base.group_user,1,1,1,1

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
-        <record id="report_layout_searate" model="report.layout">
-            <field name="view_id" ref="freight_report_layout.external_layout_searate"/>
-            <field name="name">SR Boxed Bordered</field>
-        </record>
-    </data>
-</odoo>

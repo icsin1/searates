@@ -1,6 +1,0 @@
-id,code,name,sequence
-cntr_service_mode_csf_csf,CFS/CFS,CFS/CFS,1
-cntr_service_mode_csf_door,CFS/DOOR,CFS/DOOR,2
-cntr_service_mode_door_csf,DOOR/CFS,DOOR/CFS,3
-cntr_service_mode_door_door,DOOR/DOOR,DOOR/DOOR,4
-cntr_service_mode_port_port,PORT/PORT,PORT/PORT,5

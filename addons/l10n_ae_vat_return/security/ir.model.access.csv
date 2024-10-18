@@ -1,5 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_vat_return,access_vat_return,model_vat_return,,1,1,1,1
-access_vat_return_sale_line,access_vat_return_sale_line,model_vat_return_sale_line,,1,1,1,1
-access_vat_return_purchase_line,access_vat_return_purchase_line,model_vat_return_purchase_line,,1,1,1,1
-access_vat_return_summary_line,access_vat_return_summary_line,model_vat_return_summary_line,,1,1,1,1

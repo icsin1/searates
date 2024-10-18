@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <menuitem
-        id="menu_tariff_root_menu"
-        name="Tariff"
-        parent="freight_base.root_freight_admin_configurations"
-        sequence="2"/>
-</odoo>

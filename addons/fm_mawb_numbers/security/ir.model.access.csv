@@ -1,5 +1,0 @@
-"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
-access_mawb_stock_line,access_mawb_stock_line,model_mawb_stock_line,base.group_user,1,1,1,1
-
-access_mawb_stock_internal_user,access_mawb_stock_internal_user,model_mawb_stock,base.group_user,1,0,0,0
-access_mawb_stock_admin_user,access_mawb_stock_admin_user,model_mawb_stock,base.group_system,1,1,1,0

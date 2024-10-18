@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-
-    <record id="quote_direct_accept_group_access" model="res.groups">
-        <field name="name">Direct Quote Accept</field>
-    </record>
-
-</odoo>
